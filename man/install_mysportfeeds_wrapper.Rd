@@ -1,4 +1,4 @@
-\\name{install_mysportsfeeds_wrapper}
+\name{install_mysportsfeeds_wrapper}
 \alias{install_mysportsfeeds_wrapper}
 \title{Install MySportsFeeds Wrapper}
 \usage{
