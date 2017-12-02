@@ -1,0 +1,12 @@
+---
+title: "tidysportsfeed - make tibbles from https://www.mysportsfeeds.com/ APIs"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Patreon links
+* [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb)
+* [MySportsFeeds](https://www.patreon.com/mysportsfeeds/posts)
