@@ -1,4 +1,4 @@
-Package: tidysportsfeed
+Package: tidysportsfeeds
 Type: Package
 Title: Make Tibbles from the MySportsFeeds.com API
 Version: 0.0.0.9000

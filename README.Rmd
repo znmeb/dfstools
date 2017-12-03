@@ -1,5 +1,5 @@
 ---
-title: "tidysportsfeed - Make Tibbles from the MySportsFeeds.com API"
+title: "tidysportsfeeds - Make Tibbles from the MySportsFeeds.com API"
 output: github_document
 ---
 
