@@ -1,4 +1,4 @@
-tidysportsfeed - Make Tibbles From <https://www.mysportsfeeds.com/> APIs
+tidysportsfeed - Make Tibbles from the MySportsFeeds.com API
 ================
 
 ## Patreon links
