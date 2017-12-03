@@ -1,0 +1,12 @@
+Package: tidysportsfeed
+Type: Package
+Title: Make Tibbles From https://www.mysportsfeeds.com/ APIs
+Version: 0.0.0.9999
+Author: M. Edward (Ed) Borasky <znmeb@znmeb.net>
+Maintainer: M. Edward (Ed) Borasky <znmeb@znmeb.net>
+Description: MySportsFeeds.com is a site that offers current and historical sports data via an API. Historical data is free for non-commercial use, but there is a charge for current data.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Imports: devtools
