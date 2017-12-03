@@ -1,4 +1,4 @@
-tidysportsfeed - Make Tibbles from the MySportsFeeds.com API
+tidysportsfeeds - Make Tibbles from the MySportsFeeds.com API
 ================
 
 ## Getting started
