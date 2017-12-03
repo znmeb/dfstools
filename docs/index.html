@@ -54,7 +54,23 @@
     
     
 <div class="contents">
-<section id="patreon-links" class="level2"><h2>Patreon links</h2>
+<section id="getting-started" class="level2"><h2>Getting started</h2>
+<ol type="1">
+<li>Go to <a href="https://www.mysportsfeeds.com/" class="uri">https://www.mysportsfeeds.com/</a> and register an account.</li>
+<li>Sign in.</li>
+<li>Browse to <a href="https://www.mysportsfeeds.com/data-feeds/api-docs" class="uri">https://www.mysportsfeeds.com/data-feeds/api-docs</a>.</li>
+<li>Use the selectors on the left to pick your sport, season and feed. I’ll use NBA, 2016-2017 regular and Daily DFS for the example.</li>
+<li>
+<p>Now you’re on the documentation page for the sport, season and feed. Click on the “CSV” sample.</p>
+<p>If you get an authentication request, enter your user name and password. You can then download the file, or, if you have a spreadsheet program installed, open the file in it.</p>
+</li>
+</ol></section><section id="whats-in-this-package" class="level2"><h2>What’s in this package?</h2>
+<p>As you’ve seen above, MySportsFeeds.com allows you to directly download files in spreadsheet-friendly CSV format. You can also set it up to email you the data. As long as you’re doing non-commercial analysis on historical data, everything is free.</p>
+<p>But if you want to build up a database of historical data, or want to track the current season, you’ll want to automate things. Enter <code>tidysportsfeeds</code>. I’m doing daily fantasy sports analytics, so I want to build up databases and build projection / optimization software. <code>tidysportsfeeds</code> is a collection of the front-end part of this - the workflow from the raw API to tibbles.</p>
+</section><section id="what-now" class="level2"><h2>What now?</h2>
+<p>That depends on what you want to do with the data. I recommend exploring the data on MySportsFeeds.com with a browser and a spreadsheet as described above. Once you know what’s on the site, you can focus on a workflow.</p>
+<p>I’m building this package as a general tool to get data into tibbles. But the examples will nearly all be relevant to NBA daily fantasy sports.</p>
+</section><section id="patreon-links" class="level2"><h2>Patreon links</h2>
 <ul>
 <li><a href="https://www.patreon.com/znmeb">M. Edward (Ed) Borasky</a></li>
 <li><a href="https://www.patreon.com/mysportsfeeds/posts">MySportsFeeds</a></li>
@@ -65,15 +81,10 @@
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2 class="hasAnchor">
 <a href="#sidebar" class="anchor"></a>License</h2>
-
+<p><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE.html">LICENSE</a></p>
 <h2>Developers</h2>
 <ul class="list-unstyled">
 <li>M. Edward (Ed) Borasky <br><small class="roles"> Author, maintainer </small> </li>
-</ul>
-<h2>Dev status</h2>
-<ul class="list-unstyled">
-<li><a href="https://opensource.org/licenses/mit-license.php">MIT</a></li>
-<li><a href="LICENSE.html">LICENSE</a></li>
 </ul>
 </div>
 
