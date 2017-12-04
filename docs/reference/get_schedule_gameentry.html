@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Schedule Gameentry — get_schedule_gameentry • tidysportsfeeds</title>
+<title>Get Schedule Gameentry from MySportsFeeds.com — get_schedule_gameentry • tidysportsfeeds</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -75,7 +75,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Schedule Gameentry</h1>
+    <h1>Get Schedule Gameentry from MySportsFeeds.com</h1>
     </div>
 
     
@@ -104,12 +104,17 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
+<span class='no'>username</span> <span class='kw'>&lt;-</span> <span class='st'>"yourusername"</span>
+<span class='no'>password</span> <span class='kw'>&lt;-</span> <span class='st'>"yourpassword"</span>
+<span class='fu'>library</span>(<span class='no'>tidysportsfeeds</span>)
+<span class='fu'>library</span>(<span class='no'>mysportsfeedsR</span>)
+<span class='kw pkg'>mysportsfeedsR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/mysportsfeedsR/topics/authenticate_v1_0'>authenticate_v1_0</a></span>(<span class='no'>username</span>, <span class='no'>password</span>)
 <span class='no'>nba_gameentry</span> <span class='kw'>&lt;-</span>
-<span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>)
 <span class='no'>nhl_gameentry</span> <span class='kw'>&lt;-</span>
-<span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>)
 <span class='no'>nfl_gameentry</span> <span class='kw'>&lt;-</span>
-<span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-regular"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_schedule_gameentry'>get_schedule_gameentry</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>, <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-regular"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
