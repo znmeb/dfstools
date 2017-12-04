@@ -1,6 +1,0 @@
-[submodule "mysportsfeeds-r"]
-	path = mysportsfeeds-r
-	url = git@github.com:znmeb/mysportsfeeds-r.git
-[submodule "stattleship-r"]
-	path = stattleship-r
-	url = git@github.com:znmeb/stattleship-r.git
