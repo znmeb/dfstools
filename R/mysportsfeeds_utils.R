@@ -1,15 +1,18 @@
-#' @title Install MySportsFeeds Wrapper
-#' @name install_mysportsfeeds_wrapper
-#' @description Installs the MySportsFeed R wrapper from GitHub
-#' @export install_mysportsfeeds_wrapper
-#' @return return value from devtools::install_github
+#' @title Install MySportsFeeds and Stattleship Wrappers
+#' @name install_api_wrappers
+#' @description Installs the MySportsFeed and Stattleship R wrappers from GitHub
+#' @export install_api_wrappers
+#' @return list of return values from the wrapper installs
 #' @examples
 #' \dontrun{
-#' tidysportsfeeds::install_mysportsfeeds_wrapper()
+#' install_status <- tidysportsfeeds::install_api_wrappers()
 #' }
 
-install_mysportsfeeds_wrapper <- function() {
-  devtools::install_github("znmeb/mysportsfeeds-r")
+install_api_wrappers <- function() {
+  list(
+    mysportsfeeds = devtools::install_github("znmeb/mysportsfeeds-r", force = TRUE),
+    stattleship = devtools::install_github("znmeb/stattleship-r", force = TRUE)
+  )
 }
 
 #' @title Get Schedule Gameentry
