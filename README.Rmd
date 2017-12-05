@@ -1,5 +1,5 @@
 ---
-title: "tidysportsfeeds - Tidy Data Acquistion from Sports Data APIs"
+title: "tidysportsfeeds - Tidy Data Analytics from Sports Data APIs"
 output: github_document
 ---
 

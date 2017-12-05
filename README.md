@@ -1,4 +1,4 @@
-tidysportsfeeds - Tidy Data Acquistion from Sports Data APIs
+tidysportsfeeds - Tidy Data Analytics from Sports Data APIs
 ================
 
 ## Getting started
