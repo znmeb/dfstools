@@ -13,4 +13,7 @@ RoxygenNote: 6.0.1
 Imports: devtools,
     tibble,
     mysportsfeedsR,
-    stattleshipR
+    stattleshipR,
+    dplyr,
+    lubridate,
+    mvglmmRank
