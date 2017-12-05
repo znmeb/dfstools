@@ -48,3 +48,4 @@ sports.
 
   - [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb)
   - [MySportsFeeds](https://www.patreon.com/mysportsfeeds/posts)
+  - [Stattleship](https://www.patreon.com/stattleship/posts)
