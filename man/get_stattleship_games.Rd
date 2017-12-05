@@ -4,12 +4,10 @@
 \alias{get_stattleship_games}
 \title{Get Stattleship Games}
 \usage{
-get_stattleship_games(league = "nba", sport = "basketball")
+get_stattleship_games(league = "nba")
 }
 \arguments{
 \item{league}{("nba", "nhl", "nfl" or "mlb")}
-
-\item{sport}{e.g., "basketball"}
 }
 \value{
 a tibble with the games for the season. The whole schedule is given,
@@ -25,10 +23,10 @@ library(tidysportsfeeds)
 library(stattleshipR)
 stattleshipR::set_token(token)
 nba_stattleship_games <-
-  tidysportsfeeds::get_stattleship_games(league = "nba", sport = "basketball")
+  tidysportsfeeds::get_stattleship_games(league = "nba")
 nhl_stattleship_games <-
-  tidysportsfeeds::get_stattleship_games(league = "nhl", sport = "hockey")
+  tidysportsfeeds::get_stattleship_games(league = "nhl")
 nfl_stattleship_games <-
-  tidysportsfeeds::get_stattleship_games(league = "nfl", sport = "football")
+  tidysportsfeeds::get_stattleship_games(league = "nfl")
 }
 }

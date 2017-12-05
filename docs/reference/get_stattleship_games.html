@@ -87,7 +87,7 @@
     <p>Gets a schedule 'gameentry' object from the MySportsFeeds.com API</p>
     
 
-    <pre class="usage"><span class='fu'>get_stattleship_games</span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='kw'>sport</span> <span class='kw'>=</span> <span class='st'>"basketball"</span>)</pre>
+    <pre class="usage"><span class='fu'>get_stattleship_games</span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -95,10 +95,6 @@
     <tr>
       <th>league</th>
       <td><p>("nba", "nhl", "nfl" or "mlb")</p></td>
-    </tr>
-    <tr>
-      <th>sport</th>
-      <td><p>e.g., "basketball"</p></td>
     </tr>
     </table>
     
@@ -115,11 +111,11 @@ with games as yet unplayed having scores of zero.</p>
 <span class='fu'>library</span>(<span class='no'>stattleshipR</span>)
 <span class='kw pkg'>stattleshipR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stattleshipR/topics/set_token'>set_token</a></span>(<span class='no'>token</span>)
 <span class='no'>nba_stattleship_games</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='kw'>sport</span> <span class='kw'>=</span> <span class='st'>"basketball"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
 <span class='no'>nhl_stattleship_games</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>, <span class='kw'>sport</span> <span class='kw'>=</span> <span class='st'>"hockey"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>)
 <span class='no'>nfl_stattleship_games</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>, <span class='kw'>sport</span> <span class='kw'>=</span> <span class='st'>"football"</span>)
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_stattleship_games'>get_stattleship_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
