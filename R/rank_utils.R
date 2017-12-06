@@ -249,3 +249,32 @@ stattleship_game_data <- function(stattleship_games) {
     dplyr::select(home:OT, started_at, ended_at)
   return(game_data)
 }
+
+#' @title Stattleship upcoming games
+#' @name stattleship_upcoming_games
+#' @description creates a data frame with upcoming games
+#' @export stattleship_upcoming_games
+#' @importFrom dplyr %>%
+#' @param stattleship_games "games" tibble from Stattleship API
+#' @return a game data dataframe
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' nba_stattleship_games <-
+#'   tidysportsfeeds::get_stattleship_games(league = "nba")
+#' nba_game_data <- tidysportsfeeds::stattleship_upcoming_games(nba_stattleship_games)
+#' }
+
+stattleship_upcoming_games <- function(stattleship_games) {
+  game_data <- stattleship_games %>%
+    dplyr::filter(status == "upcoming") %>%
+    dplyr::arrange(started_at) %>%
+    dplyr::mutate(
+      home = sub("^.* vs ", "", label),
+      away = sub(" vs .*$", "", label)) %>%
+    dplyr::select(started_at, away, home)
+  return(game_data)
+}
