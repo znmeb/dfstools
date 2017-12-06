@@ -8,7 +8,15 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "away_prob_w",
   "data_set",
   "games",
-  "own_team"
+  "own_team",
+  "status",
+  "started_at",
+  "label",
+  "home_team_score",
+  "away_team_score",
+  "at_neutral_site",
+  "period",
+  "ended_at"
 ))
 
 #' @title Game predict
@@ -202,4 +210,42 @@ collect_game_data <- function(gbs, pmg, end_date) {
   joined.df$date <- as.character(joined.df$date)
 
     return(joined.df)
+}
+
+#' @title Stattleship collect game data
+#' @name stattleship_game_data
+#' @description creates an input game data file for mvglmmRank
+#' @export stattleship_game_data
+#' @importFrom dplyr %>%
+#' @param stattleship_games "games" tibble from Stattleship API
+#' @return a game data dataframe
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' nba_stattleship_games <-
+#'   tidysportsfeeds::get_stattleship_games(league = "nba")
+#' nba_game_data <- tidysportsfeeds::stattleship_game_data(nba_stattleship_games)
+#' }
+
+stattleship_game_data <- function(stattleship_games) {
+
+  # compute periods per game for overtime detection
+  league = sub("-.*$", "", stattleship_games$slug)[1]
+  if (league == "nba" || league == "nfl") ppg <- 4
+  if (league == "nhl") ppg <- 3
+  game_data <- stattleship_games %>%
+    dplyr::filter(status == "closed") %>%
+    dplyr::arrange(started_at) %>%
+    dplyr::mutate(
+      home = sub("^.* vs ", "", label),
+      away = sub(" vs .*$", "", label),
+      home.response = home_team_score,
+      away.response = away_team_score,
+      neutral.site = ifelse(is.na(at_neutral_site), 0, 1),
+      OT = ifelse(period > ppg, 1, 0)) %>%
+    dplyr::select(home:OT, started_at, ended_at)
+  return(game_data)
 }
