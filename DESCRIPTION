@@ -17,3 +17,6 @@ Imports: devtools,
     dplyr,
     lubridate,
     mvglmmRank
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr
