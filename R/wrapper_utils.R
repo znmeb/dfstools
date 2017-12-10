@@ -5,11 +5,11 @@
   return(sports[league])
 }
 
-#' @title Get Stattleship Games
-#' @name get_stattleship_games
-#' @description Gets a schedule 'gameentry' object from the MySportsFeeds.com API
-#' @export get_stattleship_games
-#' @import stattleshipR
+#' @title Get Current Season Games from Stattleship API
+#' @name get_games
+#' @description Gets a schedule 'gameentry' object from the stattleship.com API
+#' @export get_games
+#' @importFrom stattleshipR ss_get_result
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @return a tibble with the games for the season. The whole schedule is given,
 #' with games as yet unplayed having scores of zero.
@@ -19,23 +19,23 @@
 #' library(tidysportsfeeds)
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
-#' nba_stattleship_games <-
-#'   tidysportsfeeds::get_stattleship_games(league = "nba")
-#' nhl_stattleship_games <-
-#'   tidysportsfeeds::get_stattleship_games(league = "nhl")
-#' nfl_stattleship_games <-
-#'   tidysportsfeeds::get_stattleship_games(league = "nfl")
+#' nba_games <-
+#'   tidysportsfeeds::get_games(league = "nba")
+#' nhl_games <-
+#'   tidysportsfeeds::get_games(league = "nhl")
+#' nfl_games <-
+#'   tidysportsfeeds::get_games(league = "nfl")
 #' }
 
-get_stattleship_games <- function(league = "nba") {
+get_games <- function(league) {
   result <- stattleshipR::ss_get_result(
     league = league,
     sport = .sport(league),
     ep = "games",
     walk = TRUE,
     verbose = FALSE)
-  stattleship_games <- tibble::as_tibble(
-    do.call("rbind", lapply(result, function(x) x$games)))
+  return(tibble::as_tibble(
+    do.call("rbind", lapply(result, function(x) x$games))))
 }
 
 #' @title Get MySportsFeed DFS data
