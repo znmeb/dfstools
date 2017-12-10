@@ -10,13 +10,14 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/znmeb/tidysportsfeeds
 RoxygenNote: 6.0.1
-Imports: devtools,
-    tibble,
+Imports: tibble,
     mysportsfeedsR,
     stattleshipR,
     dplyr,
     lubridate,
     mvglmmRank
+Remotes: znmeb/mysportsfeeds-r,
+    znmeb/stattleship-r
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

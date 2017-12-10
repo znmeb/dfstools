@@ -1,21 +1,3 @@
-#' @title Install MySportsFeeds and Stattleship Wrappers
-#' @name install_api_wrappers
-#' @description Installs the MySportsFeed and Stattleship R wrappers from GitHub
-#' @export install_api_wrappers
-#' @return list of return values from the wrapper installs
-#' @examples
-#' \dontrun{
-#' install_status <- tidysportsfeeds::install_api_wrappers()
-#' }
-
-install_api_wrappers <- function() {
-  list(
-    mysportsfeeds =
-      devtools::install_github("znmeb/mysportsfeeds-r", force = TRUE),
-    stattleship =
-      devtools::install_github("znmeb/stattleship-r", force = TRUE))
-}
-
 # internal function to look up sport name
 .sport <- function(league) {
   sports <- c("basketball", "hockey", "football", "baseball")
