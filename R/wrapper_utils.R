@@ -162,12 +162,26 @@ get_players <- function(league) {
 #' }
 
 get_game_logs <- function(league) {
+  start <- Sys.time()
   result <- stattleshipR::ss_get_result(
     league = league,
     sport = .sport(league),
     ep = "game_logs",
     walk = TRUE,
     verbose = FALSE)
-  #return(tibble::as_tibble(
-    #do.call("rbind", lapply(result, function(x) x$game_logs))))
+  download <- Sys.time()
+  game_logs <- tibble::as_tibble(
+    do.call("rbind", lapply(result, function(x) x$game_logs)))
+  teams <- tibble::as_tibble(unique(
+    do.call("rbind", lapply(result, function(x) x$teams))))
+  players <- tibble::as_tibble(unique(
+    do.call("rbind", lapply(result, function(x) x$players))))
+  done <- Sys.time()
+  return(list(
+    start = start,
+    download = download,
+    done = done,
+    teams = teams,
+    players = players,
+    game_logs = game_logs))
 }
