@@ -140,7 +140,7 @@ get_players <- function(league) {
     do.call("rbind", lapply(result, function(x) x$players))))
 }
 
-#' @title Get Current Season PLayers from Stattleship API
+#' @title Get Current Season Game Logs from Stattleship API
 #' @name get_game_logs
 #' @description Gets the game_logs for a league's current season from the stattleship.com API
 #' @export get_game_logs
@@ -184,4 +184,48 @@ get_game_logs <- function(league) {
     teams = teams,
     players = players,
     game_logs = game_logs))
+}
+
+#' @title Get Current Season Play-by-Play Log from Stattleship API
+#' @name get_pbp_log
+#' @description Gets the play-by-play log for a current season game from the stattleship.com API
+#' @export get_pbp_log
+#' @importFrom stattleshipR ss_get_result
+#' @param league ("nba", "nhl", "nfl" or "mlb")
+#' @param game_slug game slug from the "games" data frame for the season
+#' @return a tibble with the play-by-play log for the game
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' nhl_pbp_log <- tidysportsfeeds::get_pbp_log(
+#'   league = "nhl", game_slug = "nhl-2017-2018-phi-sj-2017-10-4-1930")
+#' }
+
+get_pbp_log <- function(league, game_slug) {
+  start <- Sys.time()
+  result <- stattleshipR::ss_get_result(
+    league = league,
+    sport = .sport(league),
+    ep = paste("play_by_play", game_slug, sep = "/"),
+    query = list(include_penalties = 1, include_stats = 1),
+    walk = TRUE,
+    verbose = FALSE)
+  download <- Sys.time()
+  play_by_play <- tibble::as_tibble(
+    do.call("rbind", lapply(result, function(x) x$play_by_play)))
+  teams <- tibble::as_tibble(unique(
+    do.call("rbind", lapply(result, function(x) x$teams))))
+  players <- tibble::as_tibble(unique(
+    do.call("rbind", lapply(result, function(x) x$players))))
+  done <- Sys.time()
+  return(list(
+    start = start,
+    download = download,
+    done = done,
+    teams = teams,
+    players = players,
+    play_by_play = play_by_play))
 }
