@@ -168,50 +168,6 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "away.response"
 ))
 
-#' @title Collect game data
-#' @name game_data
-#' @description creates an input game data file for mvglmmRank
-#' @export collect_game_data
-#' @importFrom dplyr %>%
-#' @param gbs game box score data frame
-#' @param pmg player minutes per game (240 for NBA, 200 for WNBA)
-#' @param end_date the latest date to use as input
-#' @return a game data dataframe
-
-collect_game_data <- function(gbs, pmg, end_date) {
-
-  # compute points and OT columns
-  pmo <- 25 # player-minutes per overtime
-  df <- gbs
-  df$OT <- (round(gbs$min, 0) - pmg) / pmo
-  df <- dplyr::filter(df, date <= lubridate::ymd(end_date))
-
-  # break out home and away data frames
-  home.df <- dplyr::filter(df, venue_r_h == "H")
-  away.df <- dplyr::filter(df, venue_r_h == "R")
-  home.df <- dplyr::transmute(
-    home.df,
-    date = date,
-    away = opp_team,
-    home = own_team,
-    home.response = pts)
-  away.df <- dplyr::transmute(
-    away.df,
-    date = date,
-    away = own_team,
-    home = opp_team,
-    away.response = pts,
-    OT = OT)
-  joined.df <- dplyr::full_join(away.df, home.df) %>%
-    dplyr::mutate(
-      total = home.response + away.response,
-      home_mov = home.response - away.response) %>%
-    dplyr::arrange(date)
-  joined.df$date <- as.character(joined.df$date)
-
-    return(joined.df)
-}
-
 #' @title Stattleship collect game data
 #' @name stattleship_game_data
 #' @description creates an input game data file for mvglmmRank
