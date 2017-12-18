@@ -3,49 +3,42 @@ tidysportsfeeds - Tidy Data Analytics from Sports Data APIs
 
 ## Getting started
 
-1.  Go to <https://www.mysportsfeeds.com/> and register an account.
+1.  Read the [code of
+    conduct](https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.md)
+    and [contributor’s
+    guide](https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.md).
+2.  Sign up for an account at
+    [MySportsFeeds.com](https://www.mysportsfeeds.com/) and
+    [Stattleship.com](https://api.stattleship.com/). You will need
+    accounts on both to use this package; the two APIs have different
+    capabilities and the R package uses both APIs.
+3.  Sign up for monthly support of the API providers on Patreon. After
+    you do that, they will activate your logins / API tokens.
+      - [MySportsFeeds.com](https://www.patreon.com/mysportsfeeds)
+      - [Stattleship.com](https://www.patreon.com/stattleship)
+4.  If you find this package useful, you can support my work on Patreon
+    at <https://www.patreon.com/znmeb/posts>. ***Supporting me is not
+    required to use the package\!***
 
-2.  Sign in.
+## Installing the package
 
-3.  Browse to <https://www.mysportsfeeds.com/data-feeds/api-docs>.
-
-4.  Use the selectors on the left to pick your sport, season and feed.
-    I’ll use NBA, 2016-2017 regular and Daily DFS for the example.
-
-5.  Now you’re on the documentation page for the sport, season and feed.
-    Click on the “CSV” sample.
+1.  Install git, R and RStudio for your work environment. This is a
+    developers’ release; for the moment, you’ll need to be familiar with
+    git / GitHub, R and RStudio.
     
-    If you get an authentication request, enter your user name and
-    password. You can then download the file, or, if you have a
-    spreadsheet program installed, open the file in it.
+    I test regularly on Windows and Arch Linux, but any environment that
+    supports RStudio should work. If anything doesn’t work or the
+    documentation is unclear, please file an issue at
+    <https://github.com/znmeb/tidysportsfeeds/issues/new>
 
-## What’s in this package?
+2.  Open RStudio and install the packages `devtools` and `roxygen2` from
+    CRAN.
 
-As you’ve seen above, MySportsFeeds.com allows you to directly download
-files in spreadsheet-friendly CSV format. You can also set it up to
-email you the data. As long as you’re doing non-commercial analysis on
-historical data, everything is free.
-
-But if you want to build up a database of historical data, or want to
-track the current season, you’ll want to automate things. Enter
-`tidysportsfeeds`. I’m doing daily fantasy sports analytics, so I want
-to build up databases and build projection / optimization software.
-`tidysportsfeeds` is a collection of the front-end part of this - the
-workflow from the raw API to tibbles.
-
-## What now?
-
-That depends on what you want to do with the data. I recommend exploring
-the data on MySportsFeeds.com with a browser and a spreadsheet as
-described above. Once you know what’s on the site, you can focus on a
-workflow.
-
-I’m building this package as a general tool to get data into tibbles.
-But the examples will nearly all be relevant to NBA daily fantasy
-sports.
+3.  In the RStudio console, type
+    `devtools::install_github("znmeb/tidysportsfeeds")`.
 
 ## Patreon links
 
-  - [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb)
+  - [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb/posts)
   - [MySportsFeeds](https://www.patreon.com/mysportsfeeds/posts)
   - [Stattleship](https://www.patreon.com/stattleship/posts)

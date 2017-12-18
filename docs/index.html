@@ -78,23 +78,27 @@
 <div class="contents">
 <section id="getting-started" class="level2"><h2>Getting started</h2>
 <ol type="1">
-<li>Go to <a href="https://www.mysportsfeeds.com/" class="uri">https://www.mysportsfeeds.com/</a> and register an account.</li>
-<li>Sign in.</li>
-<li>Browse to <a href="https://www.mysportsfeeds.com/data-feeds/api-docs" class="uri">https://www.mysportsfeeds.com/data-feeds/api-docs</a>.</li>
-<li>Use the selectors on the left to pick your sport, season and feed. I’ll use NBA, 2016-2017 regular and Daily DFS for the example.</li>
-<li>
-<p>Now you’re on the documentation page for the sport, season and feed. Click on the “CSV” sample.</p>
-<p>If you get an authentication request, enter your user name and password. You can then download the file, or, if you have a spreadsheet program installed, open the file in it.</p>
-</li>
-</ol></section><section id="whats-in-this-package" class="level2"><h2>What’s in this package?</h2>
-<p>As you’ve seen above, MySportsFeeds.com allows you to directly download files in spreadsheet-friendly CSV format. You can also set it up to email you the data. As long as you’re doing non-commercial analysis on historical data, everything is free.</p>
-<p>But if you want to build up a database of historical data, or want to track the current season, you’ll want to automate things. Enter <code>tidysportsfeeds</code>. I’m doing daily fantasy sports analytics, so I want to build up databases and build projection / optimization software. <code>tidysportsfeeds</code> is a collection of the front-end part of this - the workflow from the raw API to tibbles.</p>
-</section><section id="what-now" class="level2"><h2>What now?</h2>
-<p>That depends on what you want to do with the data. I recommend exploring the data on MySportsFeeds.com with a browser and a spreadsheet as described above. Once you know what’s on the site, you can focus on a workflow.</p>
-<p>I’m building this package as a general tool to get data into tibbles. But the examples will nearly all be relevant to NBA daily fantasy sports.</p>
-</section><section id="patreon-links" class="level2"><h2>Patreon links</h2>
+<li>Read the <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.md">code of conduct</a> and <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.md">contributor’s guide</a>.</li>
+<li>Sign up for an account at <a href="https://www.mysportsfeeds.com/">MySportsFeeds.com</a> and <a href="https://api.stattleship.com/">Stattleship.com</a>. You will need accounts on both to use this package; the two APIs have different capabilities and the R package uses both APIs.</li>
+<li>Sign up for monthly support of the API providers on Patreon. After you do that, they will activate your logins / API tokens.
 <ul>
-<li><a href="https://www.patreon.com/znmeb">M. Edward (Ed) Borasky</a></li>
+<li><a href="https://www.patreon.com/mysportsfeeds">MySportsFeeds.com</a></li>
+<li><a href="https://www.patreon.com/stattleship">Stattleship.com</a></li>
+</ul>
+</li>
+<li>If you find this package useful, you can support my work on Patreon at <a href="https://www.patreon.com/znmeb/posts" class="uri">https://www.patreon.com/znmeb/posts</a>. <strong><em>Supporting me is not required to use the package!</em></strong>
+</li>
+</ol></section><section id="installing-the-package" class="level2"><h2>Installing the package</h2>
+<ol type="1">
+<li>
+<p>Install git, R and RStudio for your work environment. This is a developers’ release; for the moment, you’ll need to be familiar with git / GitHub, R and RStudio.</p>
+I test regularly on Windows and Arch Linux, but any environment that supports RStudio should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/tidysportsfeeds/issues/new" class="uri">https://github.com/znmeb/tidysportsfeeds/issues/new</a>
+</li>
+<li>Open RStudio and install the packages <code>devtools</code> and <code>roxygen2</code> from CRAN.</li>
+<li><p>In the RStudio console, type <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("znmeb/tidysportsfeeds")</a></code>.</p></li>
+</ol></section><section id="patreon-links" class="level2"><h2>Patreon links</h2>
+<ul>
+<li><a href="https://www.patreon.com/znmeb/posts">M. Edward (Ed) Borasky</a></li>
 <li><a href="https://www.patreon.com/mysportsfeeds/posts">MySportsFeeds</a></li>
 <li><a href="https://www.patreon.com/stattleship/posts">Stattleship</a></li>
 </ul></section>
