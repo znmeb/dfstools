@@ -137,18 +137,19 @@ rank_scores <- function(aug_schedule) {
 #' @description runs mvglmmRank::mvglmmRank against a game box score and points function
 #' @export build_model
 #' @importFrom dplyr %>%
-#' @param game_data a game.data input file
+#' @param season a tibble returned from the Stattleship API via `get_games`
 #' @param method method to be passed to mvglmmRank - default is "PB1"
 #' @param first.order flag to be passed to mvglmmRank - default is TRUE
 #' @param OT.flag flag to be passes to mvglmmRank - default is TRUE
 #' @return an mvglmmRank model object
 
 build_model <- function(
-  game_data,
+  season,
   method = "PB1",
   first.order = TRUE,
   OT.flag = TRUE
 ) {
+  game_data <- .stattleship_game_data(season)
   result <- mvglmmRank::mvglmmRank(
     game_data,
     method = method,
@@ -168,25 +169,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "away.response"
 ))
 
-#' @title Stattleship collect game data
-#' @name stattleship_game_data
-#' @description creates an input game data file for mvglmmRank
-#' @export stattleship_game_data
-#' @importFrom dplyr %>%
-#' @param stattleship_games "games" tibble from Stattleship API
-#' @return a game data dataframe
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(tidysportsfeeds)
-#' library(stattleshipR)
-#' stattleshipR::set_token(token)
-#' nba_stattleship_games <-
-#'   tidysportsfeeds::get_stattleship_games(league = "nba")
-#' nba_game_data <- tidysportsfeeds::stattleship_game_data(nba_stattleship_games)
-#' }
-
-stattleship_game_data <- function(stattleship_games) {
+## intenral function to extract input for model
+.stattleship_game_data <- function(stattleship_games) {
 
   # compute periods per game for overtime detection
   league = sub("-.*$", "", stattleship_games$slug)[1]

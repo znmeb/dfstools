@@ -4,10 +4,10 @@
 \alias{build_model}
 \title{Build model}
 \usage{
-build_model(game_data, method = "PB1", first.order = TRUE, OT.flag = TRUE)
+build_model(season, method = "PB1", first.order = TRUE, OT.flag = TRUE)
 }
 \arguments{
-\item{game_data}{a game.data input file}
+\item{season}{a tibble returned from the Stattleship API via `get_games`}
 
 \item{method}{method to be passed to mvglmmRank - default is "PB1"}
 
