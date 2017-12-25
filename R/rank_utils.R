@@ -24,71 +24,72 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @description Creates a data frame with game predictions
 #' @export game_predict
 #' @importFrom dplyr %>%
-#' @param model a model from mvglmmRank::mvglmmRank
-#' @param schedule a data frame team names in "away" and "home" columns
-#' @return the schedule augmented with prediction columns
+#' @param model a model from build_model
+#' @param season a tibble returned from the Stattleship API via `get_games`
+#' @return the upcoming games from the season augmented with prediction columns
 
 game_predict <-
-  function(model, schedule) {
-  aug_schedule <- dplyr::mutate(schedule, method = model$method)
+  function(model, season) {
+    schedule <- .stattleship_upcoming_games(season)
+    aug_schedule <- dplyr::mutate(schedule, method = model$method)
 
-  # are there normal score ratings?
-  if (!is.null(model$n.ratings.offense)) {
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      away_score_p =
-        model$n.mean["LocationAway"] +
-        model$n.ratings.offense[away] -
-        model$n.ratings.defense[home],
-      home_score_p =
-        model$n.mean["LocationHome"] +
-        model$n.ratings.offense[home] -
-        model$n.ratings.defense[away])
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      total_p =  home_score_p + away_score_p,
-      home_mov_p = home_score_p - away_score_p,
-      home_ratio_p = home_score_p / away_score_p)
-  }
+    # are there normal score ratings?
+    if (!is.null(model$n.ratings.offense)) {
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        away_score_p =
+          model$n.mean["LocationAway"] +
+          model$n.ratings.offense[away] -
+          model$n.ratings.defense[home],
+        home_score_p =
+          model$n.mean["LocationHome"] +
+          model$n.ratings.offense[home] -
+          model$n.ratings.defense[away])
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        total_p =  home_score_p + away_score_p,
+        home_mov_p = home_score_p - away_score_p,
+        home_ratio_p = home_score_p / away_score_p)
+    }
 
-  # are there Poisson score ratings?
-  if (!is.null(model$p.ratings.offense)) {
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      away_score_p =
-        exp(
-          model$p.mean["LocationAway"] +
-          model$p.ratings.offense[away] -
-          model$p.ratings.defense[home]),
-      home_score_p =
-        exp(
-          model$p.mean["LocationHome"] +
-          model$p.ratings.offense[home] -
-          model$p.ratings.defense[away]))
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      total_p = home_score_p + away_score_p,
-      home_mov_p = home_score_p - away_score_p,
-      home_ratio_p = home_score_p / away_score_p)
-  }
+    # are there Poisson score ratings?
+    if (!is.null(model$p.ratings.offense)) {
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        away_score_p =
+          exp(
+            model$p.mean["LocationAway"] +
+            model$p.ratings.offense[away] -
+            model$p.ratings.defense[home]),
+        home_score_p =
+          exp(
+            model$p.mean["LocationHome"] +
+            model$p.ratings.offense[home] -
+            model$p.ratings.defense[away]))
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+          total_p = home_score_p + away_score_p,
+        home_mov_p = home_score_p - away_score_p,
+        home_ratio_p = home_score_p / away_score_p)
+    }
 
-  # are there binomial win probability ratings?
-  if (!is.null(model$b.ratings)) {
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      home_prob_w =
-        stats::pnorm(
-          model$b.mean +
-          model$b.ratings[home] -
-          model$b.ratings[away]))
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      away_prob_w = 1 - home_prob_w)
-    aug_schedule <- dplyr::mutate(
-      aug_schedule,
-      entropy =
-        -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
-  }
+    # are there binomial win probability ratings?
+    if (!is.null(model$b.ratings)) {
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        home_prob_w =
+          stats::pnorm(
+            model$b.mean +
+            model$b.ratings[home] -
+            model$b.ratings[away]))
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        away_prob_w = 1 - home_prob_w)
+      aug_schedule <- dplyr::mutate(
+        aug_schedule,
+        entropy =
+          -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
+    }
 
   return(aug_schedule)
 }
@@ -190,25 +191,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   return(game_data)
 }
 
-#' @title Stattleship upcoming games
-#' @name stattleship_upcoming_games
-#' @description creates a data frame with upcoming games
-#' @export stattleship_upcoming_games
-#' @importFrom dplyr %>%
-#' @param stattleship_games "games" tibble from Stattleship API
-#' @return a game data dataframe
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(tidysportsfeeds)
-#' library(stattleshipR)
-#' stattleshipR::set_token(token)
-#' nba_stattleship_games <-
-#'   tidysportsfeeds::get_stattleship_games(league = "nba")
-#' nba_game_data <- tidysportsfeeds::stattleship_upcoming_games(nba_stattleship_games)
-#' }
-
-stattleship_upcoming_games <- function(stattleship_games) {
+# internal function to extract upcoming games
+.stattleship_upcoming_games <- function(stattleship_games) {
   game_data <- stattleship_games %>%
     dplyr::filter(status == "upcoming") %>%
     dplyr::arrange(started_at) %>%

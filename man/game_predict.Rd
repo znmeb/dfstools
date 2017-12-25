@@ -4,15 +4,15 @@
 \alias{game_predict}
 \title{Game predict}
 \usage{
-game_predict(model, schedule)
+game_predict(model, season)
 }
 \arguments{
-\item{model}{a model from mvglmmRank::mvglmmRank}
+\item{model}{a model from build_model}
 
-\item{schedule}{a data frame team names in "away" and "home" columns}
+\item{season}{a tibble returned from the Stattleship API via `get_games`}
 }
 \value{
-the schedule augmented with prediction columns
+the upcoming games from the season augmented with prediction columns
 }
 \description{
 Creates a data frame with game predictions
