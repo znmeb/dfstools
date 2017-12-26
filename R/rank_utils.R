@@ -21,6 +21,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @description Creates a tibble with projections for the rest of the games in a season
 #' @export project_season
 #' @importFrom dplyr %>%
+#' @importFrom magrittr %<>%
 #' @param model a model from build_model
 #' @param season a tibble returned from the Stattleship API via `get_seaon`
 #' @return the upcoming games from the season augmented with projection columns:
@@ -39,13 +40,12 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 
 project_season <-
   function(model, season) {
-    schedule <- .stattleship_upcoming_games(season)
-    aug_schedule <- dplyr::mutate(schedule, method = model$method)
+    schedule <- .stattleship_upcoming_games(season) %>%
+      dplyr::mutate(method = model$method)
 
     # are there normal score ratings?
     if (!is.null(model$n.ratings.offense)) {
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
+      schedule %<>% dplyr::mutate(
         away_score_p =
           model$n.mean["LocationAway"] +
           model$n.ratings.offense[away] -
@@ -53,17 +53,14 @@ project_season <-
         home_score_p =
           model$n.mean["LocationHome"] +
           model$n.ratings.offense[home] -
-          model$n.ratings.defense[away])
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
+          model$n.ratings.defense[away],
         total_p =  home_score_p + away_score_p,
         home_mov_p = home_score_p - away_score_p)
     }
 
     # are there Poisson score ratings?
     if (!is.null(model$p.ratings.offense)) {
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
+      schedule %<>% dplyr::mutate(
         away_score_p =
           exp(
             model$p.mean["LocationAway"] +
@@ -73,32 +70,24 @@ project_season <-
           exp(
             model$p.mean["LocationHome"] +
             model$p.ratings.offense[home] -
-            model$p.ratings.defense[away]))
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
-          total_p = home_score_p + away_score_p,
+            model$p.ratings.defense[away]),
+        total_p = home_score_p + away_score_p,
         home_mov_p = home_score_p - away_score_p)
     }
 
     # are there binomial win probability ratings?
     if (!is.null(model$b.ratings)) {
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
+      schedule %<>% dplyr::mutate(
         home_prob_w =
           stats::pnorm(
             model$b.mean +
             model$b.ratings[home] -
-            model$b.ratings[away]))
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
-        away_prob_w = 1 - home_prob_w)
-      aug_schedule <- dplyr::mutate(
-        aug_schedule,
-        entropy =
-          -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
+            model$b.ratings[away]),
+        away_prob_w = 1 - home_prob_w,
+        entropy = -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
     }
 
-  return(aug_schedule)
+  return(schedule)
 }
 
 #' @title Build model
