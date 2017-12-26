@@ -48,9 +48,8 @@ The four tasks I have coded (subject to some refactoring to be done) are
 1.  Predicting game scores and win probabilities via `mvglmmRank`,
 2.  Visualization of players’ and teams’ fantasy point distributions
     with `ggplot2`,
-3.  Predicting fantasy points via a general linear model (`MASS::glm`),
-    and
-4.  Archetypal analysis (`Anthropometry`).
+3.  Archetypoidal analysis (`Anthropometry`), and
+4.  Predicting fantasy points via a general linear model (`MASS::glm`).
 
 ## Patreon links
 
