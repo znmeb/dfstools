@@ -45,9 +45,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/exploringdfs.html">Exploring Daily Fantasy Sports Data</a>
-    </li>
-    <li>
       <a href="../articles/mvglmmranking.html">Projecting a Season with mvglmmRank</a>
     </li>
   </ul>
@@ -75,203 +72,69 @@
       <h1>Projecting a Season with mvglmmRank</h1>
                         <h4 class="author">M. Edward (Ed) Borasky</h4>
             
-            <h4 class="date">2017-12-23</h4>
+            <h4 class="date">2017-12-25</h4>
           </div>
 
     
     
 <div class="contents">
-<p>Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The <code>html_vignette</code> output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The <code>html_vignette</code> format:</p>
+<section id="getting-started" class="level2"><h2>Getting started</h2>
+<ol type="1">
+<li>You’ll need an API key for Stattleship. Go to <a href="https://www.patreon.com/stattleship/posts" class="uri">https://www.patreon.com/stattleship/posts</a> to sign up.</li>
+<li>If you haven’t already, install <code>devtools</code>:<code>install.packages("devtools")</code>.</li>
+<li>Install <code>tidysportsfeeds</code>: <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("znmeb/tidysportsfeeds", build_vignettes = TRUE)</a></code>.</li>
+</ol></section><section id="setting-the-api-access-token" class="level2"><h2>Setting the API access token</h2>
+<ol type="1">
+<li>Go to the Stattleship API page <a href="https://api.stattleship.com/" class="uri">https://api.stattleship.com/</a> and sign in. Then press the <code>Copy Access Token</code> button.</li>
+<li>
+<p>Enter the following in the R console:</p>
+<pre><code>library(tidysportsfeeds)
+library(stattleshipR)
+set_token("paste_the_copied_access_token_here")</code></pre>
+</li>
+</ol></section><section id="downloading-the-current-season-for-a-league" class="level2"><h2>Downloading the current season for a league</h2>
+<ol type="1">
+<li>Choose your league. I’m going to use NBA.</li>
+<li>Acquire the tibble: <code>nba_season &lt;- get_season("nba")</code>.</li>
+</ol>
+<p>This will return a tibble of all the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
+</section><section id="projecting-the-rest-of-the-season" class="level2"><h2>Projecting the rest of the season</h2>
+<ol type="1">
+<li>Build the model: <code>nba_model &lt;- build_model(nba_season)</code>.</li>
+<li>Run the projections: <code>nba_projections &lt;- project_season(nba_model, nba_season)</code>.</li>
+<li>Save as a CSV file: <code><a href="http://www.rdocumentation.org/packages/readr/topics/write_delim">readr::write_excel_csv(nba_projections, "nba_projections.csv")</a></code>.</li>
+</ol></section><section id="faq" class="level2"><h2>FAQ</h2>
+<section id="what-do-the-columns-mean" class="level3"><h3>What do the columns mean?</h3>
 <ul>
-<li>Never uses retina figures</li>
-<li>Has a smaller default figure size</li>
-<li>Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style</li>
+<li>started_at: the scheduled game start time</li>
+<li>away: The away team name</li>
+<li>home: the home team name</li>
+<li>method: The method used to build the <code>mvglmmRank</code> model; the default is “PB1”.</li>
+<li>away_score_p: the projected score for the away team</li>
+<li>home_score_p: the projected score for the home team</li>
+<li>total_p: the projected total score</li>
+<li>home_mov_p: the projected home margin of victory (home score - away score)</li>
+<li>home_prob_w: the projected probability that the home team wins</li>
+<li>away_prob_w: the projected probability that the away team wins</li>
+<li>entropy: the projected Shannon entropy for the game</li>
 </ul>
-<section id="vignette-info" class="level2"><h2>Vignette Info</h2>
-<p>Note the various macros within the <code>vignette</code> section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the <code>title</code> field and the <code>\VignetteIndexEntry</code> to match the title of your vignette.</p>
-</section><section id="styles" class="level2"><h2>Styles</h2>
-<p>The <code>html_vignette</code> template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:</p>
-<pre><code>output: 
-  rmarkdown::html_vignette:
-    css: mystyles.css</code></pre>
-</section><section id="figures" class="level2"><h2>Figures</h2>
-<p>The figure sizes have been customised so that you can easily put two images side-by-side.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">plot</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">10</span>)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw">plot</span>(<span class="dv">10</span><span class="op">:</span><span class="dv">1</span>)</a></code></pre></div>
-<p><img src="mvglmmranking_files/figure-html/unnamed-chunk-1-1.png" width="672"><img src="mvglmmranking_files/figure-html/unnamed-chunk-1-2.png" width="672"></p>
-<p>You can enable figure captions by <code>fig_caption: yes</code> in YAML:</p>
-<pre><code>output:
-  rmarkdown::html_vignette:
-    fig_caption: yes</code></pre>
-<p>Then you can use the chunk option <code>fig.cap = "Your figure caption."</code> in <strong>knitr</strong>.</p>
-</section><section id="more-examples" class="level2"><h2>More Examples</h2>
-<p>You can write math expressions, e.g. <span class="math inline">\(Y = X\beta + \epsilon\)</span>, footnotes<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, and tables, e.g. using <code><a href="http://www.rdocumentation.org/packages/knitr/topics/kable">knitr::kable()</a></code>.</p>
-<table class="table">
-<thead><tr class="header">
-<th></th>
-<th style="text-align: right;">mpg</th>
-<th style="text-align: right;">cyl</th>
-<th style="text-align: right;">disp</th>
-<th style="text-align: right;">hp</th>
-<th style="text-align: right;">drat</th>
-<th style="text-align: right;">wt</th>
-<th style="text-align: right;">qsec</th>
-<th style="text-align: right;">vs</th>
-<th style="text-align: right;">am</th>
-<th style="text-align: right;">gear</th>
-<th style="text-align: right;">carb</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Mazda RX4</td>
-<td style="text-align: right;">21.0</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">160.0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: right;">3.90</td>
-<td style="text-align: right;">2.620</td>
-<td style="text-align: right;">16.46</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="even">
-<td>Mazda RX4 Wag</td>
-<td style="text-align: right;">21.0</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">160.0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: right;">3.90</td>
-<td style="text-align: right;">2.875</td>
-<td style="text-align: right;">17.02</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="odd">
-<td>Datsun 710</td>
-<td style="text-align: right;">22.8</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">108.0</td>
-<td style="text-align: right;">93</td>
-<td style="text-align: right;">3.85</td>
-<td style="text-align: right;">2.320</td>
-<td style="text-align: right;">18.61</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="even">
-<td>Hornet 4 Drive</td>
-<td style="text-align: right;">21.4</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">258.0</td>
-<td style="text-align: right;">110</td>
-<td style="text-align: right;">3.08</td>
-<td style="text-align: right;">3.215</td>
-<td style="text-align: right;">19.44</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td>Hornet Sportabout</td>
-<td style="text-align: right;">18.7</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">360.0</td>
-<td style="text-align: right;">175</td>
-<td style="text-align: right;">3.15</td>
-<td style="text-align: right;">3.440</td>
-<td style="text-align: right;">17.02</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="even">
-<td>Valiant</td>
-<td style="text-align: right;">18.1</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">225.0</td>
-<td style="text-align: right;">105</td>
-<td style="text-align: right;">2.76</td>
-<td style="text-align: right;">3.460</td>
-<td style="text-align: right;">20.22</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">1</td>
-</tr>
-<tr class="odd">
-<td>Duster 360</td>
-<td style="text-align: right;">14.3</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">360.0</td>
-<td style="text-align: right;">245</td>
-<td style="text-align: right;">3.21</td>
-<td style="text-align: right;">3.570</td>
-<td style="text-align: right;">15.84</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">3</td>
-<td style="text-align: right;">4</td>
-</tr>
-<tr class="even">
-<td>Merc 240D</td>
-<td style="text-align: right;">24.4</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">146.7</td>
-<td style="text-align: right;">62</td>
-<td style="text-align: right;">3.69</td>
-<td style="text-align: right;">3.190</td>
-<td style="text-align: right;">20.00</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="odd">
-<td>Merc 230</td>
-<td style="text-align: right;">22.8</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">140.8</td>
-<td style="text-align: right;">95</td>
-<td style="text-align: right;">3.92</td>
-<td style="text-align: right;">3.150</td>
-<td style="text-align: right;">22.90</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">2</td>
-</tr>
-<tr class="even">
-<td>Merc 280</td>
-<td style="text-align: right;">19.2</td>
-<td style="text-align: right;">6</td>
-<td style="text-align: right;">167.6</td>
-<td style="text-align: right;">123</td>
-<td style="text-align: right;">3.92</td>
-<td style="text-align: right;">3.440</td>
-<td style="text-align: right;">18.30</td>
-<td style="text-align: right;">1</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">4</td>
-<td style="text-align: right;">4</td>
-</tr>
-</tbody>
-</table>
-<p>Also a quote using <code>&gt;</code>:</p>
-<blockquote>
-<p>“He who gives up [code] safety for [code] speed deserves neither.” (<a href="https://twitter.com/hadleywickham/status/504368538874703872">via</a>)</p>
-</blockquote>
-</section><section class="footnotes"><hr>
-<ol>
-<li id="fn1"><p>A footnote here.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-</ol></section>
+<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of closeness. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
+<p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39.</p>
+</section><section id="how-good-are-the-projections" class="level3"><h3>How good are the projections?</h3>
+<p>They’re about as good as you can get given the inputs are just the scores of completed games. They won’t be as good as projections that take into account more detailed information from compeleted games.</p>
+<p>They won’t be as good as projections based on a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the “wisdom of the crowd”. Bottom line: don’t risk money on these numbers. I only use them as inputs for projecting player fantasy points.</p>
+</section><section id="where-can-i-find-details-on-mvglmmrank" class="level3"><h3>Where can I find details on <code>mvglmmRank</code>?</h3>
+<p>The package documentation is at <span class="citation" data-cites="Karl2015">Karl and Broatch (2015)</span>, but there’s not a lot of the mathematics there. <span class="citation" data-cites="Broatch2017">Broatch and Karl (2017)</span> gives the math and references earlier papers with more details.</p>
+</section></section><section id="references" class="level2 unnumbered"><h2>References</h2>
+<div id="refs" class="references">
+<div id="ref-Broatch2017">
+<p>Broatch, Jennifer E., and Andrew T. Karl. 2017. “Multivariate Generalized Linear Mixed Models for Joint Estimation of Sporting Outcomes.” <a href="https://arxiv.org/abs/1710.05284" class="uri">https://arxiv.org/abs/1710.05284</a>.</p>
+</div>
+<div id="ref-Karl2015">
+<p>Karl, Andrew T., and Jennifer Broatch. 2015. <em>MvglmmRank: Multivariate Generalized Linear Mixed Models for Ranking Sports Teams</em>. <a href="https://CRAN.R-project.org/package=mvglmmRank" class="uri">https://CRAN.R-project.org/package=mvglmmRank</a>.</p>
+</div>
+</div>
+</section>
 </div>
   </div>
 
@@ -280,10 +143,12 @@
       <h2 class="hasAnchor">
 <a href="#tocnav" class="anchor"></a>Contents</h2>
       <ul class="nav nav-pills nav-stacked">
-<li><a href="#vignette-info">Vignette Info</a></li>
-      <li><a href="#styles">Styles</a></li>
-      <li><a href="#figures">Figures</a></li>
-      <li><a href="#more-examples">More Examples</a></li>
+<li><a href="#getting-started">Getting started</a></li>
+      <li><a href="#setting-the-api-access-token">Setting the API access token</a></li>
+      <li><a href="#downloading-the-current-season-for-a-league">Downloading the current season for a league</a></li>
+      <li><a href="#projecting-the-rest-of-the-season">Projecting the rest of the season</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#references">References</a></li>
       </ul>
 </div>
       </div>

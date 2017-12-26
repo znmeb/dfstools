@@ -44,9 +44,9 @@ get_mysportsfeeds_dfs <- function(league, season) {
 }
 
 #' @title Get Current Season Games from Stattleship API
-#' @name get_games
+#' @name get_season
 #' @description Gets a schedule 'gameentry' object from the stattleship.com API
-#' @export get_games
+#' @export get_season
 #' @importFrom stattleshipR ss_get_result
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @return a tibble with the games for the season. The whole schedule is given,
@@ -58,14 +58,14 @@ get_mysportsfeeds_dfs <- function(league, season) {
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' nba_games <-
-#'   tidysportsfeeds::get_games(league = "nba")
+#'   tidysportsfeeds::get_season(league = "nba")
 #' nhl_games <-
-#'   tidysportsfeeds::get_games(league = "nhl")
+#'   tidysportsfeeds::get_season(league = "nhl")
 #' nfl_games <-
-#'   tidysportsfeeds::get_games(league = "nfl")
+#'   tidysportsfeeds::get_season(league = "nfl")
 #' }
 
-get_games <- function(league) {
+get_season <- function(league) {
   result <- stattleshipR::ss_get_result(
     league = league,
     sport = .sport(league),

@@ -7,7 +7,7 @@
 build_model(season, method = "PB1", first.order = TRUE, OT.flag = TRUE)
 }
 \arguments{
-\item{season}{a tibble returned from the Stattleship API via `get_games`}
+\item{season}{a tibble returned from the Stattleship API via `get_seaon`}
 
 \item{method}{method to be passed to mvglmmRank - default is "PB1"}
 

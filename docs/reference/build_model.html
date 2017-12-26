@@ -68,9 +68,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/exploringdfs.html">Exploring Daily Fantasy Sports Data</a>
-    </li>
-    <li>
       <a href="../articles/mvglmmranking.html">Projecting a Season with mvglmmRank</a>
     </li>
   </ul>
@@ -102,14 +99,14 @@
     <p>runs mvglmmRank::mvglmmRank against a game box score and points function</p>
     
 
-    <pre class="usage"><span class='fu'>build_model</span>(<span class='no'>game_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"PB1"</span>, <span class='kw'>first.order</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>OT.flag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>build_model</span>(<span class='no'>season</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"PB1"</span>, <span class='kw'>first.order</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>, <span class='kw'>OT.flag</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>game_data</th>
-      <td><p>a game.data input file</p></td>
+      <th>season</th>
+      <td><p>a tibble returned from the Stattleship API via `get_seaon`</p></td>
     </tr>
     <tr>
       <th>method</th>

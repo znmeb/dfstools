@@ -18,8 +18,8 @@ knitr::opts_chunk$set(
 ```
 
 ## Getting started
-1. You will need an API key for Stattleship. Go to <https://www.patreon.com/stattleship/posts> to sign up.
-2. If you haven't already, install the `devtools` package via `install.packages("devtools")`.
+1. You'll need an API key for Stattleship. Go to <https://www.patreon.com/stattleship/posts> to sign up.
+2. If you haven't already, install `devtools`:`install.packages("devtools")`.
 3. Install `tidysportsfeeds`: `devtools::install_github("znmeb/tidysportsfeeds", build_vignettes = TRUE)`.
 
 ## Setting the API access token
@@ -34,13 +34,14 @@ knitr::opts_chunk$set(
 
 ## Downloading the current season for a league
 1. Choose your league. I'm going to use NBA.
-2. Acquire the data frame: `nba_season <- get_games("nba")`.
+2. Acquire the tibble: `nba_season <- get_season("nba")`.
 
 This will return a tibble of all the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
 
-## Predicting the rest of the season
-1. Build the model: `nba_model <- build_model(nba_season)'.
-2. Run the predictions: `nba_predictions <- game_predict(nba_model, nba_season)`.
+## Projecting the rest of the season
+1. Build the model: `nba_model <- build_model(nba_season)`.
+2. Run the projections: `nba_projections <- project_season(nba_model, nba_season)`.
+3. Save as a CSV file: `readr::write_excel_csv(nba_projections, "nba_projections.csv")`.
 
 ## FAQ
 
@@ -52,18 +53,19 @@ This will return a tibble of all the games in the season, both already played an
 * away_score_p: the projected score for the away team
 * home_score_p: the projected score for the home team
 * total_p: the projected total score
-* home_mov_p: the predicted home margin of victory (home score - away score)
-* home_prob_w: the predicted probability that the home team wins
-* away_prob_w: the predicted probability that the away team wins
-* entropy: the predicted Shannon entropy for the game
+* home_mov_p: the projected home margin of victory (home score - away score)
+* home_prob_w: the projected probability that the home team wins
+* away_prob_w: the projected probability that the away team wins
+* entropy: the projected Shannon entropy for the game
 
-This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It's an indicator of closeness. The maximum value, 1.0, indicates that the game will be close and we'll learn a lot from the outcome.
+This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It's an indicator of closeness. The maximum value, 1.0, indicates that the game is projected to be a tie and we'll learn a lot from the outcome.
 
-A minimum score, zero, indicates that the game will be a blowout. There's little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I've never seen a zero; the lowest value of the entropy predictions for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. 
-
+A minimum entropy, zero, indicates that the game will be a blowout. There's little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I've never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. 
 
 ### How good are the projections?
-They're about as good as you can get considering that the only inputs they have are the scores of completed games. They won't be as good as projectsions that take into account more detailed information from compeleted games. They won't be as good as projections based on a simulation. And they won't be as good as closing odds / point spreads / totals from bookmakers, which take into account late-breaking player status and the "wisdom of the crowd". 
+They're about as good as you can get given the inputs are just the scores of completed games. They won't be as good as projections that take into account more detailed information from compeleted games.
+
+They won't be as good as projections based on a simulation. And they won't be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the "wisdom of the crowd". Bottom line: don't risk money on these numbers. I only use them as inputs for projecting player fantasy points.
 
 ### Where can I find details on `mvglmmRank`?
 The package documentation is at @Karl2015, but there's not a lot of the mathematics there. @Broatch2017 gives the math and references earlier papers with more details.

@@ -1,34 +1,43 @@
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "away",
-  "home",
-  "home_score_p",
-  "away_score_p",
-  "home_prob_w",
-  "away_prob_w",
-  "data_set",
-  "games",
-  "own_team",
-  "status",
-  "started_at",
-  "label",
-  "home_team_score",
-  "away_team_score",
   "at_neutral_site",
+  "away",
+  "away_prob_w",
+  "away_score_p",
+  "away_team_score",
+  "ended_at",
+  "home",
+  "home_prob_w",
+  "home_score_p",
+  "home_team_score",
+  "label",
   "period",
-  "ended_at"
+  "started_at",
+  "status"
 ))
 
-#' @title Game predict
-#' @name game_predict
-#' @description Creates a data frame with game predictions
-#' @export game_predict
+#' @title Project season
+#' @name project_season
+#' @description Creates a tibble with projections for the rest of the games in a season
+#' @export project_season
 #' @importFrom dplyr %>%
 #' @param model a model from build_model
-#' @param season a tibble returned from the Stattleship API via `get_games`
-#' @return the upcoming games from the season augmented with prediction columns
+#' @param season a tibble returned from the Stattleship API via `get_seaon`
+#' @return the upcoming games from the season augmented with projection columns:
+#' \itemize{
+#' \item started_at: the scheduled game start time
+#' \item away: The away team name
+#' \item home: the home team name
+#' \item method: The method used to build the `mvglmmRank` model; the default is "PB1".
+#' \item away_score_p: the projected score for the away team
+#' \item home_score_p: the projected score for the home team
+#' \item total_p: the projected total score
+#' \item home_mov_p: the projected home margin of victory (home score - away score)
+#' \item home_prob_w: the projected probability that the home team wins
+#' \item away_prob_w: the projected probability that the away team wins
+#' \item entropy: the projected Shannon entropy for the game}
 
-game_predict <-
+project_season <-
   function(model, season) {
     schedule <- .stattleship_upcoming_games(season)
     aug_schedule <- dplyr::mutate(schedule, method = model$method)
@@ -92,50 +101,12 @@ game_predict <-
   return(aug_schedule)
 }
 
-## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "home_mov_p",
-  "home_ratio_p",
-  "score_p",
-  "total_p"
-))
-
-#' @title Rank predicted scores
-#' @name rank_scores
-#' @description rank the teams by predicted scores
-#' @export rank_scores
-#' @importFrom dplyr %>%
-#' @param aug_schedule an augmented schedule from tidy_game_predict
-#' @return the teams ranked by ascending scores
-
-rank_scores <- function(aug_schedule) {
-  return(dplyr::bind_rows(
-    dplyr::select(
-      aug_schedule,
-      team = away,
-      opponent = home,
-      score_p = away_score_p,
-      total_p,
-      home_mov_p,
-      home_ratio_p),
-    dplyr::select(
-      aug_schedule,
-      team = home,
-      opponent = away,
-      score_p = home_score_p,
-      total_p,
-      home_mov_p,
-      home_ratio_p)
-    ) %>%
-    dplyr::arrange(dplyr::desc(score_p)))
-}
-
 #' @title Build model
 #' @name build_model
 #' @description runs mvglmmRank::mvglmmRank against a game box score and points function
 #' @export build_model
 #' @importFrom dplyr %>%
-#' @param season a tibble returned from the Stattleship API via `get_games`
+#' @param season a tibble returned from the Stattleship API via `get_seaon`
 #' @param method method to be passed to mvglmmRank - default is "PB1"
 #' @param first.order flag to be passed to mvglmmRank - default is TRUE
 #' @param OT.flag flag to be passes to mvglmmRank - default is TRUE

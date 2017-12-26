@@ -221,8 +221,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <section id="getting-started" class="level2">
 <h2>Getting started</h2>
 <ol type="1">
-<li>You will need an API key for Stattleship. Go to <a href="https://www.patreon.com/stattleship/posts" class="uri">https://www.patreon.com/stattleship/posts</a> to sign up.</li>
-<li>If you haven’t already, install the <code>devtools</code> package via <code>install.packages(&quot;devtools&quot;)</code>.</li>
+<li>You’ll need an API key for Stattleship. Go to <a href="https://www.patreon.com/stattleship/posts" class="uri">https://www.patreon.com/stattleship/posts</a> to sign up.</li>
+<li>If you haven’t already, install <code>devtools</code>:<code>install.packages(&quot;devtools&quot;)</code>.</li>
 <li>Install <code>tidysportsfeeds</code>: <code>devtools::install_github(&quot;znmeb/tidysportsfeeds&quot;, build_vignettes = TRUE)</code>.</li>
 </ol>
 </section>
@@ -240,15 +240,16 @@ set_token(&quot;paste_the_copied_access_token_here&quot;)</code></pre></li>
 <h2>Downloading the current season for a league</h2>
 <ol type="1">
 <li>Choose your league. I’m going to use NBA.</li>
-<li>Acquire the data frame: <code>nba_season &lt;- get_games(&quot;nba&quot;)</code>.</li>
+<li>Acquire the tibble: <code>nba_season &lt;- get_season(&quot;nba&quot;)</code>.</li>
 </ol>
 <p>This will return a tibble of all the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
 </section>
-<section id="predicting-the-rest-of-the-season" class="level2">
-<h2>Predicting the rest of the season</h2>
+<section id="projecting-the-rest-of-the-season" class="level2">
+<h2>Projecting the rest of the season</h2>
 <ol type="1">
-<li>Build the model: `nba_model &lt;- build_model(nba_season)’.</li>
-<li>Run the predictions: <code>nba_predictions &lt;- game_predict(nba_model, nba_season)</code>.</li>
+<li>Build the model: <code>nba_model &lt;- build_model(nba_season)</code>.</li>
+<li>Run the projections: <code>nba_projections &lt;- project_season(nba_model, nba_season)</code>.</li>
+<li>Save as a CSV file: <code>readr::write_excel_csv(nba_projections, &quot;nba_projections.csv&quot;)</code>.</li>
 </ol>
 </section>
 <section id="faq" class="level2">
@@ -263,17 +264,18 @@ set_token(&quot;paste_the_copied_access_token_here&quot;)</code></pre></li>
 <li>away_score_p: the projected score for the away team</li>
 <li>home_score_p: the projected score for the home team</li>
 <li>total_p: the projected total score</li>
-<li>home_mov_p: the predicted home margin of victory (home score - away score)</li>
-<li>home_prob_w: the predicted probability that the home team wins</li>
-<li>away_prob_w: the predicted probability that the away team wins</li>
-<li>entropy: the predicted Shannon entropy for the game</li>
+<li>home_mov_p: the projected home margin of victory (home score - away score)</li>
+<li>home_prob_w: the projected probability that the home team wins</li>
+<li>away_prob_w: the projected probability that the away team wins</li>
+<li>entropy: the projected Shannon entropy for the game</li>
 </ul>
-<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of closeness. The maximum value, 1.0, indicates that the game will be close and we’ll learn a lot from the outcome.</p>
-<p>A minimum score, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy predictions for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39.</p>
+<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of closeness. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
+<p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39.</p>
 </section>
 <section id="how-good-are-the-projections" class="level3">
 <h3>How good are the projections?</h3>
-<p>They’re about as good as you can get considering that the only inputs they have are the scores of completed games. They won’t be as good as projectsions that take into account more detailed information from compeleted games. They won’t be as good as projections based on a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, which take into account late-breaking player status and the “wisdom of the crowd”.</p>
+<p>They’re about as good as you can get given the inputs are just the scores of completed games. They won’t be as good as projectsions that take into account more detailed information from compeleted games.</p>
+<p>They won’t be as good as projections based on a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, account for late-breaking player status and the “wisdom of the crowd”. Bottom line: don’t risk money on these numbers. I only use them as inputs for projecting player fantasy points.</p>
 </section>
 <section id="where-can-i-find-details-on-mvglmmrank" class="level3">
 <h3>Where can I find details on <code>mvglmmRank</code>?</h3>
