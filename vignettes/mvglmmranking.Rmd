@@ -3,6 +3,7 @@ title: "Projecting a Season with mvglmmRank"
 author: "M. Edward (Ed) Borasky"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
+bibliography: bibliography.bib
 vignette: >
   %\VignetteIndexEntry{Vignette Title}
   %\VignetteEngine{knitr::rmarkdown}
@@ -16,50 +17,55 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+## Getting started
+1. You will need an API key for Stattleship. Go to <https://www.patreon.com/stattleship/posts> to sign up.
+2. If you haven't already, install the `devtools` package via `install.packages("devtools")`.
+3. Install `tidysportsfeeds`: `devtools::install_github("znmeb/tidysportsfeeds", build_vignettes = TRUE)`.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+## Setting the API access token
+1. Go to the Stattleship API page <https://api.stattleship.com/> and sign in. Then press the `Copy Access Token` button.
+2. Enter the following in the R console:
 
-## Vignette Info
+    ```
+    library(tidysportsfeeds)
+    library(stattleshipR)
+    set_token("paste_the_copied_access_token_here")
+    ```
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+## Downloading the current season for a league
+1. Choose your league. I'm going to use NBA.
+2. Acquire the data frame: `nba_season <- get_games("nba")`.
 
-## Styles
+This will return a tibble of all the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+## Predicting the rest of the season
+1. Build the model: `nba_model <- build_model(nba_season)'.
+2. Run the predictions: `nba_predictions <- game_predict(nba_model, nba_season)`.
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+## FAQ
 
-## Figures
+### What do the columns mean?
+* started_at: the scheduled game start time
+* away: The away team name
+* home: the home team name
+* method: The method used to build the `mvglmmRank` model; the default is "PB1".
+* away_score_p: the projected score for the away team
+* home_score_p: the projected score for the home team
+* total_p: the projected total score
+* home_mov_p: the predicted home margin of victory (home score - away score)
+* home_prob_w: the predicted probability that the home team wins
+* away_prob_w: the predicted probability that the away team wins
+* entropy: the predicted Shannon entropy for the game
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
+This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It's an indicator of closeness. The maximum value, 1.0, indicates that the game will be close and we'll learn a lot from the outcome.
 
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
+A minimum score, zero, indicates that the game will be a blowout. There's little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I've never seen a zero; the lowest value of the entropy predictions for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. 
 
-You can enable figure captions by `fig_caption: yes` in YAML:
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+### How good are the projections?
+They're about as good as you can get considering that the only inputs they have are the scores of completed games. They won't be as good as projectsions that take into account more detailed information from compeleted games. They won't be as good as projections based on a simulation. And they won't be as good as closing odds / point spreads / totals from bookmakers, which take into account late-breaking player status and the "wisdom of the crowd". 
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+### Where can I find details on `mvglmmRank`?
+The package documentation is at @Karl2015, but there's not a lot of the mathematics there. @Broatch2017 gives the math and references earlier papers with more details.
 
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+## References

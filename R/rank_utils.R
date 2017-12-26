@@ -48,8 +48,7 @@ game_predict <-
       aug_schedule <- dplyr::mutate(
         aug_schedule,
         total_p =  home_score_p + away_score_p,
-        home_mov_p = home_score_p - away_score_p,
-        home_ratio_p = home_score_p / away_score_p)
+        home_mov_p = home_score_p - away_score_p)
     }
 
     # are there Poisson score ratings?
@@ -69,8 +68,7 @@ game_predict <-
       aug_schedule <- dplyr::mutate(
         aug_schedule,
           total_p = home_score_p + away_score_p,
-        home_mov_p = home_score_p - away_score_p,
-        home_ratio_p = home_score_p / away_score_p)
+        home_mov_p = home_score_p - away_score_p)
     }
 
     # are there binomial win probability ratings?
@@ -93,7 +91,6 @@ game_predict <-
 
   return(aug_schedule)
 }
-
 
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
