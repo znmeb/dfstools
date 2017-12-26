@@ -67,6 +67,9 @@ They're about as good as you can get given the inputs are just the scores of com
 
 They won't be as good as projections based on a simulation. And they won't be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the "wisdom of the crowd". Bottom line: don't risk money on these numbers. I only use them as inputs for projecting player fantasy points.
 
+### Sample output
+I've uploaded a sample I ran on December 25, 2017 to <https://1drv.ms/x/s!AoL7Rk8gd5uRgtFh8LVDyFKM0ycNJg>.
+
 ### Where can I find details on `mvglmmRank`?
 The package documentation is at @Karl2015, but there's not a lot of the mathematics there. @Broatch2017 gives the math and references earlier papers with more details.
 
