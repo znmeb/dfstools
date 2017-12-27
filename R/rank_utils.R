@@ -2,19 +2,47 @@
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "at_neutral_site",
   "away",
-  "away_prob_w",
-  "away_score_p",
+  "prob_away_wins",
+  "away_score_proj",
+  "away.response",
   "away_team_score",
   "ended_at",
   "home",
-  "home_prob_w",
-  "home_score_p",
+  "prob_home_wins",
+  "home_score_proj",
+  "home.response",
   "home_team_score",
   "label",
+  "league",
+  "neutral.site",
+  "OT",
   "period",
+  "ppg",
+  "slug",
   "started_at",
   "status"
 ))
+
+## internal function for periods per game for a league
+.ppg <- function(league) {
+  ifelse(league == "nhl", 3, ifelse(league == "mlb", 9, 4))
+}
+
+## internal function for model input data tibble
+.extract_model_input_data <- function(raw_season) {
+  raw_season %>% dplyr::mutate(
+    league = sub("-.*$", "", slug),
+    ppg = .ppg(league),
+    away = sub(" vs .*$", "", label),
+    home = sub("^.* vs ", "", label),
+    away.response = away_team_score,
+    home.response = home_team_score,
+    binary.response = as.integer(home.response > away.response),
+    neutral.site = ifelse(is.na(at_neutral_site), 0, 1),
+    OT = ifelse(period > ppg, 1, 0)) %>%
+    dplyr::arrange(started_at) %>%
+    dplyr::select(away:OT, started_at, ended_at, periods = period, status)
+}
 
 #' @title Project season
 #' @name project_season
@@ -22,140 +50,80 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @export project_season
 #' @importFrom dplyr %>%
 #' @importFrom magrittr %<>%
-#' @param model a model from build_model
-#' @param season a tibble returned from the Stattleship API via `get_seaon`
-#' @return the upcoming games from the season augmented with projection columns:
+#' @param raw_season a tibble returned from the Stattleship API via `get_season`
+#' @return a list with three items:
 #' \itemize{
-#' \item started_at: the scheduled game start time
-#' \item away: The away team name
-#' \item home: the home team name
-#' \item method: The method used to build the `mvglmmRank` model; the default is "PB1".
-#' \item away_score_p: the projected score for the away team
-#' \item home_score_p: the projected score for the home team
-#' \item total_p: the projected total score
-#' \item home_mov_p: the projected home margin of victory (home score - away score)
-#' \item home_prob_w: the projected probability that the home team wins
-#' \item away_prob_w: the projected probability that the away team wins
-#' \item entropy: the projected Shannon entropy for the game}
+#' \item projections: a tibble with the projections for the rest of the season.
+#' \item model: the model that mvglmmRank built from the closed games
+#' \item model_input: model input data from the closed games}
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' nba_raw <-
+#'   tidysportsfeeds::get_season(league = "nba")
+#' nba_result <- project_season(nba_raw)
+#' nba_projections <- nba_result$projections
+#' readr::write_excel_csv(nba_projections, "nba_projections.csv")
+#' }
 
-project_season <-
-  function(model, season) {
-    schedule <- .stattleship_upcoming_games(season) %>%
-      dplyr::mutate(method = model$method)
+project_season <- function(raw_season) {
 
-    # are there normal score ratings?
-    if (!is.null(model$n.ratings.offense)) {
-      schedule %<>% dplyr::mutate(
-        away_score_p =
-          model$n.mean["LocationAway"] +
-          model$n.ratings.offense[away] -
-          model$n.ratings.defense[home],
-        home_score_p =
-          model$n.mean["LocationHome"] +
-          model$n.ratings.offense[home] -
-          model$n.ratings.defense[away],
-        total_p =  home_score_p + away_score_p,
-        home_mov_p = home_score_p - away_score_p)
+  # get model input
+  season_data <- .extract_model_input_data(raw_season)
+  model_input <- season_data %>% dplyr::filter(status == "closed")
+  projections <- season_data %>% dplyr::filter(status == "upcoming") %>%
+    dplyr::select(away, home, neutral_site = neutral.site, scheduled_at = started_at)
+
+  # build model
+  model <- mvglmmRank::mvglmmRank(
+    model_input, method = "PB1", first.order = FALSE, verbose = FALSE, OT.flag = TRUE)
+
+  # add projection columns
+  projections %<>% dplyr::mutate(method = model$method)
+
+  # are there normal score ratings?
+  if (!is.null(model$n.ratings.offense)) {
+    projections %<>% dplyr::mutate(
+      away_score_proj =
+        model$n.mean["LocationAway"] +
+        model$n.ratings.offense[away] -
+        model$n.ratings.defense[home],
+      home_score_proj =
+        model$n.mean["LocationHome"] +
+        model$n.ratings.offense[home] -
+        model$n.ratings.defense[away])
     }
 
     # are there Poisson score ratings?
     if (!is.null(model$p.ratings.offense)) {
-      schedule %<>% dplyr::mutate(
-        away_score_p =
+      projections %<>% dplyr::mutate(
+        away_score_proj =
           exp(
             model$p.mean["LocationAway"] +
             model$p.ratings.offense[away] -
             model$p.ratings.defense[home]),
-        home_score_p =
+        home_score_proj =
           exp(
             model$p.mean["LocationHome"] +
             model$p.ratings.offense[home] -
-            model$p.ratings.defense[away]),
-        total_p = home_score_p + away_score_p,
-        home_mov_p = home_score_p - away_score_p)
+            model$p.ratings.defense[away]))
     }
 
     # are there binomial win probability ratings?
     if (!is.null(model$b.ratings)) {
-      schedule %<>% dplyr::mutate(
-        home_prob_w =
+      projections %<>% dplyr::mutate(
+        prob_home_wins =
           stats::pnorm(
             model$b.mean +
             model$b.ratings[home] -
             model$b.ratings[away]),
-        away_prob_w = 1 - home_prob_w,
-        entropy = -log2(home_prob_w) * home_prob_w - log2(away_prob_w) * away_prob_w)
+        prob_away_wins = 1 - prob_home_wins,
+        entropy = -log2(prob_home_wins) * prob_home_wins -
+          log2(prob_away_wins) * prob_away_wins)
     }
 
-  return(schedule)
-}
-
-#' @title Build model
-#' @name build_model
-#' @description runs mvglmmRank::mvglmmRank against a game box score and points function
-#' @export build_model
-#' @importFrom dplyr %>%
-#' @param season a tibble returned from the Stattleship API via `get_seaon`
-#' @param method method to be passed to mvglmmRank - default is "PB1"
-#' @param first.order flag to be passed to mvglmmRank - default is TRUE
-#' @param OT.flag flag to be passes to mvglmmRank - default is TRUE
-#' @return an mvglmmRank model object
-
-build_model <- function(
-  season,
-  method = "PB1",
-  first.order = TRUE,
-  OT.flag = TRUE
-) {
-  game_data <- .stattleship_game_data(season)
-  result <- mvglmmRank::mvglmmRank(
-    game_data,
-    method = method,
-    first.order = first.order,
-    OT.flag = OT.flag,
-    verbose = FALSE)
-  return(result)
-}
-
-## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "venue_r_h",
-  "opp_team",
-  "pts",
-  "OT",
-  "home.response",
-  "away.response"
-))
-
-## intenral function to extract input for model
-.stattleship_game_data <- function(stattleship_games) {
-
-  # compute periods per game for overtime detection
-  league = sub("-.*$", "", stattleship_games$slug)[1]
-  if (league == "nba" || league == "nfl") ppg <- 4
-  if (league == "nhl") ppg <- 3
-  game_data <- stattleship_games %>%
-    dplyr::filter(status == "closed") %>%
-    dplyr::arrange(started_at) %>%
-    dplyr::mutate(
-      home = sub("^.* vs ", "", label),
-      away = sub(" vs .*$", "", label),
-      home.response = home_team_score,
-      away.response = away_team_score,
-      neutral.site = ifelse(is.na(at_neutral_site), 0, 1),
-      OT = ifelse(period > ppg, 1, 0)) %>%
-    dplyr::select(home:OT, started_at, ended_at)
-  return(game_data)
-}
-
-# internal function to extract upcoming games
-.stattleship_upcoming_games <- function(stattleship_games) {
-  game_data <- stattleship_games %>%
-    dplyr::filter(status == "upcoming") %>%
-    dplyr::arrange(started_at) %>%
-    dplyr::mutate(
-      home = sub("^.* vs ", "", label),
-      away = sub(" vs .*$", "", label)) %>%
-    dplyr::select(started_at, away, home)
-  return(game_data)
+  return(list(projections = projections, model = model, model_input = model_input))
 }

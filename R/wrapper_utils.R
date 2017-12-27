@@ -57,11 +57,11 @@ get_mysportsfeeds_dfs <- function(league, season) {
 #' library(tidysportsfeeds)
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
-#' nba_games <-
+#' nba_raw <-
 #'   tidysportsfeeds::get_season(league = "nba")
-#' nhl_games <-
+#' nhl_raw <-
 #'   tidysportsfeeds::get_season(league = "nhl")
-#' nfl_games <-
+#' nfl_raw <-
 #'   tidysportsfeeds::get_season(league = "nfl")
 #' }
 

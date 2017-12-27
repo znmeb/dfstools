@@ -16,7 +16,8 @@ Imports: tibble,
     dplyr,
     lubridate,
     mvglmmRank,
-    readr
+    readr,
+    magrittr
 Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r
 Suggests: knitr,

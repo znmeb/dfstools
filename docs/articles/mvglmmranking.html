@@ -72,7 +72,7 @@
       <h1>Projecting a Season with mvglmmRank</h1>
                         <h4 class="author">M. Edward (Ed) Borasky</h4>
             
-            <h4 class="date">2017-12-26</h4>
+            <h4 class="date">2017-12-27</h4>
           </div>
 
     
@@ -92,39 +92,46 @@
 library(stattleshipR)
 set_token("paste_the_copied_access_token_here")</code></pre>
 </li>
-</ol></section><section id="downloading-the-current-season-for-a-league" class="level2"><h2>Downloading the current season for a league</h2>
+</ol></section><section id="downloading-the-raw-data-for-the-current-season-for-a-league" class="level2"><h2>Downloading the raw data for the current season for a league</h2>
 <ol type="1">
 <li>Choose your league. I’m going to use NBA.</li>
-<li>Acquire the tibble: <code>nba_season &lt;- get_season("nba")</code>.</li>
+<li>Acquire the tibble: <code>nba_raw &lt;- get_season("nba")</code>.</li>
 </ol>
 <p>This will return a tibble of all the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
 </section><section id="projecting-the-rest-of-the-season" class="level2"><h2>Projecting the rest of the season</h2>
 <ol type="1">
-<li>Build the model: <code>nba_model &lt;- build_model(nba_season)</code>.</li>
-<li>Run the projections: <code>nba_projections &lt;- project_season(nba_model, nba_season)</code>.</li>
-<li>Save as a CSV file: <code><a href="http://www.rdocumentation.org/packages/readr/topics/write_delim">readr::write_excel_csv(nba_projections, "nba_projections.csv")</a></code>.</li>
-</ol></section><section id="faq" class="level2"><h2>FAQ</h2>
-<section id="what-do-the-columns-mean" class="level3"><h3>What do the columns mean?</h3>
+<li>
+<p>Run the projections: <code>nba_result &lt;- project_season(nba_raw)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
+<p>The result of <code>project_season</code> is a list of three items:</p>
 <ul>
-<li>started_at: the scheduled game start time</li>
+<li>projections: a tibble containing the projections</li>
+<li>model: the model <code>mvglmmRank</code> derived</li>
+<li>model_input: the data from closed games that <code>mvglmmRank</code> used</li>
+</ul>
+</li>
+<li>Extract the projections from the result: <code>nba_projections &lt;- nba_result$projections</code>.</li>
+<li><p>Save as a CSV file: <code><a href="http://www.rdocumentation.org/packages/readr/topics/write_delim">readr::write_excel_csv(nba_projections, "nba_projections.csv")</a></code>.</p></li>
+</ol></section><section id="faq" class="level2"><h2>FAQ</h2>
+<section id="what-do-the-projections-columns-mean" class="level3"><h3>What do the <code>projections</code> columns mean?</h3>
+<ul>
 <li>away: The away team name</li>
 <li>home: the home team name</li>
+<li>neutral_site: 1 if the game is scheduled at a neutral site</li>
+<li>scheduled_at: the scheduled game start time</li>
 <li>method: The method used to build the <code>mvglmmRank</code> model; the default is “PB1”.</li>
-<li>away_score_p: the projected score for the away team</li>
-<li>home_score_p: the projected score for the home team</li>
-<li>total_p: the projected total score</li>
-<li>home_mov_p: the projected home margin of victory (home score - away score)</li>
-<li>home_prob_w: the projected probability that the home team wins</li>
-<li>away_prob_w: the projected probability that the away team wins</li>
+<li>away_score_proj: the projected score for the away team</li>
+<li>home_response_proj: the projected score for the home team</li>
+<li>prob_home_wins: the projected probability that the home team wins</li>
+<li>prob_away_wins: the projected probability that the away team wins</li>
 <li>entropy: the projected Shannon entropy for the game</li>
 </ul>
-<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of closeness. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
-<p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 25, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39.</p>
+<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of the projected closeness of the game. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
+<p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 26, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. The model predicts that there’s a 92% probability that the Warriors will win.</p>
 </section><section id="how-good-are-the-projections" class="level3"><h3>How good are the projections?</h3>
 <p>They’re about as good as you can get given the inputs are just the scores of completed games. They won’t be as good as projections that take into account more detailed information from compeleted games.</p>
-<p>They won’t be as good as projections based on a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the “wisdom of the crowd”. Bottom line: don’t risk money on these numbers. I only use them as inputs for projecting player fantasy points.</p>
+<p>They won’t be as good as a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the “wisdom of the crowd”. Bottom line: don’t risk money on these numbers. I only use them as inputs for projecting player fantasy points.</p>
 </section><section id="sample-output" class="level3"><h3>Sample output</h3>
-<p>I’ve uploaded a sample I ran on December 25, 2017 to <a href="https://1drv.ms/x/s!AoL7Rk8gd5uRgtFh8LVDyFKM0ycNJg" class="uri">https://1drv.ms/x/s!AoL7Rk8gd5uRgtFh8LVDyFKM0ycNJg</a>.</p>
+<p>I’ve uploaded a sample I ran on December 26, 2017 to <a href="https://docs.google.com/spreadsheets/d/1oy0I_zm92JNrEeMjABXR489LbylT3zI2EwExCPHouMQ/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1oy0I_zm92JNrEeMjABXR489LbylT3zI2EwExCPHouMQ/edit?usp=sharing</a>.</p>
 </section><section id="where-can-i-find-details-on-mvglmmrank" class="level3"><h3>Where can I find details on <code>mvglmmRank</code>?</h3>
 <p>The package documentation is at <span class="citation" data-cites="Karl2015">Karl and Broatch (2015)</span>, but there’s not a lot of the mathematics there. <span class="citation" data-cites="Broatch2017">Broatch and Karl (2017)</span> gives the math and references earlier papers with more details.</p>
 </section></section><section id="references" class="level2 unnumbered"><h2>References</h2>
@@ -147,7 +154,7 @@ set_token("paste_the_copied_access_token_here")</code></pre>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#getting-started">Getting started</a></li>
       <li><a href="#setting-the-api-access-token">Setting the API access token</a></li>
-      <li><a href="#downloading-the-current-season-for-a-league">Downloading the current season for a league</a></li>
+      <li><a href="#downloading-the-raw-data-for-the-current-season-for-a-league">Downloading the raw data for the current season for a league</a></li>
       <li><a href="#projecting-the-rest-of-the-season">Projecting the rest of the season</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#references">References</a></li>
@@ -163,7 +170,7 @@ set_token("paste_the_copied_access_token_here")</code></pre>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://github.com/r-lib/pkgdown">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>

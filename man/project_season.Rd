@@ -4,28 +4,31 @@
 \alias{project_season}
 \title{Project season}
 \usage{
-project_season(model, season)
+project_season(raw_season)
 }
 \arguments{
-\item{model}{a model from build_model}
-
-\item{season}{a tibble returned from the Stattleship API via `get_seaon`}
+\item{raw_season}{a tibble returned from the Stattleship API via `get_season`}
 }
 \value{
-the upcoming games from the season augmented with projection columns:
+a list with three items:
 \itemize{
-\item started_at: the scheduled game start time
-\item away: The away team name
-\item home: the home team name
-\item method: The method used to build the `mvglmmRank` model; the default is "PB1".
-\item away_score_p: the projected score for the away team
-\item home_score_p: the projected score for the home team
-\item total_p: the projected total score
-\item home_mov_p: the projected home margin of victory (home score - away score)
-\item home_prob_w: the projected probability that the home team wins
-\item away_prob_w: the projected probability that the away team wins
-\item entropy: the projected Shannon entropy for the game}
+\item projections: a tibble with the projections for the rest of the season.
+\item model: the model that mvglmmRank built from the closed games
+\item model_input: model input data from the closed games}
 }
 \description{
 Creates a tibble with projections for the rest of the games in a season
+}
+\examples{
+\dontrun{
+token <- "yourtoken"
+library(tidysportsfeeds)
+library(stattleshipR)
+stattleshipR::set_token(token)
+nba_raw <-
+  tidysportsfeeds::get_season(league = "nba")
+nba_result <- project_season(nba_raw)
+nba_projections <- nba_result$projections
+readr::write_excel_csv(nba_projections, "nba_projections.csv")
+}
 }
