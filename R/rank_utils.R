@@ -7,6 +7,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "away.response",
   "away_team_score",
   "ended_at",
+  "entropy",
   "home",
   "prob_home_wins",
   "home_score_proj",
@@ -14,12 +15,15 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "home_team_score",
   "label",
   "league",
+  "method",
   "neutral.site",
+  "neutral_site",
   "OT",
   "period",
   "ppg",
   "slug",
   "started_at",
+  "scheduled_at",
   "status"
 ))
 
@@ -125,5 +129,10 @@ project_season <- function(raw_season) {
           log2(prob_away_wins) * prob_away_wins)
     }
 
+  projections %<>% dplyr::select(
+    away, home,
+    prob_away_wins, prob_home_wins,
+    away_score_proj, home_score_proj,
+    entropy, scheduled_at, neutral_site, method)
   return(list(projections = projections, model = model, model_input = model_input))
 }

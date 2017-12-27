@@ -116,16 +116,16 @@ set_token("paste_the_copied_access_token_here")</code></pre>
 <ul>
 <li>away: The away team name</li>
 <li>home: the home team name</li>
-<li>neutral_site: 1 if the game is scheduled at a neutral site</li>
-<li>scheduled_at: the scheduled game start time</li>
-<li>method: The method used to build the <code>mvglmmRank</code> model; the default is “PB1”.</li>
-<li>away_score_proj: the projected score for the away team</li>
-<li>home_response_proj: the projected score for the home team</li>
-<li>prob_home_wins: the projected probability that the home team wins</li>
 <li>prob_away_wins: the projected probability that the away team wins</li>
+<li>prob_home_wins: the projected probability that the home team wins</li>
+<li>away_score_proj: the projected score for the away team</li>
+<li>home_score_proj: the projected score for the home team</li>
 <li>entropy: the projected Shannon entropy for the game</li>
+<li>scheduled_at: the scheduled game start time</li>
+<li>neutral_site: 1 if the game is scheduled at a neutral site</li>
+<li>method: The method used to build the <code>mvglmmRank</code> model; the default is “PB1”.</li>
 </ul>
-<p>This last column needs some explanation. The Shannon entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of the projected closeness of the game. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
+<p>The (Shannon) entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of the projected closeness of the game. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
 <p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 26, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. The model predicts that there’s a 92% probability that the Warriors will win.</p>
 </section><section id="how-good-are-the-projections" class="level3"><h3>How good are the projections?</h3>
 <p>They’re about as good as you can get given the inputs are just the scores of completed games. They won’t be as good as projections that take into account more detailed information from compeleted games.</p>
