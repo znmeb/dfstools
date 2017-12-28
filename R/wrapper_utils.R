@@ -37,9 +37,13 @@ get_mysportsfeeds_dfs <- function(league, season) {
   DraftKings <- tibble::as_tibble(
     res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[1]]) %>%
     dplyr::mutate(site = "DraftKings")
+  DraftKings$salary <- as.numeric(DraftKings$salary)
+  DraftKings$fantasyPoints <- as.numeric(DraftKings$fantasyPoints)
   FanDuel <- tibble::as_tibble(
     res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[2]]) %>%
     dplyr::mutate(site = "FanDuel")
+  FanDuel$salary <- as.numeric(FanDuel$salary)
+  FanDuel$fantasyPoints <- as.numeric(FanDuel$fantasyPoints)
   return(dplyr::bind_rows(DraftKings, FanDuel))
 }
 
