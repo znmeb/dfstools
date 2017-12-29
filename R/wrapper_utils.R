@@ -97,3 +97,9 @@ get_season <- function(league) {
   }
   return(list(teams = teams, players = players, games = games))
 }
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "teams",
+  "players",
+  "games"
+))
