@@ -34,12 +34,15 @@ knitr::opts_chunk$set(
 
 ## Downloading the raw data for the current season for a league
 1. Choose your league. I'm going to use NBA.
-2. Acquire the tibble: `nba_raw <- get_season("nba")`.
+2. Acquire the tibbles: `nba_season <- get_season("nba")`.
 
-This will return a tibble of all the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
+This will return a list of three tibbles:
+    * teams: the teams in the league
+    * players: the players in the league
+    * games: the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
 
 ## Projecting the rest of the season
-1. Run the projections: `nba_result <- project_season(nba_raw)`. You'll see the iterations for the `mvglmmRank` model. This will take some time, depending on the number of games in the input dataset.
+1. Run the projections: `nba_result <- project_season(nba_season$games)`. You'll see the iterations for the `mvglmmRank` model. This will take some time, depending on the number of games in the input dataset.
 
     The result of `project_season` is a list of three items:
     

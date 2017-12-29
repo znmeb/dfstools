@@ -5,6 +5,20 @@
   return(sports[league])
 }
 
+# internal function to fetch from Stattleship and unpack the main result as a tibble
+.get_tibble <- function(league, ep, query) {
+  result <- stattleshipR::ss_get_result(
+    sport = .sport(league),
+    league = league,
+    ep = ep,
+    query = query,
+    walk = TRUE,
+    verbose = FALSE)
+
+  return(tibble::as_tibble(
+    do.call("rbind", lapply(result, function(x) get(ep, x)))))
+}
+
 #' @title Get MySportsFeed DFS data
 #' @name get_mysportsfeeds_dfs
 #' @description Gets DFS data object from the MySportsFeeds.com API
@@ -47,35 +61,39 @@ get_mysportsfeeds_dfs <- function(league, season) {
   return(dplyr::bind_rows(DraftKings, FanDuel))
 }
 
-#' @title Get Current Season Games from Stattleship API
+#' @title Get Current Season tables from Stattleship API
 #' @name get_season
 #' @description Gets a schedule 'gameentry' object from the stattleship.com API
 #' @export get_season
 #' @importFrom stattleshipR ss_get_result
 #' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @return a tibble with the games for the season. The whole schedule is given,
-#' with games as yet unplayed having scores of zero.
+#' @return a list of three tibbles:
+#' \itemize{
+#' \item teams: the teams in the league
+#' \item players: the players in the league
+#' \item games: games in the season.
+#' All games - completed, in-progress and upcaming - are listed.}
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
 #' library(tidysportsfeeds)
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
-#' nba_raw <-
+#' nba_season <-
 #'   tidysportsfeeds::get_season(league = "nba")
-#' nhl_raw <-
+#' nhl_season <-
 #'   tidysportsfeeds::get_season(league = "nhl")
-#' nfl_raw <-
+#' nfl_season <-
 #'   tidysportsfeeds::get_season(league = "nfl")
 #' }
 
 get_season <- function(league) {
-  result <- stattleshipR::ss_get_result(
-    league = league,
-    sport = .sport(league),
-    ep = "games",
-    walk = TRUE,
-    verbose = FALSE)
-  return(tibble::as_tibble(
-    do.call("rbind", lapply(result, function(x) x$games))))
+  for (table in c("teams", "players", "games")) {
+    assign(table, .get_tibble(
+      league = league,
+      ep = table,
+      query = list()
+    ))
+  }
+  return(list(teams = teams, players = players, games = games))
 }

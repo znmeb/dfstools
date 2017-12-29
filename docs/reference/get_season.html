@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Current Season Games from Stattleship API — get_season • tidysportsfeeds</title>
+<title>Get Current Season tables from Stattleship API — get_season • tidysportsfeeds</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,7 +92,7 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Current Season Games from Stattleship API</h1>
+    <h1>Get Current Season tables from Stattleship API</h1>
     </div>
 
     
@@ -112,8 +112,13 @@
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a tibble with the games for the season. The whole schedule is given,
-with games as yet unplayed having scores of zero.</p>
+    <p>a list of three tibbles:</p><ul>
+<li><p>teams: the teams in the league</p></li>
+<li><p>players: the players in the league</p></li>
+<li><p>games: games in the season.
+All games - completed, in-progress and upcaming - are listed.</p></li>
+</ul>
+
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -122,11 +127,11 @@ with games as yet unplayed having scores of zero.</p>
 <span class='fu'>library</span>(<span class='no'>tidysportsfeeds</span>)
 <span class='fu'>library</span>(<span class='no'>stattleshipR</span>)
 <span class='kw pkg'>stattleshipR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stattleshipR/topics/set_token'>set_token</a></span>(<span class='no'>token</span>)
-<span class='no'>nba_raw</span> <span class='kw'>&lt;-</span>
+<span class='no'>nba_season</span> <span class='kw'>&lt;-</span>
   <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_season'>get_season</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
-<span class='no'>nhl_raw</span> <span class='kw'>&lt;-</span>
+<span class='no'>nhl_season</span> <span class='kw'>&lt;-</span>
   <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_season'>get_season</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>)
-<span class='no'>nfl_raw</span> <span class='kw'>&lt;-</span>
+<span class='no'>nfl_season</span> <span class='kw'>&lt;-</span>
   <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_season'>get_season</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>)
 <span class='co'># }</span></pre>
   </div>

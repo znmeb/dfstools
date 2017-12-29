@@ -12,7 +12,7 @@
 
 <meta name="author" content="M. Edward (Ed) Borasky" />
 
-<meta name="date" content="2017-12-27" />
+<meta name="date" content="2017-12-28" />
 
 <title>Projecting a Season with mvglmmRank</title>
 
@@ -214,7 +214,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Projecting a Season with mvglmmRank</h1>
 <h4 class="author"><em>M. Edward (Ed) Borasky</em></h4>
-<h4 class="date"><em>2017-12-27</em></h4>
+<h4 class="date"><em>2017-12-28</em></h4>
 
 
 
@@ -240,14 +240,14 @@ set_token(&quot;paste_the_copied_access_token_here&quot;)</code></pre></li>
 <h2>Downloading the raw data for the current season for a league</h2>
 <ol type="1">
 <li>Choose your league. I’m going to use NBA.</li>
-<li>Acquire the tibble: <code>nba_raw &lt;- get_season(&quot;nba&quot;)</code>.</li>
+<li>Acquire the tibbles: <code>nba_season &lt;- get_season(&quot;nba&quot;)</code>.</li>
 </ol>
-<p>This will return a tibble of all the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
+<p>This will return a list of three tibbles: * teams: the teams in the league * players: the players in the league * games: the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
 </section>
 <section id="projecting-the-rest-of-the-season" class="level2">
 <h2>Projecting the rest of the season</h2>
 <ol type="1">
-<li><p>Run the projections: <code>nba_result &lt;- project_season(nba_raw)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
+<li><p>Run the projections: <code>nba_result &lt;- project_season(nba_season$games)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
 <p>The result of <code>project_season</code> is a list of three items:</p>
 <ul>
 <li>projections: a tibble containing the projections</li>
