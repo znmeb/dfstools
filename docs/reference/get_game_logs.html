@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Current Season Game Logs from Stattleship API — get_game_logs • tidysportsfeeds</title>
+<title>Get Current Season (player) game logs from Stattleship API — get_game_logs • tidysportsfeeds</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -68,9 +68,6 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/exploringdfs.html">Exploring Daily Fantasy Sports Data</a>
-    </li>
-    <li>
       <a href="../articles/mvglmmranking.html">Projecting a Season with mvglmmRank</a>
     </li>
   </ul>
@@ -95,14 +92,14 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Current Season Game Logs from Stattleship API</h1>
+    <h1>Get Current Season (player) game logs from Stattleship API</h1>
     </div>
 
     
-    <p>Gets the game_logs for a league's current season from the stattleship.com API</p>
+    <p>Gets a game_logs object from the stattleship.com API</p>
     
 
-    <pre class="usage"><span class='fu'>get_game_logs</span>(<span class='no'>league</span>)</pre>
+    <pre class="usage"><span class='fu'>get_game_logs</span>(<span class='no'>league</span>, <span class='no'>team_slug</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
@@ -111,11 +108,15 @@
       <th>league</th>
       <td><p>("nba", "nhl", "nfl" or "mlb")</p></td>
     </tr>
+    <tr>
+      <th>team_slug</th>
+      <td><p>the Stattleship team slug for the team</p></td>
+    </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a tibble with the game_logs for the season.</p>
+    <p>a tibble with the game logs</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
@@ -124,12 +125,8 @@
 <span class='fu'>library</span>(<span class='no'>tidysportsfeeds</span>)
 <span class='fu'>library</span>(<span class='no'>stattleshipR</span>)
 <span class='kw pkg'>stattleshipR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stattleshipR/topics/set_token'>set_token</a></span>(<span class='no'>token</span>)
-<span class='no'>nba_game_logs</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_game_logs'>get_game_logs</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
-<span class='no'>nhl_game_logs</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_game_logs'>get_game_logs</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>)
-<span class='no'>nfl_game_logs</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_game_logs'>get_game_logs</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nfl"</span>)
+<span class='no'>trailblazers_logs</span> <span class='kw'>&lt;-</span>
+  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_game_logs'>get_game_logs</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='kw'>team_slug</span> <span class='kw'>=</span> <span class='st'>"nba_por"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
@@ -151,7 +148,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
 </div>
 
       </footer>
