@@ -97,6 +97,42 @@ get_season <- function(league) {
   }
   return(list(teams = teams, players = players, games = games))
 }
+
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "teams",
+  "players",
+  "games"
+))
+
+#' @title Get Current Season (player) game logs from Stattleship API
+#' @name get_game_logs
+#' @description Gets a game_logs object from the stattleship.com API
+#' @export get_game_logs
+#' @importFrom stattleshipR ss_get_result
+#' @param league ("nba", "nhl", "nfl" or "mlb")
+#' @param team_slug the Stattleship team slug for the team
+#' @return a tibble with the game logs
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' trailblazers_logs <-
+#'   tidysportsfeeds::get_game_logs(league = "nba", team_slug = "nba_por")
+#' }
+
+get_game_logs <- function(league, team_slug) {
+  return(
+    .get_tibble(
+      league = league,
+      ep = "game_logs",
+      query = list(team_id = team_slug)
+    )
+  )
+}
+
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "teams",
