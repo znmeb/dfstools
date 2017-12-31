@@ -120,7 +120,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' trailblazers_logs <-
-#'   tidysportsfeeds::get_game_logs(league = "nba", team_slug = "nba_por")
+#'   tidysportsfeeds::get_game_logs(league = "nba", team_slug = "nba-por")
 #' }
 
 get_game_logs <- function(league, team_slug) {
