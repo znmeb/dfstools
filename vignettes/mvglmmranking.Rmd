@@ -60,6 +60,8 @@ This will return a tibble of the games in the season, both already played and up
 * prob_home_wins: the projected probability that the home team wins
 * away_score_proj: the projected score for the away team
 * home_score_proj: the projected score for the home team
+* home_mov_proj: the projected margin of victory for the home team
+* total_proj: the projected total of both teams' scores
 * entropy: the projected Shannon entropy for the game
 * scheduled_at: the scheduled game start time
 * neutral_site: 1 if the game is scheduled at a neutral site
