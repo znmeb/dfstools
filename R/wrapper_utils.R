@@ -2,7 +2,9 @@
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "teams",
   "players",
-  "games"
+  "games",
+  "DraftKings",
+  "FanDuel"
 ))
 
 # internal function to look up sport name
@@ -55,16 +57,15 @@ get_mysportsfeeds_dfs <- function(league, season) {
     season = season,
     feed = "daily_dfs",
     verbose = FALSE)
-  DraftKings <- tibble::as_tibble(
-    res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[1]]) %>%
-    dplyr::mutate(site = "DraftKings")
-  DraftKings$salary <- as.numeric(DraftKings$salary)
-  DraftKings$fantasyPoints <- as.numeric(DraftKings$fantasyPoints)
-  FanDuel <- tibble::as_tibble(
-    res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[2]]) %>%
-    dplyr::mutate(site = "FanDuel")
-  FanDuel$salary <- as.numeric(FanDuel$salary)
-  FanDuel$fantasyPoints <- as.numeric(FanDuel$fantasyPoints)
+  sites <- res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsType"]]
+  for (i in 1:2) {
+    tbl_df <- tibble::as_tibble(
+      res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[i]]) %>%
+      dplyr::mutate(site = sites[i])
+    tbl_df$salary <- as.numeric(tbl_df$salary)
+    tbl_df$fantasyPoints <- as.numeric(tbl_df$fantasyPoints)
+    assign(sites[i], tbl_df)
+  }
   return(dplyr::bind_rows(DraftKings, FanDuel))
 }
 
