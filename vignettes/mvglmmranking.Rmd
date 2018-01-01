@@ -27,28 +27,26 @@ knitr::opts_chunk$set(
 2. Enter the following in the R console:
 
     ```
+    token <- "paste_the_copied_access_token_here"
     library(tidysportsfeeds)
     library(stattleshipR)
-    set_token("paste_the_copied_access_token_here")
+    set_token(token)
     ```
 
-## Downloading the raw data for the current season for a league
+## Downloading the `games` tibble
 1. Choose your league. I'm going to use NBA.
-2. Acquire the tibbles: `nba_season <- get_season("nba")`.
+2. Acquire the `games` tibble: `nba_games <- get_games("nba")`.
 
-This will return a list of three tibbles:
-    * teams: the teams in the league
-    * players: the players in the league
-    * games: the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
+This will return a tibble of the games in the season, both already played and upcoming. Column `status` will be "upcoming" for upcoming games and "closed" for games that have been played.
 
 ## Projecting the rest of the season
-1. Run the projections: `nba_result <- project_season(nba_season$games)`. You'll see the iterations for the `mvglmmRank` model. This will take some time, depending on the number of games in the input dataset.
+1. Run the projections: `nba_result <- project_upcoming_games(nba_games)`. You'll see the iterations for the `mvglmmRank` model. This will take some time, depending on the number of games in the input dataset.
 
-    The result of `project_season` is a list of three items:
+    The result of `project_upcoming_games` is a list of three items:
     
-    * projections: a tibble containing the projections
-    * model: the model `mvglmmRank` derived
-    * model_input: the data from closed games that `mvglmmRank` used
+    * projections: a tibble containing the projections,
+    * model: the model `mvglmmRank` derived, and
+    * model_input: the data from closed games that `mvglmmRank` used.
 
 2. Extract the projections from the result: `nba_projections <- nba_result$projections`.
 3. Save as a CSV file: `readr::write_excel_csv(nba_projections, "nba_projections.csv")`.

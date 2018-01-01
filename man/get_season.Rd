@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper_utils.R
 \name{get_season}
 \alias{get_season}
-\title{Get Current Season tables from Stattleship API}
+\title{Get current season tables from Stattleship API}
 \usage{
 get_season(league)
 }
@@ -15,10 +15,12 @@ a list of three tibbles:
 \item teams: the teams in the league
 \item players: the players in the league
 \item games: games in the season.
-All games - completed, in-progress and upcaming - are listed.}
+All games - closed, in-progress and upcaming - are listed.}
 }
 \description{
-Gets a schedule 'gameentry' object from the stattleship.com API
+Gets a baseline list of tables for a season from the
+Stattleship API. Usually, one runs this once at the beginning of the season
+and updates the tables on a daily or weekly basis.
 }
 \examples{
 \dontrun{

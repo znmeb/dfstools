@@ -1,3 +1,10 @@
+# See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
+if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "teams",
+  "players",
+  "games"
+))
+
 # internal function to look up sport name
 .sport <- function(league) {
   sports <- c("basketball", "hockey", "football", "baseball")
@@ -61,9 +68,11 @@ get_mysportsfeeds_dfs <- function(league, season) {
   return(dplyr::bind_rows(DraftKings, FanDuel))
 }
 
-#' @title Get Current Season tables from Stattleship API
+#' @title Get current season tables from Stattleship API
 #' @name get_season
-#' @description Gets a schedule 'gameentry' object from the stattleship.com API
+#' @description Gets a baseline list of tables for a season from the
+#' Stattleship API. Usually, one runs this once at the beginning of the season
+#' and updates the tables on a daily or weekly basis.
 #' @export get_season
 #' @importFrom stattleshipR ss_get_result
 #' @param league ("nba", "nhl", "nfl" or "mlb")
@@ -72,7 +81,7 @@ get_mysportsfeeds_dfs <- function(league, season) {
 #' \item teams: the teams in the league
 #' \item players: the players in the league
 #' \item games: games in the season.
-#' All games - completed, in-progress and upcaming - are listed.}
+#' All games - closed, in-progress and upcaming - are listed.}
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
@@ -98,14 +107,7 @@ get_season <- function(league) {
   return(list(teams = teams, players = players, games = games))
 }
 
-## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "teams",
-  "players",
-  "games"
-))
-
-#' @title Get Current Season (player) game logs from Stattleship API
+#' @title Get current season game logs (player box scores) from Stattleship API
 #' @name get_game_logs
 #' @description Gets a game_logs object from the stattleship.com API
 #' @export get_game_logs
@@ -133,9 +135,34 @@ get_game_logs <- function(league, team_slug) {
   )
 }
 
-## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "teams",
-  "players",
-  "games"
-))
+#' @title Get current season games from Stattleship API
+#' @name get_games
+#' @description Gets a `games` table from the stattleship.com API
+#' @export get_games
+#' @importFrom stattleshipR ss_get_result
+#' @param league ("nba", "nhl", "nfl" or "mlb")
+#' @return a `games table from the Stattleship API. The entire season is
+#' returned, with column `status` designating "closed", "upcoming" and
+#' "in_progress" games.
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' library(stattleshipR)
+#' stattleshipR::set_token(token)
+#' nba_games <-
+#'   tidysportsfeeds::get_games(league = "nba")
+#' nhl_games <-
+#'   tidysportsfeeds::get_games(league = "nhl")
+#' nfl_games <-
+#'   tidysportsfeeds::get_games(league = "nfl")
+#' }
+
+get_games <- function(league) {
+  return(.get_tibble(
+      league = league,
+      ep = "games",
+      query = list()
+    )
+  )
+}

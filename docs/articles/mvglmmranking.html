@@ -88,25 +88,26 @@
 <li>Go to the Stattleship API page <a href="https://api.stattleship.com/" class="uri">https://api.stattleship.com/</a> and sign in. Then press the <code>Copy Access Token</code> button.</li>
 <li>
 <p>Enter the following in the R console:</p>
-<pre><code>library(tidysportsfeeds)
+<pre><code>token &lt;- "paste_the_copied_access_token_here"
+library(tidysportsfeeds)
 library(stattleshipR)
-set_token("paste_the_copied_access_token_here")</code></pre>
+set_token(token)</code></pre>
 </li>
-</ol></section><section id="downloading-the-raw-data-for-the-current-season-for-a-league" class="level2"><h2>Downloading the raw data for the current season for a league</h2>
+</ol></section><section id="downloading-the-games-tibble" class="level2"><h2>Downloading the <code>games</code> tibble</h2>
 <ol type="1">
 <li>Choose your league. I’m going to use NBA.</li>
-<li>Acquire the tibbles: <code>nba_season &lt;- get_season("nba")</code>.</li>
+<li>Acquire the <code>games</code> tibble: <code>nba_games &lt;- get_games("nba")</code>.</li>
 </ol>
-<p>This will return a list of three tibbles: * teams: the teams in the league * players: the players in the league * games: the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
+<p>This will return a tibble of the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
 </section><section id="projecting-the-rest-of-the-season" class="level2"><h2>Projecting the rest of the season</h2>
 <ol type="1">
 <li>
-<p>Run the projections: <code>nba_result &lt;- project_season(nba_season$games)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
-<p>The result of <code>project_season</code> is a list of three items:</p>
+<p>Run the projections: <code>nba_result &lt;- project_upcoming_games(nba_games)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
+<p>The result of <code>project_upcoming_games</code> is a list of three items:</p>
 <ul>
-<li>projections: a tibble containing the projections</li>
-<li>model: the model <code>mvglmmRank</code> derived</li>
-<li>model_input: the data from closed games that <code>mvglmmRank</code> used</li>
+<li>projections: a tibble containing the projections,</li>
+<li>model: the model <code>mvglmmRank</code> derived, and</li>
+<li>model_input: the data from closed games that <code>mvglmmRank</code> used.</li>
 </ul>
 </li>
 <li>Extract the projections from the result: <code>nba_projections &lt;- nba_result$projections</code>.</li>
@@ -154,7 +155,7 @@ set_token("paste_the_copied_access_token_here")</code></pre>
       <ul class="nav nav-pills nav-stacked">
 <li><a href="#getting-started">Getting started</a></li>
       <li><a href="#setting-the-api-access-token">Setting the API access token</a></li>
-      <li><a href="#downloading-the-raw-data-for-the-current-season-for-a-league">Downloading the raw data for the current season for a league</a></li>
+      <li><a href="#downloading-the-games-tibble">Downloading the <code>games</code> tibble</a></li>
       <li><a href="#projecting-the-rest-of-the-season">Projecting the rest of the season</a></li>
       <li><a href="#faq">FAQ</a></li>
       <li><a href="#references">References</a></li>

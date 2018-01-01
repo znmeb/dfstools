@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get Current Season tables from Stattleship API — get_season • tidysportsfeeds</title>
+<title>Get current season tables from Stattleship API — get_season • tidysportsfeeds</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -92,11 +92,13 @@
       <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get Current Season tables from Stattleship API</h1>
+    <h1>Get current season tables from Stattleship API</h1>
     </div>
 
     
-    <p>Gets a schedule 'gameentry' object from the stattleship.com API</p>
+    <p>Gets a baseline list of tables for a season from the
+Stattleship API. Usually, one runs this once at the beginning of the season
+and updates the tables on a daily or weekly basis.</p>
     
 
     <pre class="usage"><span class='fu'>get_season</span>(<span class='no'>league</span>)</pre>
@@ -116,7 +118,7 @@
 <li><p>teams: the teams in the league</p></li>
 <li><p>players: the players in the league</p></li>
 <li><p>games: games in the season.
-All games - completed, in-progress and upcaming - are listed.</p></li>
+All games - closed, in-progress and upcaming - are listed.</p></li>
 </ul>
 
     

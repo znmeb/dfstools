@@ -9,6 +9,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "ended_at",
   "entropy",
   "home",
+  "home_mov_proj",
   "prob_home_wins",
   "home_score_proj",
   "home.response",
@@ -24,7 +25,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "slug",
   "started_at",
   "scheduled_at",
-  "status"
+  "status",
+  "total_proj"
 ))
 
 ## internal function for periods per game for a league
@@ -48,10 +50,10 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
     dplyr::select(away:OT, started_at, ended_at, periods = period, status)
 }
 
-#' @title Project season
-#' @name project_season
+#' @title Project upcoming games for the current season
+#' @name project_upcoming_games
 #' @description Creates a tibble with projections for the rest of the games in a season
-#' @export project_season
+#' @export project_upcoming_games
 #' @importFrom dplyr %>%
 #' @importFrom magrittr %<>%
 #' @param raw_season a tibble returned from the Stattleship API via `get_season`
@@ -68,12 +70,12 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' stattleshipR::set_token(token)
 #' nba_raw <-
 #'   tidysportsfeeds::get_season(league = "nba")
-#' nba_result <- project_season(nba_raw)
+#' nba_result <- project_upcoming_games(nba_raw)
 #' nba_projections <- nba_result$projections
 #' readr::write_excel_csv(nba_projections, "nba_projections.csv")
 #' }
 
-project_season <- function(raw_season) {
+project_upcoming_games <- function(raw_season) {
 
   # get model input
   season_data <- .extract_model_input_data(raw_season)
@@ -129,10 +131,16 @@ project_season <- function(raw_season) {
           log2(prob_away_wins) * prob_away_wins)
     }
 
-  projections %<>% dplyr::select(
-    away, home,
-    prob_away_wins, prob_home_wins,
-    away_score_proj, home_score_proj,
-    entropy, scheduled_at, neutral_site, method)
+  projections %<>%
+    dplyr::mutate(
+      home_mov_proj = home_score_proj - away_score_proj,
+      total_proj = home_score_proj + away_score_proj
+    ) %>%
+    dplyr::select(
+      away, home,
+      prob_away_wins, prob_home_wins,
+      away_score_proj, home_score_proj,
+      home_mov_proj, total_proj,
+      entropy, scheduled_at, neutral_site, method)
   return(list(projections = projections, model = model, model_input = model_input))
 }

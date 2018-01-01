@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper_utils.R
 \name{get_game_logs}
 \alias{get_game_logs}
-\title{Get Current Season (player) game logs from Stattleship API}
+\title{Get current season game logs (player box scores) from Stattleship API}
 \usage{
 get_game_logs(league, team_slug)
 }
