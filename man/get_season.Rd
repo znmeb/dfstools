@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper_utils.R
 \name{get_season}
 \alias{get_season}
-\title{Get Current Season Games from Stattleship API}
+\title{Get current season tables from Stattleship API}
 \usage{
 get_season(league)
 }
@@ -10,11 +10,17 @@ get_season(league)
 \item{league}{("nba", "nhl", "nfl" or "mlb")}
 }
 \value{
-a tibble with the games for the season. The whole schedule is given,
-with games as yet unplayed having scores of zero.
+a list of three tibbles:
+\itemize{
+\item teams: the teams in the league
+\item players: the players in the league
+\item games: games in the season.
+All games - closed, in-progress and upcaming - are listed.}
 }
 \description{
-Gets a schedule 'gameentry' object from the stattleship.com API
+Gets a baseline list of tables for a season from the
+Stattleship API. Usually, one runs this once at the beginning of the season
+and updates the tables on a daily or weekly basis.
 }
 \examples{
 \dontrun{
@@ -22,11 +28,11 @@ token <- "yourtoken"
 library(tidysportsfeeds)
 library(stattleshipR)
 stattleshipR::set_token(token)
-nba_raw <-
+nba_season <-
   tidysportsfeeds::get_season(league = "nba")
-nhl_raw <-
+nhl_season <-
   tidysportsfeeds::get_season(league = "nhl")
-nfl_raw <-
+nfl_season <-
   tidysportsfeeds::get_season(league = "nfl")
 }
 }
