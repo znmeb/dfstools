@@ -4,7 +4,10 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "players",
   "games",
   "DraftKings",
-  "FanDuel"
+  "FanDuel",
+  "game_played",
+  "home_team_outcome",
+  "time_played_total"
 ))
 
 # internal function to look up sport name
@@ -166,4 +169,47 @@ get_games <- function(league) {
       query = list()
     )
   )
+}
+
+#' @title Get current season game logs to date from Stattleship API
+#' @name get_game_logs_to_date
+#' @description Gets game logs to date for all teams from the stattleship.com API
+#' @export get_game_logs_to_date
+#' @importFrom stattleshipR ss_get_result
+#' @importFrom magrittr %<>%
+#' @importFrom magrittr %>%
+#' @importFrom dplyr filter
+#' @importFrom tibble as_tibble
+#' @param league ("nba", "nhl", "nfl" or "mlb")
+#' @return a list with two items:
+#' \itemize{
+#' \item raw_game_logs the game logs (player box scores) as delivered by the API
+#' \item season_tables a list returned by "get_season"}
+#' @examples
+#' \dontrun{
+#' token <- "yourtoken"
+#' library(tidysportsfeeds)
+#' stattleshipR::set_token(token)
+#' nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
+#' }
+
+get_game_logs_to_date <- function(league) {
+  cat("\nFetching season data tables\n")
+  season <- get_season(league)
+  game_logs <- tibble::as_tibble() # empty tibble
+  team_slugs <- season$teams$slug
+
+  for (i in 1:length(team_slugs)) {
+    slug <- team_slugs[i]
+    cat("Fetching", slug, "\n")
+    game_logs %<>% dplyr::bind_rows(
+      get_game_logs("nba", team_slug = slug) %>%
+        dplyr::filter(
+          game_played == "TRUE",
+          time_played_total > 0,
+          home_team_outcome != "undecided"
+        )
+    )
+  }
+  return(list(raw_game_logs = game_logs, season_tables = season))
 }
