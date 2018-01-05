@@ -17,7 +17,8 @@ Imports: tibble,
     lubridate,
     mvglmmRank,
     readr,
-    magrittr
+    magrittr,
+    Anthropometry
 Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r
 Suggests: knitr,
