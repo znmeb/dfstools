@@ -16,7 +16,15 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "position_abbreviation",
   "weight",
   "unit_of_weight",
-  "years_of_experience"
+  "years_of_experience",
+  "assists",
+  "is_home_team",
+  "scoreline",
+  "triple_double",
+  "double_double",
+  "name.y",
+  "rebounds_defensive"
+
 ))
 
 # internal function to look up sport name
@@ -190,10 +198,12 @@ get_games <- function(league) {
 #' @importFrom dplyr filter
 #' @importFrom tibble as_tibble
 #' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @return a list with two items:
+#' @return a list with four items:
 #' \itemize{
 #' \item raw_game_logs the game logs (player box scores) as delivered by the API
-#' \item season_tables a list returned by "get_season"}
+#' \item teams the team tibble returned by the API
+#' \item players the players tibble returned by the API
+#' \item games the games tibble returned by the API}
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
@@ -220,38 +230,44 @@ get_game_logs_to_date <- function(league) {
         )
     )
   }
-  return(list(raw_game_logs = game_logs, season_tables = season))
+  return(list(
+    raw_game_logs = game_logs,
+    teams = season$teams,
+    players = season$players,
+    games = season$games))
 }
 
-#' @title Get player table from Stattleship API
-#' @name get_player_table
-#' @description Gets a joinable player table from the stattleship.com API
-#' @export get_player_table
+#' @title Get NBA game logs to date, tidied
+#' @name get_nba_game_logs
+#' @description Gets a tidy game log tibble for the NBA season to date
+#' @export get_nba_game_logs
+#' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
-#' @param players_object a "players" table returned by the Stattleship API
-#' @return a simplified table suitable for dplyr "join" operations
+#' @importFrom dplyr left_join
+#' @param nba_data a list returned by get_game_logs_to_date for the NBA
+#' @return a tidied player game log tibble (player box scores)
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
 #' library(tidysportsfeeds)
 #' stattleshipR::set_token(token)
 #' nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
-#' nba_players <-
-#' tidysportsfeeds::get_player_table(nba_data$season_tables$players)
-#' nba_game_logs <- nba_data$raw_game_logs %>%
-#' dplyr::left_join(nba_data$season_tables$games, by = c("game_id" = "id")) %>%
-#' dplyr::left_join(nba_players, by = c("player_id" = "id")) %>%
-#' dplyr::select(
-#' player = name.y,
-#' birth_date:years_of_experience,
-#' scoreline, started_at, ended_at, period,
-#' is_home_team,
-#' assists:triple_double)
+#' nba_game_logs <-
+#' tidysportsfeeds::get_nba_game_logs(nba_data)
 #' }
 
-get_player_table <- function(players_object) {
-  players_object %>%
-    dplyr::select(id, name, birth_date, height, unit_of_height, weight,
-                  unit_of_weight, position_abbreviation, years_of_experience)
+get_nba_game_logs <- function(nba_data) {
+  nba_game_logs <- nba_data$raw_game_logs %>%
+    dplyr::left_join(nba_data$games, by = c("game_id" = "id")) %>%
+    dplyr::left_join(nba_data$players, by = c("player_id" = "id")) %>%
+    dplyr::select(
+      name = name.y, birth_date,
+      height, unit_of_height, weight, unit_of_weight,
+      position_abbreviation, years_of_experience,
+      scoreline, started_at, ended_at, period,
+      is_home_team,
+      assists:time_played_total,
+      rebounds_defensive:double_double, triple_double
+    )
 }

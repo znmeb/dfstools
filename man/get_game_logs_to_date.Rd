@@ -10,10 +10,12 @@ get_game_logs_to_date(league)
 \item{league}{("nba", "nhl", "nfl" or "mlb")}
 }
 \value{
-a list with two items:
+a list with four items:
 \itemize{
 \item raw_game_logs the game logs (player box scores) as delivered by the API
-\item season_tables a list returned by "get_season"}
+\item teams the team tibble returned by the API
+\item players the players tibble returned by the API
+\item games the games tibble returned by the API}
 }
 \description{
 Gets game logs to date for all teams from the stattleship.com API
