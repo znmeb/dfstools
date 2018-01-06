@@ -48,6 +48,24 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
     do.call("rbind", lapply(result, function(x) get(ep, x)))))
 }
 
+
+# internal function to fetch from Stattleship and unpack the main result as a list of tibbles
+.get_list_of_tibbles <- function(league, ep, query, tibbles) {
+  result <- stattleshipR::ss_get_result(
+    sport = .sport(league),
+    league = league,
+    ep = ep,
+    query = query,
+    walk = TRUE,
+    verbose = FALSE)
+  return_list <- list()
+  for (t in tibbles) {
+    return_list[[t]] <- tibble::as_tibble(
+      do.call("rbind", lapply(result, function(x) get(t, x))))
+  }
+  return(return_list)
+}
+
 #' @title Get MySportsFeed DFS data
 #' @name get_mysportsfeeds_dfs
 #' @description Gets DFS data object from the MySportsFeeds.com API
