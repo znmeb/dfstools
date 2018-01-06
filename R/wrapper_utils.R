@@ -29,11 +29,12 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 
 # names of teams for endpoints / queries
 .team_slugs <- c(
-  "nba-atl", "nba-bos", "nba-bk", , "nba-cha", "nba-chi", "nba-cle", "nba-dal", 
-  "nba-den", "nba-det", "nba-gs", , "nba-hou", "nba-ind", "nba-lac", "nba-lal", 
-  "nba-mem", "nba-mia", "nba-mil", "nba-min", "nba-no", , "nba-ny", , "nba-okc", 
-  "nba-orl", "nba-phi", "nba-pho", "nba-por", "nba-sac", "nba-sa", , "nba-tor", 
-  "nba-uta", "nba-was")
+  "nba-atl", "nba-bos", "nba-bk", "nba-cha", "nba-chi",
+  "nba-cle", "nba-dal", "nba-den", "nba-det", "nba-gs",
+  "nba-hou", "nba-ind", "nba-lac", "nba-lal", "nba-mem",
+  "nba-mia", "nba-mil", "nba-min", "nba-no", "nba-ny",
+  "nba-okc", "nba-orl", "nba-phi", "nba-pho", "nba-por",
+  "nba-sac", "nba-sa", "nba-tor", "nba-uta", "nba-was")
 
 # internal function to look up sport name
 .sport <- function(league) {
