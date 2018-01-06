@@ -73,8 +73,10 @@
     
     
 <div class="contents">
-<section id="getting-started" class="level2"><h2>Getting started</h2>
-<ol type="1">
+<div id="getting-started" class="section level2">
+<h2 class="hasAnchor">
+<a href="#getting-started" class="anchor"></a>Getting started</h2>
+<ol style="list-style-type: decimal">
 <li>Read the <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.md">code of conduct</a> and <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.md">contributor’s guide</a>.</li>
 <li>Sign up for an account at <a href="https://www.mysportsfeeds.com/">MySportsFeeds.com</a> and <a href="https://api.stattleship.com/">Stattleship.com</a>. You will need accounts on both to use this package; the two APIs have different capabilities and the R package uses both APIs.</li>
 <li>Sign up for monthly support of the API providers on Patreon. After you do that, they will activate your logins / API tokens.
@@ -85,28 +87,41 @@
 </li>
 <li>If you find this package useful, you can support my work on Patreon at <a href="https://www.patreon.com/znmeb/posts" class="uri">https://www.patreon.com/znmeb/posts</a>. <strong><em>Supporting me is not required to use the package!</em></strong>
 </li>
-</ol></section><section id="installing-the-package" class="level2"><h2>Installing the package</h2>
-<ol type="1">
+</ol>
+</div>
+<div id="installing-the-package" class="section level2">
+<h2 class="hasAnchor">
+<a href="#installing-the-package" class="anchor"></a>Installing the package</h2>
+<ol style="list-style-type: decimal">
 <li>
 <p>Install git, R and RStudio for your work environment. This is a developers’ release; for the moment, you’ll need to be familiar with git / GitHub, R and RStudio.</p>
 I test regularly on Windows and Arch Linux, but any environment that supports RStudio should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/tidysportsfeeds/issues/new" class="uri">https://github.com/znmeb/tidysportsfeeds/issues/new</a>
 </li>
 <li>Open RStudio and install the packages <code>devtools</code> and <code>roxygen2</code> from CRAN.</li>
 <li><p>In the RStudio console, type <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("znmeb/tidysportsfeeds")</a></code>.</p></li>
-</ol></section><section id="some-philosophy-roadmap" class="level2"><h2>Some philosophy / roadmap</h2>
+</ol>
+</div>
+<div id="some-philosophy-roadmap" class="section level2">
+<h2 class="hasAnchor">
+<a href="#some-philosophy-roadmap" class="anchor"></a>Some philosophy / roadmap</h2>
 <p>I’m planning to grow this package some, but not as a full-fledged DFS analytics suite. Most of it will be on an as-needed basis; I’ll want to run an analysis and I’ll code up the API interfaces I need for the task.</p>
 <p>The four tasks I have coded (subject to some refactoring to be done) are</p>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li>Predicting game scores and win probabilities via <code>mvglmmRank</code>,</li>
 <li>Visualization of players’ and teams’ fantasy point distributions with <code>ggplot2</code>,</li>
 <li>Archetypoidal analysis (<code>Anthropometry</code>), and</li>
 <li>Predicting fantasy points via a general linear model (<code>MASS::glm</code>).</li>
-</ol></section><section id="patreon-links" class="level2"><h2>Patreon links</h2>
+</ol>
+</div>
+<div id="patreon-links" class="section level2">
+<h2 class="hasAnchor">
+<a href="#patreon-links" class="anchor"></a>Patreon links</h2>
 <ul>
 <li><a href="https://www.patreon.com/znmeb/posts">M. Edward (Ed) Borasky</a></li>
 <li><a href="https://www.patreon.com/mysportsfeeds/posts">MySportsFeeds</a></li>
 <li><a href="https://www.patreon.com/stattleship/posts">Stattleship</a></li>
-</ul></section>
+</ul>
+</div>
 </div>
   </div>
 
@@ -133,7 +148,7 @@ I test regularly on Windows and Arch Linux, but any environment that supports RS
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="http://pkgdown.r-lib.org/">pkgdown</a>.</p>
+  <p>Site built with <a href="http://hadley.github.io/pkgdown/">pkgdown</a>.</p>
 </div>
 
       </footer>
