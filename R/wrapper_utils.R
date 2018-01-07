@@ -174,34 +174,6 @@ get_season <- function(league) {
   return(list(teams = teams, players = players, games = games))
 }
 
-#' @title Get current season game logs (player box scores) from Stattleship API
-#' @name get_game_logs
-#' @description Gets a game_logs object from the stattleship.com API
-#' @export get_game_logs
-#' @importFrom stattleshipR ss_get_result
-#' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @param team_slug the Stattleship team slug for the team
-#' @return a tibble with the game logs
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(tidysportsfeeds)
-#' library(stattleshipR)
-#' stattleshipR::set_token(token)
-#' trailblazers_logs <-
-#'   get_game_logs(league = "nba", team_slug = "nba-por")
-#' }
-
-get_game_logs <- function(league, team_slug) {
-  return(
-    .get_tibble(
-      league = league,
-      ep = "game_logs",
-      query = list(team_id = team_slug)
-    )
-  )
-}
-
 #' @title Get current season games from Stattleship API
 #' @name get_games
 #' @description Gets a `games` table from the stattleship.com API
@@ -284,10 +256,10 @@ get_game_logs_to_date <- function(league) {
     games = games))
 }
 
-#' @title Get NBA game logs to date, tidied
-#' @name get_nba_game_logs
+#' @title Tidy NBA game logs to date
+#' @name tidy_nba_game_logs
 #' @description Gets a tidy game log tibble for the NBA season to date
-#' @export get_nba_game_logs
+#' @export tidy_nba_game_logs
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
 #' @importFrom dplyr select
@@ -301,11 +273,11 @@ get_game_logs_to_date <- function(league) {
 #' stattleshipR::set_token(token)
 #' nba_data <- get_game_logs_to_date(league = "nba")
 #' nba_game_logs <-
-#' get_nba_game_logs(nba_data)
+#' tidy_nba_game_logs(nba_data)
 #' }
 
-get_nba_game_logs <- function(nba_data) {
-  nba_game_logs <- nba_data$raw_game_logs %>%
+tidy_nba_game_logs <- function(nba_data) {
+  nba_game_logs <- nba_data$game_logs %>%
     dplyr::left_join(nba_data$games, by = c("game_id" = "id")) %>%
     dplyr::left_join(nba_data$players, by = c("player_id" = "id")) %>%
     dplyr::select(
