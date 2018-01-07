@@ -24,6 +24,6 @@ library(tidysportsfeeds)
 library(stattleshipR)
 stattleshipR::set_token(token)
 trailblazers_logs <-
-  tidysportsfeeds::get_game_logs(league = "nba", team_slug = "nba-por")
+  get_game_logs(league = "nba", team_slug = "nba-por")
 }
 }

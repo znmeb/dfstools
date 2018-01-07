@@ -7,15 +7,14 @@
 get_game_logs_to_date(league)
 }
 \arguments{
-\item{league}{("nba", "nhl", "nfl" or "mlb")}
+\item{league}{("nba", "nhl" -- "nfl", "mlb" TBD!)}
 }
 \value{
-a list with four items:
+a list with three items:
 \itemize{
-\item raw_game_logs the game logs (player box scores) as delivered by the API
-\item teams the team tibble returned by the API
 \item players the players tibble returned by the API
-\item games the games tibble returned by the API}
+\item games the games tibble returned by the API
+\item game_logs the game logs (player box scores) as delivered by the API}
 }
 \description{
 Gets game logs to date for all teams from the stattleship.com API
@@ -25,6 +24,7 @@ Gets game logs to date for all teams from the stattleship.com API
 token <- "yourtoken"
 library(tidysportsfeeds)
 stattleshipR::set_token(token)
-nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
+nba_data <- get_game_logs_to_date(league = "nba")
+nhl_data <- get_game_logs_to_date(league = "nhl")
 }
 }

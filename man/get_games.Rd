@@ -24,10 +24,10 @@ library(tidysportsfeeds)
 library(stattleshipR)
 stattleshipR::set_token(token)
 nba_games <-
-  tidysportsfeeds::get_games(league = "nba")
+  get_games(league = "nba")
 nhl_games <-
-  tidysportsfeeds::get_games(league = "nhl")
+  get_games(league = "nhl")
 nfl_games <-
-  tidysportsfeeds::get_games(league = "nfl")
+  get_games(league = "nfl")
 }
 }

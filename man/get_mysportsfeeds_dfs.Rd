@@ -25,6 +25,6 @@ library(tidysportsfeeds)
 library(mysportsfeedsR)
 mysportsfeedsR::authenticate_v1_0(username, password)
 nba_dfs_2017_2018 <-
-  tidysportsfeeds::get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
+  get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
 }
 }

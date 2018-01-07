@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get current season game logs to date from Stattleship API — get_game_logs_to_date • tidysportsfeeds</title>
+<title>Get current season game logs to date from Stattleship API � get_game_logs_to_date • tidysportsfeeds</title>
 
 <!-- jquery -->
 <script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script>
@@ -106,17 +106,16 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>league</th>
-      <td><p>("nba", "nhl", "nfl" or "mlb")</p></td>
+      <td><p>("nba", "nhl" -- "nfl", "mlb" TBD!)</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list with four items:</p><ul>
-<li><p>raw_game_logs the game logs (player box scores) as delivered by the API</p></li>
-<li><p>teams the team tibble returned by the API</p></li>
+    <p>a list with three items:</p><ul>
 <li><p>players the players tibble returned by the API</p></li>
 <li><p>games the games tibble returned by the API</p></li>
+<li><p>game_logs the game logs (player box scores) as delivered by the API</p></li>
 </ul>
 
     
@@ -126,7 +125,8 @@
 <span class='no'>token</span> <span class='kw'>&lt;-</span> <span class='st'>"yourtoken"</span>
 <span class='fu'>library</span>(<span class='no'>tidysportsfeeds</span>)
 <span class='kw pkg'>stattleshipR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stattleshipR/topics/set_token'>set_token</a></span>(<span class='no'>token</span>)
-<span class='no'>nba_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_game_logs_to_date'>get_game_logs_to_date</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
+<span class='no'>nba_data</span> <span class='kw'>&lt;-</span> <span class='fu'>get_game_logs_to_date</span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
+<span class='no'>nhl_data</span> <span class='kw'>&lt;-</span> <span class='fu'>get_game_logs_to_date</span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nhl"</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

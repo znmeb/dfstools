@@ -20,8 +20,8 @@ Gets a tidy game log tibble for the NBA season to date
 token <- "yourtoken"
 library(tidysportsfeeds)
 stattleshipR::set_token(token)
-nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
+nba_data <- get_game_logs_to_date(league = "nba")
 nba_game_logs <-
-tidysportsfeeds::get_nba_game_logs(nba_data)
+get_nba_game_logs(nba_data)
 }
 }

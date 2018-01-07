@@ -29,10 +29,10 @@ library(tidysportsfeeds)
 library(stattleshipR)
 stattleshipR::set_token(token)
 nba_season <-
-  tidysportsfeeds::get_season(league = "nba")
+  get_season(league = "nba")
 nhl_season <-
-  tidysportsfeeds::get_season(league = "nhl")
+  get_season(league = "nhl")
 nfl_season <-
-  tidysportsfeeds::get_season(league = "nfl")
+  get_season(league = "nfl")
 }
 }

@@ -28,13 +28,32 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 ))
 
 # names of teams for endpoints / queries
-.team_slugs <- c(
+.team_slugs <- list()
+.team_slugs[["nba"]] <- c(
   "nba-atl", "nba-bos", "nba-bk", "nba-cha", "nba-chi",
   "nba-cle", "nba-dal", "nba-den", "nba-det", "nba-gs",
   "nba-hou", "nba-ind", "nba-lac", "nba-lal", "nba-mem",
   "nba-mia", "nba-mil", "nba-min", "nba-no", "nba-ny",
   "nba-okc", "nba-orl", "nba-phi", "nba-pho", "nba-por",
   "nba-sac", "nba-sa", "nba-tor", "nba-uta", "nba-was")
+
+.team_slugs[["nfl"]] <- c(
+  "nfl-ari", "nfl-atl", "nfl-bal", "nfl-buf", "nfl-car",
+  "nfl-chi", "nfl-cin", "nfl-cle", "nfl-dal", "nfl-den",
+  "nfl-det", "nfl-gb", "nfl-hou", "nfl-ind", "nfl-jac",
+  "nfl-kc", "nfl-lac", "nfl-stl", "nfl-mia", "nfl-min",
+  "nfl-ne", "nfl-no", "nfl-nyj", "nfl-nyg", "nfl-oak",
+  "nfl-phi", "nfl-pit", "nfl-sf", "nfl-sea", "nfl-tb",
+  "nfl-ten", "nfl-was")
+
+.team_slugs[["nhl"]] <- c(
+  "nhl-ana", "nhl-ari", "nhl-bos", "nhl-buf", "nhl-cal",
+  "nhl-car", "nhl-chi", "nhl-col", "nhl-clb", "nhl-dal",
+  "nhl-det", "nhl-edm", "nhl-fla", "nhl-la", "nhl-min",
+  "nhl-mon", "nhl-nas", "nhl-nj", "nhl-nyi", "nhl-nyr",
+  "nhl-ott", "nhl-phi", "nhl-pit", "nhl-sj", "nhl-stl",
+  "nhl-tb", "nhl-tor", "nhl-van", "nhl-vgk", "nhl-was",
+  "nhl-win")
 
 # internal function to look up sport name
 .sport <- function(league) {
@@ -95,7 +114,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' library(mysportsfeedsR)
 #' mysportsfeedsR::authenticate_v1_0(username, password)
 #' nba_dfs_2017_2018 <-
-#'   tidysportsfeeds::get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
+#'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
 #' }
 
 get_mysportsfeeds_dfs <- function(league, season) {
@@ -137,11 +156,11 @@ get_mysportsfeeds_dfs <- function(league, season) {
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' nba_season <-
-#'   tidysportsfeeds::get_season(league = "nba")
+#'   get_season(league = "nba")
 #' nhl_season <-
-#'   tidysportsfeeds::get_season(league = "nhl")
+#'   get_season(league = "nhl")
 #' nfl_season <-
-#'   tidysportsfeeds::get_season(league = "nfl")
+#'   get_season(league = "nfl")
 #' }
 
 get_season <- function(league) {
@@ -170,7 +189,7 @@ get_season <- function(league) {
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' trailblazers_logs <-
-#'   tidysportsfeeds::get_game_logs(league = "nba", team_slug = "nba-por")
+#'   get_game_logs(league = "nba", team_slug = "nba-por")
 #' }
 
 get_game_logs <- function(league, team_slug) {
@@ -199,11 +218,11 @@ get_game_logs <- function(league, team_slug) {
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' nba_games <-
-#'   tidysportsfeeds::get_games(league = "nba")
+#'   get_games(league = "nba")
 #' nhl_games <-
-#'   tidysportsfeeds::get_games(league = "nhl")
+#'   get_games(league = "nhl")
 #' nfl_games <-
-#'   tidysportsfeeds::get_games(league = "nfl")
+#'   get_games(league = "nfl")
 #' }
 
 get_games <- function(league) {
@@ -222,46 +241,47 @@ get_games <- function(league) {
 #' @importFrom stattleshipR ss_get_result
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
-#' @importFrom dplyr filter
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr distinct
 #' @importFrom tibble as_tibble
-#' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @return a list with four items:
+#' @param league ("nba", "nhl" -- "nfl", "mlb" TBD!)
+#' @return a list with three items:
 #' \itemize{
-#' \item raw_game_logs the game logs (player box scores) as delivered by the API
-#' \item teams the team tibble returned by the API
 #' \item players the players tibble returned by the API
-#' \item games the games tibble returned by the API}
+#' \item games the games tibble returned by the API
+#' \item game_logs the game logs (player box scores) as delivered by the API}
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
 #' library(tidysportsfeeds)
 #' stattleshipR::set_token(token)
-#' nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
+#' nba_data <- get_game_logs_to_date(league = "nba")
+#' nhl_data <- get_game_logs_to_date(league = "nhl")
 #' }
 
 get_game_logs_to_date <- function(league) {
-  cat("\nFetching season data tables\n")
-  season <- get_season(league)
-  game_logs <- tibble::as_tibble() # empty tibble
-  team_slugs <- season$teams$slug
-
+  game_logs <- games <- players <- tibble::as_tibble() # empty tibble
+  team_slugs <- .team_slugs[[league]]
   for (i in 1:length(team_slugs)) {
     slug <- team_slugs[i]
     cat("Fetching", slug, "\n")
-    game_logs %<>% dplyr::bind_rows(
-      get_game_logs("nba", team_slug = slug) %>%
-        dplyr::filter(
-          game_played == "TRUE",
-          time_played_total > 0,
-          home_team_outcome != "undecided"
-        )
+    tibbles <- .get_list_of_tibbles(
+      league = league,
+      ep = "game_logs",
+      query = list(team_id = slug),
+      tibbles = c("players", "games", "game_logs")
     )
+    players %<>% dplyr::bind_rows(tibbles$players) %>%
+      dplyr::distinct(id, .keep_all = TRUE)
+    games %<>% dplyr::bind_rows(tibbles$games) %>%
+      dplyr::distinct(id, .keep_all = TRUE)
+    game_logs %<>% dplyr::bind_rows(tibbles$game_logs) %>%
+      dplyr::distinct(id, .keep_all = TRUE)
   }
   return(list(
-    raw_game_logs = game_logs,
-    teams = season$teams,
-    players = season$players,
-    games = season$games))
+    game_logs = game_logs,
+    players = players,
+    games = games))
 }
 
 #' @title Get NBA game logs to date, tidied
@@ -279,9 +299,9 @@ get_game_logs_to_date <- function(league) {
 #' token <- "yourtoken"
 #' library(tidysportsfeeds)
 #' stattleshipR::set_token(token)
-#' nba_data <- tidysportsfeeds::get_game_logs_to_date(league = "nba")
+#' nba_data <- get_game_logs_to_date(league = "nba")
 #' nba_game_logs <-
-#' tidysportsfeeds::get_nba_game_logs(nba_data)
+#' get_nba_game_logs(nba_data)
 #' }
 
 get_nba_game_logs <- function(nba_data) {
