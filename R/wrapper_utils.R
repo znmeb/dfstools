@@ -135,45 +135,6 @@ get_mysportsfeeds_dfs <- function(league, season) {
   return(dplyr::bind_rows(DraftKings, FanDuel))
 }
 
-#' @title Get current season tables from Stattleship API
-#' @name get_season
-#' @description Gets a baseline list of tables for a season from the
-#' Stattleship API. Usually, one runs this once at the beginning of the season
-#' and updates the tables on a daily or weekly basis.
-#' @export get_season
-#' @importFrom stattleshipR ss_get_result
-#' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @return a list of three tibbles:
-#' \itemize{
-#' \item teams: the teams in the league
-#' \item players: the players in the league
-#' \item games: games in the season.
-#' All games - closed, in-progress and upcaming - are listed.}
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(tidysportsfeeds)
-#' library(stattleshipR)
-#' stattleshipR::set_token(token)
-#' nba_season <-
-#'   get_season(league = "nba")
-#' nhl_season <-
-#'   get_season(league = "nhl")
-#' nfl_season <-
-#'   get_season(league = "nfl")
-#' }
-
-get_season <- function(league) {
-  for (table in c("teams", "players", "games")) {
-    assign(table, .get_tibble(
-      league = league,
-      ep = table,
-      query = list()
-    ))
-  }
-  return(list(teams = teams, players = players, games = games))
-}
-
 #' @title Get current season games from Stattleship API
 #' @name get_games
 #' @description Gets a `games` table from the stattleship.com API
@@ -208,7 +169,7 @@ get_games <- function(league) {
 
 #' @title Get current season game logs to date from Stattleship API
 #' @name get_game_logs_to_date
-#' @description Gets game logs to date for all teams from the stattleship.com API
+#' @description Gets game logs to date for all teams from the stattleship.com API. Note: this is a lengthy process; the API delivers only one team at a time. If it crashes, you'll need to re-run it.
 #' @export get_game_logs_to_date
 #' @importFrom stattleshipR ss_get_result
 #' @importFrom magrittr %<>%
@@ -272,8 +233,7 @@ get_game_logs_to_date <- function(league) {
 #' library(tidysportsfeeds)
 #' stattleshipR::set_token(token)
 #' nba_data <- get_game_logs_to_date(league = "nba")
-#' nba_game_logs <-
-#' tidy_nba_game_logs(nba_data)
+#' nba_game_logs <- tidy_nba_game_logs(nba_data)
 #' }
 
 tidy_nba_game_logs <- function(nba_data) {

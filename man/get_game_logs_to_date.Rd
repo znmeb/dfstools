@@ -17,7 +17,7 @@ a list with three items:
 \item game_logs the game logs (player box scores) as delivered by the API}
 }
 \description{
-Gets game logs to date for all teams from the stattleship.com API
+Gets game logs to date for all teams from the stattleship.com API. Note: this is a lengthy process; the API delivers only one team at a time. If it crashes, you'll need to re-run it.
 }
 \examples{
 \dontrun{

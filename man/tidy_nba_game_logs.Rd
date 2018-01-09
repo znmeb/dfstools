@@ -21,7 +21,6 @@ token <- "yourtoken"
 library(tidysportsfeeds)
 stattleshipR::set_token(token)
 nba_data <- get_game_logs_to_date(league = "nba")
-nba_game_logs <-
-tidy_nba_game_logs(nba_data)
+nba_game_logs <- tidy_nba_game_logs(nba_data)
 }
 }
