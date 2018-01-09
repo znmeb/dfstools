@@ -12,7 +12,7 @@
 
 <meta name="author" content="M. Edward (Ed) Borasky" />
 
-<meta name="date" content="2017-12-31" />
+<meta name="date" content="2018-01-08" />
 
 <title>Projecting a Season with mvglmmRank</title>
 
@@ -214,7 +214,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Projecting a Season with mvglmmRank</h1>
 <h4 class="author"><em>M. Edward (Ed) Borasky</em></h4>
-<h4 class="date"><em>2017-12-31</em></h4>
+<h4 class="date"><em>2018-01-08</em></h4>
 
 
 
@@ -233,8 +233,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li><p>Enter the following in the R console:</p>
 <pre><code>token &lt;- &quot;paste_the_copied_access_token_here&quot;
 library(tidysportsfeeds)
-library(stattleshipR)
-set_token(token)</code></pre></li>
+stattleshipR::set_token(token)</code></pre></li>
 </ol>
 </section>
 <section id="downloading-the-games-tibble" class="level2">
@@ -258,6 +257,15 @@ set_token(token)</code></pre></li>
 <li>Extract the projections from the result: <code>nba_projections &lt;- nba_result$projections</code>.</li>
 <li><p>Save as a CSV file: <code>readr::write_excel_csv(nba_projections, &quot;nba_projections.csv&quot;)</code>.</p></li>
 </ol>
+</section>
+<section id="the-whole-thing-to-copy-and-paste" class="level2">
+<h2>The whole thing to copy and paste</h2>
+<pre><code>library(tidysportsfeeds)
+stattleshipR::set_token(token)
+nba_games &lt;- get_games(&quot;nba&quot;)
+nba_result &lt;- project_upcoming_games(nba_games)
+nba_projections &lt;- nba_result$projections
+readr::write_excel_csv(nba_projections, &quot;nba_projections.csv&quot;</code></pre>
 </section>
 <section id="faq" class="level2">
 <h2>FAQ</h2>

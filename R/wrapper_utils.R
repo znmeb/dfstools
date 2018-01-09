@@ -100,18 +100,14 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @export get_mysportsfeeds_dfs
 #' @importFrom mysportsfeedsR msf_get_results
 #' @importFrom tibble as_tibble
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr mutate
-#' @importFrom dplyr %>%
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @param season Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs
-#' @return a tibble with the DFS data for the league and season.
+#' @return a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
 #' @examples
 #' \dontrun{
 #' username <- "your_user_name"
 #' password <- "your_password"
 #' library(tidysportsfeeds)
-#' library(mysportsfeedsR)
 #' mysportsfeedsR::authenticate_v1_0(username, password)
 #' nba_dfs_2017_2018 <-
 #'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
@@ -123,16 +119,17 @@ get_mysportsfeeds_dfs <- function(league, season) {
     season = season,
     feed = "daily_dfs",
     verbose = FALSE)
-  sites <- res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsType"]]
-  for (i in 1:2) {
+  sites <-
+    res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsType"]]
+  return_list <- list()
+  for (i in 1:length(sites)) {
     tbl_df <- tibble::as_tibble(
-      res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsRows"]][[i]]) %>%
-      dplyr::mutate(site = sites[i])
+      res$api_json$dailydfs$dfsEntries$dfsRows[[i]])
     tbl_df$salary <- as.numeric(tbl_df$salary)
     tbl_df$fantasyPoints <- as.numeric(tbl_df$fantasyPoints)
-    assign(sites[i], tbl_df)
+    return_list[[sites[i]]] <- tbl_df
   }
-  return(dplyr::bind_rows(DraftKings, FanDuel))
+  return(return_list)
 }
 
 #' @title Get current season games from Stattleship API

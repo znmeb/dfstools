@@ -12,7 +12,7 @@ get_mysportsfeeds_dfs(league, season)
 \item{season}{Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs}
 }
 \value{
-a tibble with the DFS data for the league and season.
+a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
 }
 \description{
 Gets DFS data object from the MySportsFeeds.com API
@@ -22,7 +22,6 @@ Gets DFS data object from the MySportsFeeds.com API
 username <- "your_user_name"
 password <- "your_password"
 library(tidysportsfeeds)
-library(mysportsfeedsR)
 mysportsfeedsR::authenticate_v1_0(username, password)
 nba_dfs_2017_2018 <-
   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")

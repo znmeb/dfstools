@@ -90,8 +90,7 @@
 <p>Enter the following in the R console:</p>
 <pre><code>token &lt;- "paste_the_copied_access_token_here"
 library(tidysportsfeeds)
-library(stattleshipR)
-set_token(token)</code></pre>
+stattleshipR::set_token(token)</code></pre>
 </li>
 </ol></section><section id="downloading-the-games-tibble" class="level2"><h2>Downloading the <code>games</code> tibble</h2>
 <ol type="1">
@@ -114,8 +113,7 @@ set_token(token)</code></pre>
 <li><p>Save as a CSV file: <code><a href="http://www.rdocumentation.org/packages/readr/topics/write_delim">readr::write_excel_csv(nba_projections, "nba_projections.csv")</a></code>.</p></li>
 </ol></section><section id="the-whole-thing-to-copy-and-paste" class="level2"><h2>The whole thing to copy and paste</h2>
 <pre><code>library(tidysportsfeeds)
-library(stattleshipR)
-set_token(token)
+stattleshipR::set_token(token)
 nba_games &lt;- get_games("nba")
 nba_result &lt;- project_upcoming_games(nba_games)
 nba_projections &lt;- nba_result$projections
