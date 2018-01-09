@@ -4,10 +4,10 @@
 \alias{project_upcoming_games}
 \title{Project upcoming games for the current season}
 \usage{
-project_upcoming_games(raw_season)
+project_upcoming_games(games)
 }
 \arguments{
-\item{raw_season}{a tibble returned from the Stattleship API via `get_season`}
+\item{games}{a `games` tibble returned from the Stattleship API via `get_games`}
 }
 \value{
 a list with three items:
@@ -23,11 +23,9 @@ Creates a tibble with projections for the rest of the games in a season
 \dontrun{
 token <- "yourtoken"
 library(tidysportsfeeds)
-library(stattleshipR)
 stattleshipR::set_token(token)
-nba_raw <-
-  tidysportsfeeds::get_season(league = "nba")
-nba_result <- project_upcoming_games(nba_raw)
+nba_games <- get_games(league = "nba")
+nba_result <- project_upcoming_games(nba_games)
 nba_projections <- nba_result$projections
 readr::write_excel_csv(nba_projections, "nba_projections.csv")
 }

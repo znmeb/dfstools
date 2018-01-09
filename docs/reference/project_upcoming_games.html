@@ -99,14 +99,14 @@
     <p>Creates a tibble with projections for the rest of the games in a season</p>
     
 
-    <pre class="usage"><span class='fu'>project_upcoming_games</span>(<span class='no'>raw_season</span>)</pre>
+    <pre class="usage"><span class='fu'>project_upcoming_games</span>(<span class='no'>games</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a> Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>raw_season</th>
-      <td><p>a tibble returned from the Stattleship API via `get_season`</p></td>
+      <th>games</th>
+      <td><p>a `games` tibble returned from the Stattleship API via `get_games`</p></td>
     </tr>
     </table>
     
@@ -124,11 +124,9 @@
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='no'>token</span> <span class='kw'>&lt;-</span> <span class='st'>"yourtoken"</span>
 <span class='fu'>library</span>(<span class='no'>tidysportsfeeds</span>)
-<span class='fu'>library</span>(<span class='no'>stattleshipR</span>)
 <span class='kw pkg'>stattleshipR</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/stattleshipR/topics/set_token'>set_token</a></span>(<span class='no'>token</span>)
-<span class='no'>nba_raw</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>tidysportsfeeds</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/tidysportsfeeds/topics/get_season'>get_season</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
-<span class='no'>nba_result</span> <span class='kw'>&lt;-</span> <span class='fu'>project_upcoming_games</span>(<span class='no'>nba_raw</span>)
+<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='get_games.html'>get_games</a></span>(<span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>)
+<span class='no'>nba_result</span> <span class='kw'>&lt;-</span> <span class='fu'>project_upcoming_games</span>(<span class='no'>nba_games</span>)
 <span class='no'>nba_projections</span> <span class='kw'>&lt;-</span> <span class='no'>nba_result</span>$<span class='no'>projections</span>
 <span class='kw pkg'>readr</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/readr/topics/write_delim'>write_excel_csv</a></span>(<span class='no'>nba_projections</span>, <span class='st'>"nba_projections.csv"</span>)
 <span class='co'># }</span></pre>

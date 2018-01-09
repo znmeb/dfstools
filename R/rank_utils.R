@@ -35,8 +35,8 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 }
 
 ## internal function for model input data tibble
-.extract_model_input_data <- function(raw_season) {
-  raw_season %>% dplyr::mutate(
+.extract_model_input_data <- function(games) {
+  games %>% dplyr::mutate(
     league = sub("-.*$", "", slug),
     ppg = .ppg(league),
     away = sub(" vs .*$", "", label),
@@ -56,7 +56,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @export project_upcoming_games
 #' @importFrom dplyr %>%
 #' @importFrom magrittr %<>%
-#' @param raw_season a tibble returned from the Stattleship API via `get_season`
+#' @param games a `games` tibble returned from the Stattleship API via `get_games`
 #' @return a list with three items:
 #' \itemize{
 #' \item projections: a tibble with the projections for the rest of the season.
@@ -66,19 +66,17 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' \dontrun{
 #' token <- "yourtoken"
 #' library(tidysportsfeeds)
-#' library(stattleshipR)
 #' stattleshipR::set_token(token)
-#' nba_raw <-
-#'   tidysportsfeeds::get_season(league = "nba")
-#' nba_result <- project_upcoming_games(nba_raw)
+#' nba_games <- get_games(league = "nba")
+#' nba_result <- project_upcoming_games(nba_games)
 #' nba_projections <- nba_result$projections
 #' readr::write_excel_csv(nba_projections, "nba_projections.csv")
 #' }
 
-project_upcoming_games <- function(raw_season) {
+project_upcoming_games <- function(games) {
 
   # get model input
-  season_data <- .extract_model_input_data(raw_season)
+  season_data <- .extract_model_input_data(games)
   model_input <- season_data %>% dplyr::filter(status == "closed")
   projections <- season_data %>% dplyr::filter(status == "upcoming") %>%
     dplyr::select(away, home, neutral_site = neutral.site, scheduled_at = started_at)
