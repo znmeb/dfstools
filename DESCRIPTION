@@ -18,7 +18,7 @@ Imports: tibble,
     mvglmmRank,
     readr,
     magrittr,
-    Anthropometry
+    archetypes
 Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r
 Suggests: knitr,
