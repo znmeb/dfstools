@@ -51,13 +51,13 @@ This will return a tibble of the games in the season, both already played and up
 3. Save as a CSV file: `readr::write_excel_csv(nba_projections, "nba_projections.csv")`.
 
 ## The whole thing to copy and paste
-```
+```{r eval=FALSE}
 library(tidysportsfeeds)
 stattleshipR::set_token(token)
 nba_games <- get_games("nba")
 nba_result <- project_upcoming_games(nba_games)
 nba_projections <- nba_result$projections
-readr::write_excel_csv(nba_projections, "nba_projections.csv"
+readr::write_excel_csv(nba_projections, "nba_projections.csv")
 ```
 
 ## FAQ
