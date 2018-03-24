@@ -18,9 +18,15 @@ Imports: tibble,
     mvglmmRank,
     readr,
     magrittr,
-    archetypes
+    archetypes,
+    openWAR,
+    pitchRx,
+    Sxslt
 Remotes: znmeb/mysportsfeeds-r,
-    znmeb/stattleship-r
+    znmeb/stattleship-r,
+    cpsievert/pitchRx,
+    omegahat/Sxslt,
+    beanumber/openWAR
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
