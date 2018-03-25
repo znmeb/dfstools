@@ -26,7 +26,7 @@ Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r,
     cpsievert/pitchRx,
     omegahat/Sxslt,
-    beanumber/openWAR
+    znmeb/openWAR
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
