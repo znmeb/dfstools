@@ -6,6 +6,7 @@ output: github_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+[![Build Status](https://travis-ci.org/znmeb/tidysportsfeeds.svg?branch=master)](https://travis-ci.org/znmeb/tidysportsfeeds)
 
 ## Getting started
 1. Read the [code of conduct](https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.md) and [contributor's guide](https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.md).

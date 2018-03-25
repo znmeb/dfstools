@@ -1,6 +1,9 @@
 tidysportsfeeds - Tidy Data Analytics from Sports Data APIs
 ================
 
+[![Build
+Status](https://travis-ci.org/znmeb/tidysportsfeeds.svg?branch=master)](https://travis-ci.org/znmeb/tidysportsfeeds)
+
 ## Getting started
 
 1.  Read the [code of
