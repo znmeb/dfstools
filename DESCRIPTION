@@ -21,7 +21,8 @@ Imports: tibble,
     archetypes,
     openWAR,
     pitchRx,
-    Sxslt
+    Sxslt,
+    Anthropometry
 Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r,
     cpsievert/pitchRx,
