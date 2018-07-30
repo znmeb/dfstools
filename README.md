@@ -2,7 +2,7 @@ dfstools - Tidy Data Analytics from Sports Data APIs
 ================
 
 [![Build
-Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/tidysportsfeeds)
+Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/dfstools)
 
 ## Getting started
 

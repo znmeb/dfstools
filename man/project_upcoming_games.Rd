@@ -22,7 +22,7 @@ Creates a tibble with projections for the rest of the games in a season
 \examples{
 \dontrun{
 token <- "yourtoken"
-library(tidysportsfeeds)
+library(dfstools)
 stattleshipR::set_token(token)
 nba_games <- get_games(league = "nba")
 nba_result <- project_upcoming_games(nba_games)

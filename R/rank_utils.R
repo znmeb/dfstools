@@ -64,7 +64,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
-#' library(tidysportsfeeds)
+#' library(dfstools)
 #' stattleshipR::set_token(token)
 #' nba_games <- get_games(league = "nba")
 #' nba_result <- project_upcoming_games(nba_games)

@@ -12,7 +12,7 @@
 
 <meta name="author" content="M. Edward (Ed) Borasky" />
 
-<meta name="date" content="2018-01-13" />
+<meta name="date" content="2018-07-30" />
 
 <title>Projecting a Season with mvglmmRank</title>
 
@@ -22,7 +22,7 @@
 <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -35,13 +35,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -280,39 +278,39 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Projecting a Season with mvglmmRank</h1>
 <h4 class="author"><em>M. Edward (Ed) Borasky</em></h4>
-<h4 class="date"><em>2018-01-13</em></h4>
+<h4 class="date"><em>2018-07-30</em></h4>
 
 
 
-<section id="getting-started" class="level2">
+<div id="getting-started" class="section level2">
 <h2>Getting started</h2>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li>You’ll need an API key for Stattleship. Go to <a href="https://www.patreon.com/stattleship/posts" class="uri">https://www.patreon.com/stattleship/posts</a> to sign up.</li>
 <li>If you haven’t already, install <code>devtools</code>:<code>install.packages(&quot;devtools&quot;)</code>.</li>
-<li>Install <code>tidysportsfeeds</code>: <code>devtools::install_github(&quot;znmeb/tidysportsfeeds&quot;, build_vignettes = TRUE)</code>.</li>
+<li>Install <code>dfstools</code>: <code>devtools::install_github(&quot;znmeb/dfstools&quot;, build_vignettes = TRUE)</code>.</li>
 </ol>
-</section>
-<section id="setting-the-api-access-token" class="level2">
+</div>
+<div id="setting-the-api-access-token" class="section level2">
 <h2>Setting the API access token</h2>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li>Go to the Stattleship API page <a href="https://api.stattleship.com/" class="uri">https://api.stattleship.com/</a> and sign in. Then press the <code>Copy Access Token</code> button.</li>
 <li><p>Enter the following in the R console:</p>
 <pre><code>token &lt;- &quot;paste_the_copied_access_token_here&quot;
-library(tidysportsfeeds)
+library(dfstools)
 stattleshipR::set_token(token)</code></pre></li>
 </ol>
-</section>
-<section id="downloading-the-games-tibble" class="level2">
+</div>
+<div id="downloading-the-games-tibble" class="section level2">
 <h2>Downloading the <code>games</code> tibble</h2>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li>Choose your league. I’m going to use NBA.</li>
 <li>Acquire the <code>games</code> tibble: <code>nba_games &lt;- get_games(&quot;nba&quot;)</code>.</li>
 </ol>
 <p>This will return a tibble of the games in the season, both already played and upcoming. Column <code>status</code> will be “upcoming” for upcoming games and “closed” for games that have been played.</p>
-</section>
-<section id="projecting-the-rest-of-the-season" class="level2">
+</div>
+<div id="projecting-the-rest-of-the-season" class="section level2">
 <h2>Projecting the rest of the season</h2>
-<ol type="1">
+<ol style="list-style-type: decimal">
 <li><p>Run the projections: <code>nba_result &lt;- project_upcoming_games(nba_games)</code>. You’ll see the iterations for the <code>mvglmmRank</code> model. This will take some time, depending on the number of games in the input dataset.</p>
 <p>The result of <code>project_upcoming_games</code> is a list of three items:</p>
 <ul>
@@ -323,19 +321,19 @@ stattleshipR::set_token(token)</code></pre></li>
 <li>Extract the projections from the result: <code>nba_projections &lt;- nba_result$projections</code>.</li>
 <li><p>Save as a CSV file: <code>readr::write_excel_csv(nba_projections, &quot;nba_projections.csv&quot;)</code>.</p></li>
 </ol>
-</section>
-<section id="the-whole-thing-to-copy-and-paste" class="level2">
+</div>
+<div id="the-whole-thing-to-copy-and-paste" class="section level2">
 <h2>The whole thing to copy and paste</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(tidysportsfeeds)</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">library</span>(dfstools)</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">stattleshipR<span class="op">::</span><span class="kw">set_token</span>(token)</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">nba_games &lt;-<span class="st"> </span><span class="kw">get_games</span>(<span class="st">&quot;nba&quot;</span>)</a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">nba_result &lt;-<span class="st"> </span><span class="kw">project_upcoming_games</span>(nba_games)</a>
 <a class="sourceLine" id="cb2-5" data-line-number="5">nba_projections &lt;-<span class="st"> </span>nba_result<span class="op">$</span>projections</a>
 <a class="sourceLine" id="cb2-6" data-line-number="6">readr<span class="op">::</span><span class="kw">write_excel_csv</span>(nba_projections, <span class="st">&quot;nba_projections.csv&quot;</span>)</a></code></pre></div>
-</section>
-<section id="faq" class="level2">
+</div>
+<div id="faq" class="section level2">
 <h2>FAQ</h2>
-<section id="what-do-the-projections-columns-mean" class="level3">
+<div id="what-do-the-projections-columns-mean" class="section level3">
 <h3>What do the <code>projections</code> columns mean?</h3>
 <ul>
 <li>away: The away team name</li>
@@ -353,22 +351,22 @@ stattleshipR::set_token(token)</code></pre></li>
 </ul>
 <p>The (Shannon) entropy is a measure of information - how much we stand to learn about the teams from the outcome of the game. It’s an indicator of the projected closeness of the game. The maximum value, 1.0, indicates that the game is projected to be a tie and we’ll learn a lot from the outcome.</p>
 <p>A minimum entropy, zero, indicates that the game will be a blowout. There’s little we can learn; they might as well just give the game to the favorite and avoid injury risk. ;-) I’ve never seen a zero; the lowest value of the entropy projections for the upcoming NBA season as of December 26, 2017 is Hawks at Warriors, coming up on 2018-03-23, with a projected entropy of 0.39. The model predicts that there’s a 92% probability that the Warriors will win.</p>
-</section>
-<section id="how-good-are-the-projections" class="level3">
+</div>
+<div id="how-good-are-the-projections" class="section level3">
 <h3>How good are the projections?</h3>
 <p>They’re about as good as you can get given the inputs are just the scores of completed games. They won’t be as good as projections that take into account more detailed information from compeleted games.</p>
 <p>They won’t be as good as a simulation. And they won’t be as good as closing odds / point spreads / totals from bookmakers, which account for late-breaking player status and the “wisdom of the crowd”. Bottom line: don’t risk money on these numbers. I only use them as inputs for projecting player fantasy points.</p>
-</section>
-<section id="sample-output" class="level3">
+</div>
+<div id="sample-output" class="section level3">
 <h3>Sample output</h3>
 <p>I’ve uploaded a sample I ran on December 26, 2017 to <a href="https://docs.google.com/spreadsheets/d/1oy0I_zm92JNrEeMjABXR489LbylT3zI2EwExCPHouMQ/edit?usp=sharing" class="uri">https://docs.google.com/spreadsheets/d/1oy0I_zm92JNrEeMjABXR489LbylT3zI2EwExCPHouMQ/edit?usp=sharing</a>.</p>
-</section>
-<section id="where-can-i-find-details-on-mvglmmrank" class="level3">
+</div>
+<div id="where-can-i-find-details-on-mvglmmrank" class="section level3">
 <h3>Where can I find details on <code>mvglmmRank</code>?</h3>
-<p>The package documentation is at <span class="citation" data-cites="Karl2015">Karl and Broatch (2015)</span>, but there’s not a lot of the mathematics there. <span class="citation" data-cites="Broatch2017">Broatch and Karl (2017)</span> gives the math and references earlier papers with more details.</p>
-</section>
-</section>
-<section id="references" class="level2 unnumbered">
+<p>The package documentation is at <span class="citation">Karl and Broatch (2015)</span>, but there’s not a lot of the mathematics there. <span class="citation">Broatch and Karl (2017)</span> gives the math and references earlier papers with more details.</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
 <h2>References</h2>
 <div id="refs" class="references">
 <div id="ref-Broatch2017">
@@ -378,7 +376,7 @@ stattleshipR::set_token(token)</code></pre></li>
 <p>Karl, Andrew T., and Jennifer Broatch. 2015. <em>MvglmmRank: Multivariate Generalized Linear Mixed Models for Ranking Sports Teams</em>. <a href="https://CRAN.R-project.org/package=mvglmmRank" class="uri">https://CRAN.R-project.org/package=mvglmmRank</a>.</p>
 </div>
 </div>
-</section>
+</div>
 
 
 
