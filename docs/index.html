@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tidy Data Analytics from Sports Data APIs • tidysportsfeeds</title>
+<title>Tidy Data Analytics from Sports Data APIs • dfstools</title>
 <!-- jquery --><script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha384-nrOSfDHtoPMzJHjVTdCopGqIqeYETSXhZDFyniQ8ZHcVy08QesyHcnOUpMpqnmWq" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/spacelab/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
@@ -28,7 +28,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">tidysportsfeeds</a>
+        <a class="navbar-link" href="index.html">dfstools</a>
         <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.0</span>
       </span>
     </div>
@@ -59,7 +59,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/znmeb/tidysportsfeeds">
+  <a href="https://github.com/znmeb/dfstools">
     <span class="fa fa-github fa-lg"></span>
      
   </a>
@@ -84,7 +84,7 @@
 <h2 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting started</h2>
 <ol style="list-style-type: decimal">
-<li>Read the <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.html">code of conduct</a> and <a href="https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.html">contributor’s guide</a>.</li>
+<li>Read the <a href="https://github.com/znmeb/dfstools/blob/master/CONDUCT.html">code of conduct</a> and <a href="https://github.com/znmeb/dfstools/blob/master/CONTRIBUTING.html">contributor’s guide</a>.</li>
 <li>Sign up for an account at <a href="https://www.mysportsfeeds.com/">MySportsFeeds.com</a> and <a href="https://api.stattleship.com/">Stattleship.com</a>. You will need accounts on both to use this package; the two APIs have different capabilities and the R package uses both APIs.</li>
 <li>Sign up for monthly support of the API providers on Patreon. After you do that, they will activate your logins / API tokens.
 <ul>
@@ -102,10 +102,10 @@
 <ol style="list-style-type: decimal">
 <li>
 <p>Install git, R and RStudio for your work environment. This is a developers’ release; for the moment, you’ll need to be familiar with git / GitHub, R and RStudio.</p>
-I test regularly on Windows and Arch Linux, but any environment that supports RStudio should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/tidysportsfeeds/issues/new" class="uri">https://github.com/znmeb/tidysportsfeeds/issues/new</a>
+I test regularly on Windows and Arch Linux, but any environment that supports RStudio should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/dfstools/issues/new" class="uri">https://github.com/znmeb/dfstools/issues/new</a>
 </li>
 <li>Open RStudio and install the packages <code>devtools</code> and <code>roxygen2</code> from CRAN.</li>
-<li><p>In the RStudio console, type <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("znmeb/tidysportsfeeds")</a></code>.</p></li>
+<li><p>In the RStudio console, type <code><a href="http://www.rdocumentation.org/packages/devtools/topics/install_github">devtools::install_github("znmeb/dfstools")</a></code>.</p></li>
 </ol>
 </div>
 <div id="some-philosophy-roadmap" class="section level2">
@@ -135,7 +135,7 @@ I test regularly on Windows and Arch Linux, but any environment that supports RS
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/znmeb/tidysportsfeeds">https://​github.com/​znmeb/​tidysportsfeeds</a>
+<li>Browse source code at <br><a href="https://github.com/znmeb/dfstools">https://​github.com/​znmeb/​dfstools</a>
 </li>
 <li>Report a bug at <br><a href="NA">NA</a>
 </li>
@@ -159,7 +159,7 @@ I test regularly on Windows and Arch Linux, but any environment that supports RS
       <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://travis-ci.org/znmeb/tidysportsfeeds"><img src="https://travis-ci.org/znmeb/tidysportsfeeds.svg?branch=master" alt="Build Status"></a></li>
+<li><a href="https://travis-ci.org/znmeb/dfstools"><img src="https://travis-ci.org/znmeb/dfstools.svg?branch=master" alt="Build Status"></a></li>
 </ul>
 </div>
 </div>

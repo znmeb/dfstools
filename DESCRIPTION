@@ -1,4 +1,4 @@
-Package: tidysportsfeeds
+Package: dfstools
 Type: Package
 Title: Tidy Data Analytics from Sports Data APIs
 Version: 0.1.0
@@ -8,7 +8,7 @@ Description: MySportsFeeds.com is a site that offers current and historical spor
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://github.com/znmeb/tidysportsfeeds
+URL: https://github.com/znmeb/dfstools
 RoxygenNote: 6.0.1
 Imports: tibble,
     mysportsfeedsR,

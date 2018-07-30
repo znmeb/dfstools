@@ -1,4 +1,3 @@
-## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "at_neutral_site",
   "away",
@@ -142,3 +141,4 @@ project_upcoming_games <- function(games) {
       entropy, scheduled_at, neutral_site, method)
   return(list(projections = projections, model = model, model_input = model_input))
 }
+## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>

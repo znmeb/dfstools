@@ -107,7 +107,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' \dontrun{
 #' username <- "your_user_name"
 #' password <- "your_password"
-#' library(tidysportsfeeds)
+#' library(dfstools)
 #' mysportsfeedsR::authenticate_v1_0(username, password)
 #' nba_dfs_2017_2018 <-
 #'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
@@ -144,7 +144,7 @@ get_mysportsfeeds_dfs <- function(league, season) {
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
-#' library(tidysportsfeeds)
+#' library(dfstools)
 #' library(stattleshipR)
 #' stattleshipR::set_token(token)
 #' nba_games <-
@@ -183,7 +183,7 @@ get_games <- function(league) {
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
-#' library(tidysportsfeeds)
+#' library(dfstools)
 #' stattleshipR::set_token(token)
 #' nba_data <- get_game_logs_to_date(league = "nba")
 #' nhl_data <- get_game_logs_to_date(league = "nhl")
@@ -227,7 +227,7 @@ get_game_logs_to_date <- function(league) {
 #' @examples
 #' \dontrun{
 #' token <- "yourtoken"
-#' library(tidysportsfeeds)
+#' library(dfstools)
 #' stattleshipR::set_token(token)
 #' nba_data <- get_game_logs_to_date(league = "nba")
 #' nba_game_logs <- tidy_nba_game_logs(nba_data)

@@ -20,7 +20,7 @@ Gets a `games` table from the stattleship.com API
 \examples{
 \dontrun{
 token <- "yourtoken"
-library(tidysportsfeeds)
+library(dfstools)
 library(stattleshipR)
 stattleshipR::set_token(token)
 nba_games <-

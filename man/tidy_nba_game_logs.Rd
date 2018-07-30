@@ -18,7 +18,7 @@ Gets a tidy game log tibble for the NBA season to date
 \examples{
 \dontrun{
 token <- "yourtoken"
-library(tidysportsfeeds)
+library(dfstools)
 stattleshipR::set_token(token)
 nba_data <- get_game_logs_to_date(league = "nba")
 nba_game_logs <- tidy_nba_game_logs(nba_data)

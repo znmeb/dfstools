@@ -22,7 +22,7 @@ Gets game logs to date for all teams from the stattleship.com API. Note: this is
 \examples{
 \dontrun{
 token <- "yourtoken"
-library(tidysportsfeeds)
+library(dfstools)
 stattleshipR::set_token(token)
 nba_data <- get_game_logs_to_date(league = "nba")
 nhl_data <- get_game_logs_to_date(league = "nhl")

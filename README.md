@@ -1,15 +1,15 @@
-tidysportsfeeds - Tidy Data Analytics from Sports Data APIs
+dfstools - Tidy Data Analytics from Sports Data APIs
 ================
 
 [![Build
-Status](https://travis-ci.org/znmeb/tidysportsfeeds.svg?branch=master)](https://travis-ci.org/znmeb/tidysportsfeeds)
+Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/tidysportsfeeds)
 
 ## Getting started
 
 1.  Read the [code of
-    conduct](https://github.com/znmeb/tidysportsfeeds/blob/master/CONDUCT.md)
+    conduct](https://github.com/znmeb/dfstools/blob/master/CONDUCT.md)
     and [contributor’s
-    guide](https://github.com/znmeb/tidysportsfeeds/blob/master/CONTRIBUTING.md).
+    guide](https://github.com/znmeb/dfstools/blob/master/CONTRIBUTING.md).
 2.  Sign up for an account at
     [MySportsFeeds.com](https://www.mysportsfeeds.com/) and
     [Stattleship.com](https://api.stattleship.com/). You will need
@@ -32,13 +32,13 @@ Status](https://travis-ci.org/znmeb/tidysportsfeeds.svg?branch=master)](https://
     I test regularly on Windows and Arch Linux, but any environment that
     supports RStudio should work. If anything doesn’t work or the
     documentation is unclear, please file an issue at
-    <https://github.com/znmeb/tidysportsfeeds/issues/new>
+    <https://github.com/znmeb/dfstools/issues/new>
 
 2.  Open RStudio and install the packages `devtools` and `roxygen2` from
     CRAN.
 
 3.  In the RStudio console, type
-    `devtools::install_github("znmeb/tidysportsfeeds")`.
+    `devtools::install_github("znmeb/dfstools")`.
 
 ## Some philosophy / roadmap
 
