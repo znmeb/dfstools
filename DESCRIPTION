@@ -22,7 +22,9 @@ Imports: tibble,
     openWAR,
     pitchRx,
     Sxslt,
-    Anthropometry
+    Anthropometry,
+    ggtern,
+    ggplot2
 Remotes: znmeb/mysportsfeeds-r,
     znmeb/stattleship-r,
     cpsievert/pitchRx,

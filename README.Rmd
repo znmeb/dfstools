@@ -8,6 +8,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 [![Build Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/dfstools)
 
+## License: AGPL-3
+
 ## Getting started
 1. Read the [code of conduct](https://github.com/znmeb/dfstools/blob/master/CONDUCT.md) and [contributor's guide](https://github.com/znmeb/dfstools/blob/master/CONTRIBUTING.md).
 2. Sign up for an account at [MySportsFeeds.com](https://www.mysportsfeeds.com/) and [Stattleship.com](https://api.stattleship.com/). You will need accounts on both to use this package; the two APIs have different capabilities and the R package uses both APIs.
