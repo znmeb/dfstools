@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 [![Build Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/dfstools)
 
-## License: AGPL-3
+## License: MIT
 
 ## Getting started
 1. Read the [code of conduct](https://github.com/znmeb/dfstools/blob/master/CONDUCT.md) and [contributor's guide](https://github.com/znmeb/dfstools/blob/master/CONTRIBUTING.md).
@@ -24,16 +24,6 @@ knitr::opts_chunk$set(echo = TRUE)
     I test regularly on Windows and Arch Linux, but any environment that supports RStudio should work. If anything doesn't work or the documentation is unclear, please file an issue at <https://github.com/znmeb/dfstools/issues/new>
 2. Open RStudio and install the packages `devtools` and `roxygen2` from CRAN.
 3. In the RStudio console, type `devtools::install_github("znmeb/dfstools")`.
-
-## Some philosophy / roadmap
-I'm planning to grow this package some, but not as a full-fledged DFS analytics suite. Most of it will be on an as-needed basis; I'll want to run an analysis and I'll code up the API interfaces I need for the task.
-
-The four tasks I have coded (subject to some refactoring to be done) are
-
-1. Predicting game scores and win probabilities via `mvglmmRank`,
-2. Visualization of players' and teams' fantasy point distributions with `ggplot2`,
-3. Archetypoidal analysis (`Anthropometry`), and
-4. Predicting fantasy points via a general linear model (`MASS::glm`).
 
 ## Patreon links
 * [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb/posts)

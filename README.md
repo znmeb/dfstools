@@ -4,7 +4,7 @@ dfstools - Tidy Data Analytics from Sports Data APIs
 [![Build
 Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/dfstools)
 
-## License: AGPL-3
+## License: MIT
 
 ## Getting started
 
@@ -41,20 +41,6 @@ Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-
 
 3.  In the RStudio console, type
     `devtools::install_github("znmeb/dfstools")`.
-
-## Some philosophy / roadmap
-
-I’m planning to grow this package some, but not as a full-fledged DFS
-analytics suite. Most of it will be on an as-needed basis; I’ll want to
-run an analysis and I’ll code up the API interfaces I need for the task.
-
-The four tasks I have coded (subject to some refactoring to be done) are
-
-1.  Predicting game scores and win probabilities via `mvglmmRank`,
-2.  Visualization of players’ and teams’ fantasy point distributions
-    with `ggplot2`,
-3.  Archetypoidal analysis (`Anthropometry`), and
-4.  Predicting fantasy points via a general linear model (`MASS::glm`).
 
 ## Patreon links
 

@@ -5,11 +5,11 @@ Version: 0.1.0
 Authors@R: person("M. Edward (Ed)", "Borasky", role = c("aut", "cre"), email = "znmeb@znmeb.net")
 Maintainer: M. Edward (Ed) Borasky <znmeb@znmeb.net>
 Description: MySportsFeeds.com is a site that offers current and historical sports data via an API. Historical data is free for non-commercial use, but there is a charge for current data.
-License: AGPL-3
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/znmeb/dfstools
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.0
 Imports: tibble,
     mysportsfeedsR,
     stattleshipR,
@@ -18,18 +18,10 @@ Imports: tibble,
     mvglmmRank,
     readr,
     magrittr,
-    archetypes,
-    openWAR,
-    pitchRx,
-    Sxslt,
-    Anthropometry,
     ggtern,
     ggplot2
 Remotes: znmeb/mysportsfeeds-r,
-    znmeb/stattleship-r,
-    cpsievert/pitchRx,
-    omegahat/Sxslt,
-    znmeb/openWAR
+    znmeb/stattleship-r
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
