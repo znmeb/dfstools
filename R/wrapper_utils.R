@@ -46,10 +46,15 @@
 #' \dontrun{
 #' username <- "your_user_name"
 #' password <- "your_password"
+#' api_key <- "your API key"
 #' library(dfstools)
-#' mysportsfeedsR::authenticate_v1_x(username, password)
+#' library(mysportsfeedsR)
+#' authenticate_v1_x(username, password)
 #' nba_dfs_2017_2018 <-
 #'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
+#' authenticate_v1_x(api_key)
+#' nhl_dfs_2017_2018 <-
+#'   get_mysportsfeeds_dfs(league = "nhl", season = "2017-2018-regular")
 #' }
 
 get_mysportsfeeds_dfs <- function(league, season) {
