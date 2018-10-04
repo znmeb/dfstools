@@ -11,17 +11,8 @@ LazyData: true
 URL: https://github.com/znmeb/dfstools
 RoxygenNote: 6.1.0
 Imports: tibble,
-    mysportsfeedsR,
-    stattleshipR,
-    dplyr,
-    lubridate,
-    mvglmmRank,
-    readr,
-    magrittr,
-    ggtern,
-    ggplot2
-Remotes: znmeb/mysportsfeeds-r,
-    znmeb/stattleship-r
+    mysportsfeedsR
+Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

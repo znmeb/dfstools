@@ -22,7 +22,7 @@ Gets DFS data object from the MySportsFeeds.com API
 username <- "your_user_name"
 password <- "your_password"
 library(dfstools)
-mysportsfeedsR::authenticate_v1_0(username, password)
+mysportsfeedsR::authenticate_v1_x(username, password)
 nba_dfs_2017_2018 <-
   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
 }
