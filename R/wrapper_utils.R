@@ -41,6 +41,7 @@
 #' @importFrom tibble as_tibble
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @param season Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs
+#' @param version API version "1.2" or "2.0", defaults to "2.0"
 #' @return a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
 #' @examples
 #' \dontrun{
@@ -50,15 +51,16 @@
 #' library(dfstools)
 #' library(mysportsfeedsR)
 #' authenticate_v1_x(username, password)
-#' nba_dfs_2017_2018 <-
-#'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
-#' authenticate_v1_x(api_key)
+#' nba_dfs_2017_2018 <- get_mysportsfeeds_dfs(
+#'   league = "nba", season = "2017-2018-regular", version = "1.2")
+#' authenticate_v2_x(api_key)
 #' nhl_dfs_2017_2018 <-
 #'   get_mysportsfeeds_dfs(league = "nhl", season = "2017-2018-regular")
 #' }
 
-get_mysportsfeeds_dfs <- function(league, season) {
+get_mysportsfeeds_dfs <- function(league, season, version = "2.0") {
   res <- mysportsfeedsR::msf_get_results(
+    version = version,
     league = league,
     season = season,
     feed = "daily_dfs",
