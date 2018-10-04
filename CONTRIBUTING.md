@@ -1,4 +1,5 @@
 Contributing to the project is really quite simple:
+
 1. Read the code of conduct at <https://github.com/znmeb/dfstools/blob/master/CODE_OF_CONDUCT.md>.
 2. Everything starts with an issue. See [Always start with an issue](https://about.gitlab.com/2016/03/03/start-with-an-issue/) for the philosophy.
     * Is the documentation unclear? [File an issue](https://github.com/znmeb/dfstools/issues/new).
