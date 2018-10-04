@@ -1,31 +1,31 @@
 # See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "teams",
-  "players",
-  "games",
-  "DraftKings",
-  "FanDuel",
-  "game_played",
-  "home_team_outcome",
-  "time_played_total",
-  "birth_date",
-  "height",
-  "unit_of_height",
-  "id",
-  "name",
-  "position_abbreviation",
-  "weight",
-  "unit_of_weight",
-  "years_of_experience",
-  "assists",
-  "is_home_team",
-  "scoreline",
-  "triple_double",
-  "double_double",
-  "name.y",
-  "rebounds_defensive"
-
-))
+# if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+#   "teams",
+#   "players",
+#   "games",
+#   "DraftKings",
+#   "FanDuel",
+#   "game_played",
+#   "home_team_outcome",
+#   "time_played_total",
+#   "birth_date",
+#   "height",
+#   "unit_of_height",
+#   "id",
+#   "name",
+#   "position_abbreviation",
+#   "weight",
+#   "unit_of_weight",
+#   "years_of_experience",
+#   "assists",
+#   "is_home_team",
+#   "scoreline",
+#   "triple_double",
+#   "double_double",
+#   "name.y",
+#   "rebounds_defensive"
+#
+# ))
 
 # names of teams for endpoints / queries
 .team_slugs <- list()
@@ -60,38 +60,6 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   sports <- c("basketball", "hockey", "football", "baseball")
   names(sports) <- c("nba", "nhl", "nfl", "mlb")
   return(sports[league])
-}
-
-# internal function to fetch from Stattleship and unpack the main result as a tibble
-.get_tibble <- function(league, ep, query) {
-  result <- stattleshipR::ss_get_result(
-    sport = .sport(league),
-    league = league,
-    ep = ep,
-    query = query,
-    walk = TRUE,
-    verbose = FALSE)
-
-  return(tibble::as_tibble(
-    do.call("rbind", lapply(result, function(x) get(ep, x)))))
-}
-
-
-# internal function to fetch from Stattleship and unpack the main result as a list of tibbles
-.get_list_of_tibbles <- function(league, ep, query, tibbles) {
-  result <- stattleshipR::ss_get_result(
-    sport = .sport(league),
-    league = league,
-    ep = ep,
-    query = query,
-    walk = TRUE,
-    verbose = FALSE)
-  return_list <- list()
-  for (t in tibbles) {
-    return_list[[t]] <- tibble::as_tibble(
-      do.call("rbind", lapply(result, function(x) get(t, x))))
-  }
-  return(return_list)
 }
 
 #' @title Get MySportsFeed DFS data
