@@ -14,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 1. Read the [code of conduct](https://github.com/znmeb/dfstools/blob/master/CODE_OF_CONDUCT.md) and [contributor's guide](https://github.com/znmeb/dfstools/blob/master/CONTRIBUTING.md).
 2. Sign up for an account at [MySportsFeeds.com](https://www.mysportsfeeds.com/). You will need an account to use this package.
 3. Sign up for monthly support of MySportsFeeds on Patreon. After you do that, they will activate your login / API token.
-    * [MySportsFeeds.com](https://www.patreon.com/mysportsfeeds)
+    * [MySportsFeeds.com Patreon](https://www.patreon.com/mysportsfeeds)
 4. If you find this package useful, you can support my work on Patreon at <https://www.patreon.com/znmeb/posts>. ***Supporting me is not required to use the package!***
 
 ## Installing the package    
