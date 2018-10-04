@@ -1,32 +1,3 @@
-# See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-# if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-#   "teams",
-#   "players",
-#   "games",
-#   "DraftKings",
-#   "FanDuel",
-#   "game_played",
-#   "home_team_outcome",
-#   "time_played_total",
-#   "birth_date",
-#   "height",
-#   "unit_of_height",
-#   "id",
-#   "name",
-#   "position_abbreviation",
-#   "weight",
-#   "unit_of_weight",
-#   "years_of_experience",
-#   "assists",
-#   "is_home_team",
-#   "scoreline",
-#   "triple_double",
-#   "double_double",
-#   "name.y",
-#   "rebounds_defensive"
-#
-# ))
-
 # names of teams for endpoints / queries
 .team_slugs <- list()
 .team_slugs[["nba"]] <- c(
