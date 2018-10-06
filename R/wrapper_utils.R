@@ -20,11 +20,12 @@
 
 msf_past_nba_games <- function(seasons) {
   games <- tibble::tibble()
-  for (season in seasons) {
+  for (ixseason in seasons) {
+    print(ixseason)
     result <- mysportsfeedsR::msf_get_results(
       version = "2.0",
       league = "nba",
-      season = season,
+      season = ixseason,
       feed = "seasonal_games",
       verbose = TRUE)
     View(result)
