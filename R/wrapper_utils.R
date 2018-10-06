@@ -2,6 +2,7 @@
 #' @name msf_past_nba_games
 #' @description Returns a data frame of past NBA games from MySportsFeeds
 #' @importFrom dplyr bind_rows
+#' @importFrom dplyr %>%
 #' @importFrom tibble tibble
 #' @importFrom mysportsfeedsR msf_get_results
 #' @export msf_past_nba_games
@@ -20,16 +21,19 @@
 msf_past_nba_games <- function(seasons) {
   games <- tibble::tibble()
   for (season in seasons) {
-    games <- dplyr::bind_rows(
-      games,
-      mysportsfeedsR::msf_get_results(
-        version = "2.0",
-        league = "nba",
-        season = season,
-        feed = "seasonal_games",
-        verbose = TRUE)
-    )
+    result <- mysportsfeedsR::msf_get_results(
+      version = "2.0",
+      league = "nba",
+      season = season,
+      feed = "seasonal_games",
+      verbose = TRUE)
+    View(result)
+    game_list <- result[["api_json"]][["games"]] %>%
+      tibble::as_tibble()
+    games <- dplyr::bind_rows(games, game_list)
+    View(games)
   }
+
   return(games)
 }
 
