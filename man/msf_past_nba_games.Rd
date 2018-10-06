@@ -17,11 +17,11 @@ Returns a data frame of past NBA games from MySportsFeeds
 }
 \examples{
 \dontrun{
+apikey <- "your_API key"
 library(dfstools)
 library(mysportsfeedsR)
-apikey <- "your_API key"
 authenticate_v2_x(apikey)
-seasons <- c("2017-2018-regular", "2018-playoffs")
+seasons <- c("2017-2018-regular", "2018-playoff")
 nba_games <- msf_past_nba_games(seasons)
 }
 }
