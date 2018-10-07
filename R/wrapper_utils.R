@@ -1,32 +1,3 @@
-# See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "teams",
-  "players",
-  "games",
-  "DraftKings",
-  "FanDuel",
-  "game_played",
-  "home_team_outcome",
-  "time_played_total",
-  "birth_date",
-  "height",
-  "unit_of_height",
-  "id",
-  "name",
-  "position_abbreviation",
-  "weight",
-  "unit_of_weight",
-  "years_of_experience",
-  "assists",
-  "is_home_team",
-  "scoreline",
-  "triple_double",
-  "double_double",
-  "name.y",
-  "rebounds_defensive"
-
-))
-
 # names of teams for endpoints / queries
 .team_slugs <- list()
 .team_slugs[["nba"]] <- c(
@@ -62,38 +33,6 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   return(sports[league])
 }
 
-# internal function to fetch from Stattleship and unpack the main result as a tibble
-.get_tibble <- function(league, ep, query) {
-  result <- stattleshipR::ss_get_result(
-    sport = .sport(league),
-    league = league,
-    ep = ep,
-    query = query,
-    walk = TRUE,
-    verbose = FALSE)
-
-  return(tibble::as_tibble(
-    do.call("rbind", lapply(result, function(x) get(ep, x)))))
-}
-
-
-# internal function to fetch from Stattleship and unpack the main result as a list of tibbles
-.get_list_of_tibbles <- function(league, ep, query, tibbles) {
-  result <- stattleshipR::ss_get_result(
-    sport = .sport(league),
-    league = league,
-    ep = ep,
-    query = query,
-    walk = TRUE,
-    verbose = FALSE)
-  return_list <- list()
-  for (t in tibbles) {
-    return_list[[t]] <- tibble::as_tibble(
-      do.call("rbind", lapply(result, function(x) get(t, x))))
-  }
-  return(return_list)
-}
-
 #' @title Get MySportsFeed DFS data
 #' @name get_mysportsfeeds_dfs
 #' @description Gets DFS data object from the MySportsFeeds.com API
@@ -102,19 +41,26 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
 #' @importFrom tibble as_tibble
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @param season Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs
+#' @param version API version "1.2" or "2.0", defaults to "2.0"
 #' @return a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
 #' @examples
 #' \dontrun{
 #' username <- "your_user_name"
 #' password <- "your_password"
+#' api_key <- "your API key"
 #' library(dfstools)
-#' mysportsfeedsR::authenticate_v1_0(username, password)
-#' nba_dfs_2017_2018 <-
-#'   get_mysportsfeeds_dfs(league = "nba", season = "2017-2018-regular")
+#' library(mysportsfeedsR)
+#' authenticate_v1_x(username, password)
+#' nba_dfs_2017_2018 <- get_mysportsfeeds_dfs(
+#'   league = "nba", season = "2017-2018-regular", version = "1.2")
+#' authenticate_v2_x(api_key)
+#' nhl_dfs_2017_2018 <-
+#'   get_mysportsfeeds_dfs(league = "nhl", season = "2017-2018-regular")
 #' }
 
-get_mysportsfeeds_dfs <- function(league, season) {
+get_mysportsfeeds_dfs <- function(league, season, version = "2.0") {
   res <- mysportsfeedsR::msf_get_results(
+    version = version,
     league = league,
     season = season,
     feed = "daily_dfs",
@@ -130,120 +76,4 @@ get_mysportsfeeds_dfs <- function(league, season) {
     return_list[[sites[i]]] <- tbl_df
   }
   return(return_list)
-}
-
-#' @title Get current season games from Stattleship API
-#' @name get_games
-#' @description Gets a `games` table from the stattleship.com API
-#' @export get_games
-#' @importFrom stattleshipR ss_get_result
-#' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @return a `games table from the Stattleship API. The entire season is
-#' returned, with column `status` designating "closed", "upcoming" and
-#' "in_progress" games.
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(dfstools)
-#' library(stattleshipR)
-#' stattleshipR::set_token(token)
-#' nba_games <-
-#'   get_games(league = "nba")
-#' nhl_games <-
-#'   get_games(league = "nhl")
-#' nfl_games <-
-#'   get_games(league = "nfl")
-#' }
-
-get_games <- function(league) {
-  return(.get_tibble(
-      league = league,
-      ep = "games",
-      query = list()
-    )
-  )
-}
-
-#' @title Get current season game logs to date from Stattleship API
-#' @name get_game_logs_to_date
-#' @description Gets game logs to date for all teams from the stattleship.com API. Note: this is a lengthy process; the API delivers only one team at a time. If it crashes, you'll need to re-run it.
-#' @export get_game_logs_to_date
-#' @importFrom stattleshipR ss_get_result
-#' @importFrom magrittr %<>%
-#' @importFrom magrittr %>%
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr distinct
-#' @importFrom tibble as_tibble
-#' @param league ("nba", "nhl" -- "nfl", "mlb" TBD!)
-#' @return a list with three items:
-#' \itemize{
-#' \item players the players tibble returned by the API
-#' \item games the games tibble returned by the API
-#' \item game_logs the game logs (player box scores) as delivered by the API}
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(dfstools)
-#' stattleshipR::set_token(token)
-#' nba_data <- get_game_logs_to_date(league = "nba")
-#' nhl_data <- get_game_logs_to_date(league = "nhl")
-#' }
-
-get_game_logs_to_date <- function(league) {
-  game_logs <- games <- players <- tibble::as_tibble() # empty tibble
-  team_slugs <- .team_slugs[[league]]
-  for (i in 1:length(team_slugs)) {
-    slug <- team_slugs[i]
-    cat("Fetching", slug, "\n")
-    tibbles <- .get_list_of_tibbles(
-      league = league,
-      ep = "game_logs",
-      query = list(team_id = slug),
-      tibbles = c("players", "games", "game_logs")
-    )
-    players %<>% dplyr::bind_rows(tibbles$players) %>%
-      dplyr::distinct(id, .keep_all = TRUE)
-    games %<>% dplyr::bind_rows(tibbles$games) %>%
-      dplyr::distinct(id, .keep_all = TRUE)
-    game_logs %<>% dplyr::bind_rows(tibbles$game_logs) %>%
-      dplyr::distinct(id, .keep_all = TRUE)
-  }
-  return(list(
-    game_logs = game_logs,
-    players = players,
-    games = games))
-}
-
-#' @title Tidy NBA game logs to date
-#' @name tidy_nba_game_logs
-#' @description Gets a tidy game log tibble for the NBA season to date
-#' @export tidy_nba_game_logs
-#' @importFrom magrittr %<>%
-#' @importFrom magrittr %>%
-#' @importFrom dplyr select
-#' @importFrom dplyr left_join
-#' @param nba_data a list returned by get_game_logs_to_date for the NBA
-#' @return a tidied player game log tibble (player box scores)
-#' @examples
-#' \dontrun{
-#' token <- "yourtoken"
-#' library(dfstools)
-#' stattleshipR::set_token(token)
-#' nba_data <- get_game_logs_to_date(league = "nba")
-#' nba_game_logs <- tidy_nba_game_logs(nba_data)
-#' }
-
-tidy_nba_game_logs <- function(nba_data) {
-  nba_game_logs <- nba_data$game_logs %>%
-    dplyr::left_join(nba_data$games, by = c("game_id" = "id")) %>%
-    dplyr::left_join(nba_data$players, by = c("player_id" = "id")) %>%
-    dplyr::select(
-      name = name.y, birth_date,
-      height, unit_of_height, weight, unit_of_weight,
-      position_abbreviation, years_of_experience,
-      scoreline, started_at, ended_at, period,
-      is_home_team,
-      assists:time_played_total,
-      rebounds_defensive:double_double, triple_double
-    )
 }
