@@ -1,3 +1,10 @@
+if(getRversion() >= "2.15.1") utils::globalVariables(c(
+  "schedule.startTime"
+  )
+)
+
+#'
+#'
 #' @title MySportsFeeds Past NBA Games
 #' @name msf_past_nba_games
 #' @description Returns a data frame of past NBA games from MySportsFeeds
@@ -6,6 +13,8 @@
 #' @importFrom dplyr mutate
 #' @importFrom tibble tibble
 #' @importFrom mysportsfeedsR msf_get_results
+#' @importFrom lubridate with_tz
+#' @importFrom lubridate as_datetime
 #' @export msf_past_nba_games
 #' @param seasons vector of season codes
 #' @return a tibble of completed NBA games
@@ -36,7 +45,12 @@ msf_past_nba_games <- function(seasons) {
       verbose = TRUE)
     game_list <- result[["api_json"]][["games"]] %>%
       tibble::as_tibble() %>%
-      dplyr::mutate(season = ixseason)
+      dplyr::mutate(
+        season = ixseason,
+        startEastern = lubridate::with_tz(
+          lubridate::as_datetime(schedule.startTime)
+        )
+      )
     games <- dplyr::bind_rows(games, game_list)
   }
 
