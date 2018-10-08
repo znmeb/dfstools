@@ -21,7 +21,13 @@ apikey <- "your_API key"
 library(dfstools)
 library(mysportsfeedsR)
 authenticate_v2_x(apikey)
-seasons <- c("2017-2018-regular", "2018-playoff")
+seasons <- c(
+  "2018-playoff",
+  "2017-2018-regular",
+  "2017-playoff",
+  "2016-2017-regular",
+  "2016-playoff",
+  "2015-2016-regular")
 nba_games <- msf_past_nba_games(seasons)
 }
 }
