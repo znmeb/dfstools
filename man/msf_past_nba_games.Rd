@@ -15,6 +15,11 @@ a tibble of completed NBA games
 \description{
 Returns a data frame of past NBA games from MySportsFeeds
 }
+\details{
+`msf_past_nba_games` adds two columns at the right of the tibble:
+  `season`, the source season of the row, and `startEastern`, the game
+  start time in the Eastern USA timezone ("EST5EDT").
+}
 \examples{
 \dontrun{
 apikey <- "your_API key"
