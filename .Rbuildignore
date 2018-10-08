@@ -2,3 +2,9 @@
 ^\.Rproj\.user$
 ^_pkgdown\.yml$
 ^\.travis\.yml$
+docs
+README.Rmd
+CONTRIBUTING.md
+CODE_OF_CONDUCT.md
+.github
+.env

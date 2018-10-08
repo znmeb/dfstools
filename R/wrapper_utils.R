@@ -1,36 +1,46 @@
-# names of teams for endpoints / queries
-.team_slugs <- list()
-.team_slugs[["nba"]] <- c(
-  "nba-atl", "nba-bos", "nba-bk", "nba-cha", "nba-chi",
-  "nba-cle", "nba-dal", "nba-den", "nba-det", "nba-gs",
-  "nba-hou", "nba-ind", "nba-lac", "nba-lal", "nba-mem",
-  "nba-mia", "nba-mil", "nba-min", "nba-no", "nba-ny",
-  "nba-okc", "nba-orl", "nba-phi", "nba-pho", "nba-por",
-  "nba-sac", "nba-sa", "nba-tor", "nba-uta", "nba-was")
+#' @title MySportsFeeds Past NBA Games
+#' @name msf_past_nba_games
+#' @description Returns a data frame of past NBA games from MySportsFeeds
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom tibble tibble
+#' @importFrom mysportsfeedsR msf_get_results
+#' @export msf_past_nba_games
+#' @param seasons vector of season codes
+#' @return a tibble of completed NBA games
+#' @examples
+#' \dontrun{
+#' apikey <- "your_API key"
+#' library(dfstools)
+#' library(mysportsfeedsR)
+#' authenticate_v2_x(apikey)
+#' seasons <- c(
+#'   "2018-playoff",
+#'   "2017-2018-regular",
+#'   "2017-playoff",
+#'   "2016-2017-regular",
+#'   "2016-playoff",
+#'   "2015-2016-regular")
+#' nba_games <- msf_past_nba_games(seasons)
+#' }
 
-.team_slugs[["nfl"]] <- c(
-  "nfl-ari", "nfl-atl", "nfl-bal", "nfl-buf", "nfl-car",
-  "nfl-chi", "nfl-cin", "nfl-cle", "nfl-dal", "nfl-den",
-  "nfl-det", "nfl-gb", "nfl-hou", "nfl-ind", "nfl-jac",
-  "nfl-kc", "nfl-lac", "nfl-stl", "nfl-mia", "nfl-min",
-  "nfl-ne", "nfl-no", "nfl-nyj", "nfl-nyg", "nfl-oak",
-  "nfl-phi", "nfl-pit", "nfl-sf", "nfl-sea", "nfl-tb",
-  "nfl-ten", "nfl-was")
+msf_past_nba_games <- function(seasons) {
+  games <- tibble::tibble()
+  for (ixseason in seasons) {
+    result <- mysportsfeedsR::msf_get_results(
+      version = "2.0",
+      league = "nba",
+      season = ixseason,
+      feed = "seasonal_games",
+      verbose = TRUE)
+    game_list <- result[["api_json"]][["games"]] %>%
+      tibble::as_tibble() %>%
+      dplyr::mutate(season = ixseason)
+    games <- dplyr::bind_rows(games, game_list)
+  }
 
-.team_slugs[["nhl"]] <- c(
-  "nhl-ana", "nhl-ari", "nhl-bos", "nhl-buf", "nhl-cal",
-  "nhl-car", "nhl-chi", "nhl-col", "nhl-clb", "nhl-dal",
-  "nhl-det", "nhl-edm", "nhl-fla", "nhl-la", "nhl-min",
-  "nhl-mon", "nhl-nas", "nhl-nj", "nhl-nyi", "nhl-nyr",
-  "nhl-ott", "nhl-phi", "nhl-pit", "nhl-sj", "nhl-stl",
-  "nhl-tb", "nhl-tor", "nhl-van", "nhl-vgk", "nhl-was",
-  "nhl-win")
-
-# internal function to look up sport name
-.sport <- function(league) {
-  sports <- c("basketball", "hockey", "football", "baseball")
-  names(sports) <- c("nba", "nhl", "nfl", "mlb")
-  return(sports[league])
+  return(games)
 }
 
 #' @title Get MySportsFeed DFS data
@@ -41,26 +51,27 @@
 #' @importFrom tibble as_tibble
 #' @param league ("nba", "nhl", "nfl" or "mlb")
 #' @param season Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs
-#' @param version API version "1.2" or "2.0", defaults to "2.0"
 #' @return a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
 #' @examples
 #' \dontrun{
 #' username <- "your_user_name"
 #' password <- "your_password"
-#' api_key <- "your API key"
 #' library(dfstools)
 #' library(mysportsfeedsR)
 #' authenticate_v1_x(username, password)
 #' nba_dfs_2017_2018 <- get_mysportsfeeds_dfs(
-#'   league = "nba", season = "2017-2018-regular", version = "1.2")
-#' authenticate_v2_x(api_key)
-#' nhl_dfs_2017_2018 <-
-#'   get_mysportsfeeds_dfs(league = "nhl", season = "2017-2018-regular")
+#'   league = "nba", season = "2017-2018-regular")
+#' nhl_dfs_2017_2018 <- get_mysportsfeeds_dfs(
+#'   league = "nhl", season = "2017-2018-regular")
+#' mlb_dfs_2017 <- get_mysportsfeeds_dfs(
+#'   league = "mlb", season = "2017-regular")
+#' nfl_dfs_2017 <- get_mysportsfeeds_dfs(
+#'   league = "nfl", season = "2017-regular")
 #' }
 
-get_mysportsfeeds_dfs <- function(league, season, version = "2.0") {
+get_mysportsfeeds_dfs <- function(league, season) {
   res <- mysportsfeedsR::msf_get_results(
-    version = version,
+    version = "1.2",
     league = league,
     season = season,
     feed = "daily_dfs",
