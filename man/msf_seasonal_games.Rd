@@ -24,11 +24,12 @@ a list of two items
 Returns a data frame of games from MySportsFeeds version 2.0 API
 }
 \details{
-`msf_seasonal_games` adds three columns at the right of the tibble:
+`msf_seasonal_games` adds four columns at the right of the tibble:
 \itemize{
 \item league the source league of the data
 \item season the source season of the data, and
 \item date the game date (started) in the Eastern USA timezone ("EST5EDT").
+\item slug the game slug (date-away_team-home_team)
 }
 The returned tibble will be sorted in chronological order.
 }
