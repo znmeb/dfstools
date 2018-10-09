@@ -9,6 +9,7 @@ License: file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/znmeb/dfstools
+BugReports: https://github.com/znmeb/dfstools/issues/new/choose
 RoxygenNote: 6.1.0
 Imports: tibble,
     dplyr,
