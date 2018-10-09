@@ -120,6 +120,7 @@ msf_past_nba_dfs <- function(nba_games, apikey) {
       "dfs.json",
       sep = "/"
     )
+    print(ixurl)
     Sys.sleep(6)
     response <- httr::GET(
       url = ixurl,
@@ -132,6 +133,10 @@ msf_past_nba_dfs <- function(nba_games, apikey) {
     }
     json <- response %>% httr::content(as = "text")
     list <- jsonlite::fromJSON(json, flatten = TRUE)
+    if (length(list[["dfsEntries"]]) == 0) {
+      print("No data - skipping")
+      next
+    }
     sites <- list[["dfsEntries"]][["dfsSource"]]
     frames <- list[["dfsEntries"]][["dfsRows"]]
     for (ixsite in 1:length(sites)) {
