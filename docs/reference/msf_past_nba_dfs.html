@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="MySportsFeeds Past NBA DFS — msf_past_nba_dfs" />
 
-<meta property="og:description" content="Gets DFS data object from the MySportsFeeds.com API" />
+<meta property="og:description" content="Gets DFS data object from from MySportsFeeds version 2.0 API" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,18 +104,22 @@
 
     <div class="ref-description">
     
-    <p>Gets DFS data object from the MySportsFeeds.com API</p>
+    <p>Gets DFS data object from from MySportsFeeds version 2.0 API</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>msf_past_nba_dfs</span>(<span class='no'>nba_games</span>)</pre>
+    <pre class="usage"><span class='fu'>msf_past_nba_dfs</span>(<span class='no'>nba_games</span>, <span class='no'>apikey</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>nba_games</th>
-      <td><p>a tibble produced with `msf_past_nba_games`</p></td>
+      <td><p>a tibble produced by `msf_past_nba_games`</p></td>
+    </tr>
+    <tr>
+      <th>apikey</th>
+      <td><p>your MySportsFeeds API key (version 2.0!)</p></td>
     </tr>
     </table>
     
@@ -128,8 +132,6 @@
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='no'>apikey</span> <span class='kw'>&lt;-</span> <span class='st'>"your_API key"</span>
 <span class='fu'>library</span>(<span class='no'>dfstools</span>)
-<span class='fu'>library</span>(<span class='no'>mysportsfeedsR</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/mysportsfeedsR/topics/authenticate_v2_x'>authenticate_v2_x</a></span>(<span class='no'>apikey</span>)
 <span class='no'>seasons</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(
   <span class='st'>"2018-playoff"</span>,
   <span class='st'>"2017-2018-regular"</span>,
@@ -137,8 +139,8 @@
   <span class='st'>"2016-2017-regular"</span>,
   <span class='st'>"2016-playoff"</span>,
   <span class='st'>"2015-2016-regular"</span>)
-<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='msf_past_nba_games.html'>msf_past_nba_games</a></span>(<span class='no'>seasons</span>)
-<span class='no'>nba_dfs</span> <span class='kw'>&lt;-</span> <span class='fu'>msf_past_nba_dfs</span>(<span class='no'>nba_games</span>)
+<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='msf_past_nba_games.html'>msf_past_nba_games</a></span>(<span class='no'>seasons</span>, <span class='no'>apikey</span>)
+<span class='no'>nba_dfs</span> <span class='kw'>&lt;-</span> <span class='fu'>msf_past_nba_dfs</span>(<span class='no'>nba_games</span>, <span class='no'>apikey</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -60,8 +60,7 @@ msf_past_nba_games <- function(seasons, apikey) {
         season = ixseason,
         date = lubridate::as_datetime(schedule.startTime) %>%
           lubridate::with_tz("EST5EDT") %>%
-          lubridate::as_date() %>%
-          as.character()
+          strftime(., format = "%Y%m%d")
       )
     games <- dplyr::bind_rows(games, game_list)
   }
@@ -70,24 +69,27 @@ msf_past_nba_games <- function(seasons, apikey) {
 
 #' @title MySportsFeeds Past NBA DFS
 #' @name msf_past_nba_dfs
-#' @description Gets DFS data object from the MySportsFeeds.com API
+#' @description Gets DFS data object from from MySportsFeeds version 2.0 API
 #' @export msf_past_nba_dfs
-#' @importFrom mysportsfeedsR msf_get_results
+#' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
+#' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
-#' @importFrom dplyr select
 #' @importFrom dplyr arrange
+#' @importFrom dplyr select
 #' @importFrom dplyr distinct
-#' @importFrom utils View
-#' @param nba_games a tibble produced with `msf_past_nba_games`
+#' @importFrom httr GET
+#' @importFrom httr authenticate
+#' @importFrom httr status_code
+#' @importFrom jsonlite fromJSON
+#' @param nba_games a tibble produced by `msf_past_nba_games`
+#' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a tibble with all the DFS data available for the input games
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
 #' library(dfstools)
-#' library(mysportsfeedsR)
-#' authenticate_v2_x(apikey)
 #' seasons <- c(
 #'   "2018-playoff",
 #'   "2017-2018-regular",
@@ -95,36 +97,55 @@ msf_past_nba_games <- function(seasons, apikey) {
 #'   "2016-2017-regular",
 #'   "2016-playoff",
 #'   "2015-2016-regular")
-#' nba_games <- msf_past_nba_games(seasons)
-#' nba_dfs <- msf_past_nba_dfs(nba_games)
+#' nba_games <- msf_past_nba_games(seasons, apikey)
+#' nba_dfs <- msf_past_nba_dfs(nba_games, apikey)
 #' }
 
-msf_past_nba_dfs <- function(nba_games) {
+msf_past_nba_dfs <- function(nba_games, apikey) {
 
   # there are fewer dates than games, so we hit the API by date rather than by game
   dates <- nba_games %>%
-    dplyr::mutate(date = as.character(lubridate::as_date(startEastern))) %>%
     dplyr::select(date, season) %>%
     dplyr::arrange(date) %>%
     dplyr::distinct(date, .keep_all = TRUE)
-  dfs <- tibble::tibble()
+  nba_dfs <- tibble::tibble()
   for (ixrow in 1:nrow(dates)) {
     ixdate <- dates$date[ixrow]
     ixseason <- dates$season[ixrow]
-    print(ixseason)
-    res <- mysportsfeedsR::msf_get_results(
-      version = "2.0",
-      league = "nba",
-      season = ixseason,
-      params = list(date = ixdate),
-      feed = "daily_dfs",
-      verbose = TRUE)
-    View(res)
-    stop("testing")
+    ixurl <- paste(
+      "https://api.mysportsfeeds.com/v2.0/pull/nba",
+      ixseason,
+      "date",
+      ixdate,
+      "dfs.json",
+      sep = "/"
+    )
+    Sys.sleep(6)
+    response <- httr::GET(
+      url = ixurl,
+      httr::authenticate(apikey, "MYSPORTSFEEDS")
+    )
+    status_code = httr::status_code(response)
+    if (status_code != 200) {
+      print(response)
+      stop(paste("status_code =", status_code))
+    }
+    json <- response %>% httr::content(as = "text")
+    list <- jsonlite::fromJSON(json, flatten = TRUE)
+    sites <- list[["dfsEntries"]][["dfsSource"]]
+    frames <- list[["dfsEntries"]][["dfsRows"]]
+    for (ixsite in 1:length(sites)) {
+      site <- sites[ixsite]
+      frame <- tibble::as_tibble(frames[[ixsite]]) %>%
+        dplyr::mutate(dfs_site = site)
+      nba_dfs <- dplyr::bind_rows(nba_dfs, frame)
+    }
   }
+  return(nba_dfs)
 }
 
 if(getRversion() >= "2.15.1") utils::globalVariables(c(
+  ".",
   "schedule.startTime",
   "startEastern",
   "season"

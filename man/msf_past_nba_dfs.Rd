@@ -4,23 +4,23 @@
 \alias{msf_past_nba_dfs}
 \title{MySportsFeeds Past NBA DFS}
 \usage{
-msf_past_nba_dfs(nba_games)
+msf_past_nba_dfs(nba_games, apikey)
 }
 \arguments{
-\item{nba_games}{a tibble produced with `msf_past_nba_games`}
+\item{nba_games}{a tibble produced by `msf_past_nba_games`}
+
+\item{apikey}{your MySportsFeeds API key (version 2.0!)}
 }
 \value{
 a tibble with all the DFS data available for the input games
 }
 \description{
-Gets DFS data object from the MySportsFeeds.com API
+Gets DFS data object from from MySportsFeeds version 2.0 API
 }
 \examples{
 \dontrun{
 apikey <- "your_API key"
 library(dfstools)
-library(mysportsfeedsR)
-authenticate_v2_x(apikey)
 seasons <- c(
   "2018-playoff",
   "2017-2018-regular",
@@ -28,7 +28,7 @@ seasons <- c(
   "2016-2017-regular",
   "2016-playoff",
   "2015-2016-regular")
-nba_games <- msf_past_nba_games(seasons)
-nba_dfs <- msf_past_nba_dfs(nba_games)
+nba_games <- msf_past_nba_games(seasons, apikey)
+nba_dfs <- msf_past_nba_dfs(nba_games, apikey)
 }
 }
