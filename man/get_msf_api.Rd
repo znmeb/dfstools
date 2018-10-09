@@ -2,7 +2,7 @@
 % Please edit documentation in R/wrapper_utils.R
 \name{get_msf_api}
 \alias{get_msf_api}
-\title{Get from MySportsFeeds API}
+\title{GET from MySportsFeeds API}
 \usage{
 get_msf_api(url, apikey)
 }

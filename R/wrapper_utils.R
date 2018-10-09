@@ -1,4 +1,4 @@
-#' @title Get from MySportsFeeds API
+#' @title GET from MySportsFeeds API
 #' @name get_msf_api
 #' @description GETs data from the MySportsFeeds 2.0 API
 #' @importFrom httr GET
@@ -46,49 +46,54 @@ get_msf_api <- function(url, apikey) {
   }
 }
 
-#' @title MySportsFeeds NBA Games
-#' @name msf_nba_games
-#' @description Returns a data frame of NBA games from MySportsFeeds version 2.0 API
+#' @title MySportsFeeds Seasonal Games
+#' @name msf_seasonal_games
+#' @description Returns a data frame of games from MySportsFeeds version 2.0 API
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
-#' @export msf_nba_games
-#' @param season the season to fetch games for
+#' @export msf_seasonal_games
+#' @param league the league to fetch
+#' @param season the season to fetch
 #' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success))
 #' \item response if status_code == 200, a tibble of games; otherwise, the raw text.
 #' }
-#' @details `msf_nba_games` adds two columns at the right of the tibble:
-#'   `season`, the source season of the data, and `date`, the game
-#'   date (started) in the Eastern USA timezone ("EST5EDT"). The returned
-#'   tibble will be sorted in chronological order.
+#' @details `msf_seasonal_games` adds three columns at the right of the tibble:
+#' \itemize{
+#' \item league the source league of the data
+#' \item season the source season of the data, and
+#' \item date the game date (started) in the Eastern USA timezone ("EST5EDT").
+#' }
+#' The returned tibble will be sorted in chronological order.
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
 #' library(dfstools)
-#' nba_games <- msf_nba_games(season = "2017-2018-regular", apikey)
+#' nba_games <-
+#'   msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
 #' }
 
-msf_nba_games <- function(season, apikey) {
-  url <- paste(
-    "https://api.mysportsfeeds.com/v2.0/pull/nba",
-    season,
-    "games.json",
-    sep = "/"
+msf_seasonal_games <- function(league, season, apikey) {
+  url <- sprintf(
+    "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
+    league,
+    season
   )
   response <- get_msf_api(url, apikey)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
   } else {
-    nba_games <- response[["data"]][["games"]] %>%
+    games <- response[["data"]][["games"]] %>%
       tibble::as_tibble() %>%
       dplyr::mutate(
+        league = league,
         season = season,
         date = lubridate::as_datetime(schedule.startTime) %>%
           lubridate::with_tz("EST5EDT") %>%
@@ -96,43 +101,46 @@ msf_nba_games <- function(season, apikey) {
       )
     return(list(
       status_code = status_code,
-      nba_games = nba_games %>% dplyr::arrange(schedule.startTime)
+      games = games %>% dplyr::arrange(schedule.startTime)
     ))
   }
 }
 
-#' @title MySportsFeeds NBA DFS
-#' @name msf_nba_dfs
+#' @title MySportsFeeds Seasonal Team DFS
+#' @name msf_seasonal_team_dfs
 #' @description Gets DFS data object from from MySportsFeeds version 2.0 API
-#' @export msf_nba_dfs
+#' @export msf_seasonal_team_dfs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @param league the league to fetch
 #' @param season the season to fetch
-#' @param date the date to fetch
+#' @param team the team to fetch
 #' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a list of two items
 #' \itemize{
-#' \item status_code the HTTP status code (200 for success, -200 for success but no DFS data))
+#' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
 #' \item response if status_code == 200, a tibble of DFS data; otherwise, the raw text.
 #' }
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
 #' library(dfstools)
-#' nba_dfs <- msf_nba_dfs("2018-playoff", "20180414", apikey)
+#' nba_dfs <- msf_seasonal_team_dfs(
+#'   season = "2018-playoff",
+#'   league = "nba",
+#'   team = "GSW",
+#'   apikey)
 #' }
 
-msf_nba_dfs <- function(season, date, apikey) {
-  url <- paste(
-   "https://api.mysportsfeeds.com/v2.0/pull/nba",
+msf_seasonal_team_dfs <- function(season, league, team, apikey) {
+  url <- sprintf(
+    "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
+    league,
     season,
-    "date",
-    date,
-    "dfs.json",
-    sep = "/"
+    team
   )
   response <- get_msf_api(url, apikey)
   status_code <- response[["status_code"]]
@@ -144,16 +152,16 @@ msf_nba_dfs <- function(season, date, apikey) {
     }
     sites <- response[["data"]][["dfsEntries"]][["dfsSource"]]
     frames <- response[["data"]][["dfsEntries"]][["dfsRows"]]
-    nba_dfs <- tibble::tibble()
+    dfs <- tibble::tibble()
     for (ixsite in 1:length(sites)) {
       site <- sites[ixsite]
       frame <- tibble::as_tibble(frames[[ixsite]]) %>%
         dplyr::mutate(dfs_site = site)
-      nba_dfs <- dplyr::bind_rows(nba_dfs, frame)
+      dfs <- dplyr::bind_rows(dfs, frame)
     }
     return(list(
       status_code = 200,
-      nba_dfs = nba_dfs
+      dfs = dfs
     ))
   }
 }
