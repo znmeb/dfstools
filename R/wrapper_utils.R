@@ -54,52 +54,64 @@ msf_past_nba_games <- function(seasons) {
   return(games)
 }
 
-#' @title Get MySportsFeed DFS data
-#' @name get_mysportsfeeds_dfs
+#' @title MySportsFeeds Past NBA DFS
+#' @name msf_past_nba_dfs
 #' @description Gets DFS data object from the MySportsFeeds.com API
-#' @export get_mysportsfeeds_dfs
+#' @export msf_past_nba_dfs
 #' @importFrom mysportsfeedsR msf_get_results
 #' @importFrom tibble as_tibble
-#' @param league ("nba", "nhl", "nfl" or "mlb")
-#' @param season Look up season code in API docs https://www.mysportsfeeds.com/data-feeds/api-docs
-#' @return a list of tibbles with the DFS data for the league and season. There is one tibble for each DFS site, currently "DraftKings" and "FanDuel".
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @importFrom dplyr arrange
+#' @importFrom dplyr distinct
+#' @importFrom utils View
+#' @param nba_games a tibble produced with `msf_past_nba_games`
+#' @return a tibble with all the DFS data available for the input games
 #' @examples
 #' \dontrun{
-#' username <- "your_user_name"
-#' password <- "your_password"
+#' apikey <- "your_API key"
 #' library(dfstools)
 #' library(mysportsfeedsR)
-#' authenticate_v1_x(username, password)
-#' nba_dfs_2017_2018 <- get_mysportsfeeds_dfs(
-#'   league = "nba", season = "2017-2018-regular")
-#' nhl_dfs_2017_2018 <- get_mysportsfeeds_dfs(
-#'   league = "nhl", season = "2017-2018-regular")
-#' mlb_dfs_2017 <- get_mysportsfeeds_dfs(
-#'   league = "mlb", season = "2017-regular")
-#' nfl_dfs_2017 <- get_mysportsfeeds_dfs(
-#'   league = "nfl", season = "2017-regular")
+#' authenticate_v2_x(apikey)
+#' seasons <- c(
+#'   "2018-playoff",
+#'   "2017-2018-regular",
+#'   "2017-playoff",
+#'   "2016-2017-regular",
+#'   "2016-playoff",
+#'   "2015-2016-regular")
+#' nba_games <- msf_past_nba_games(seasons)
+#' nba_dfs <- msf_past_nba_dfs(nba_games)
 #' }
 
-get_mysportsfeeds_dfs <- function(league, season) {
-  res <- mysportsfeedsR::msf_get_results(
-    version = "1.2",
-    league = league,
-    season = season,
-    feed = "daily_dfs",
-    verbose = FALSE)
-  sites <-
-    res[["api_json"]][["dailydfs"]][["dfsEntries"]][["dfsType"]]
-  return_list <- list()
-  for (i in 1:length(sites)) {
-    tbl_df <- tibble::as_tibble(
-      res$api_json$dailydfs$dfsEntries$dfsRows[[i]])
-    tbl_df$salary <- as.numeric(tbl_df$salary)
-    tbl_df$fantasyPoints <- as.numeric(tbl_df$fantasyPoints)
-    return_list[[sites[i]]] <- tbl_df
+msf_past_nba_dfs <- function(nba_games) {
+
+  # there are fewer dates than games, so we hit the API by date rather than by game
+  dates <- nba_games %>%
+    dplyr::mutate(date = as.character(lubridate::as_date(startEastern))) %>%
+    dplyr::select(date, season) %>%
+    dplyr::arrange(date) %>%
+    dplyr::distinct(date, .keep_all = TRUE)
+  dfs <- tibble::tibble()
+  for (ixrow in 1:nrow(dates)) {
+    ixdate <- dates$date[ixrow]
+    ixseason <- dates$season[ixrow]
+    print(ixseason)
+    res <- mysportsfeedsR::msf_get_results(
+      version = "2.0",
+      league = "nba",
+      season = ixseason,
+      params = list(date = ixdate),
+      feed = "daily_dfs",
+      verbose = TRUE)
+    View(res)
+    stop("testing")
   }
-  return(return_list)
 }
 
 if(getRversion() >= "2.15.1") utils::globalVariables(c(
-  "schedule.startTime"
+  "schedule.startTime",
+  "startEastern",
+  "season"
 ))
