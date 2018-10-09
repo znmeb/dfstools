@@ -32,7 +32,7 @@
 
 <meta property="og:title" content="MySportsFeeds Past NBA Games — msf_past_nba_games" />
 
-<meta property="og:description" content="Returns a data frame of past NBA games from MySportsFeeds" />
+<meta property="og:description" content="Returns a data frame of past NBA games from MySportsFeeds version 2.0 API" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -104,11 +104,11 @@
 
     <div class="ref-description">
     
-    <p>Returns a data frame of past NBA games from MySportsFeeds</p>
+    <p>Returns a data frame of past NBA games from MySportsFeeds version 2.0 API</p>
     
     </div>
 
-    <pre class="usage"><span class='fu'>msf_past_nba_games</span>(<span class='no'>seasons</span>)</pre>
+    <pre class="usage"><span class='fu'>msf_past_nba_games</span>(<span class='no'>seasons</span>, <span class='no'>apikey</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -116,6 +116,10 @@
     <tr>
       <th>seasons</th>
       <td><p>vector of season codes</p></td>
+    </tr>
+    <tr>
+      <th>apikey</th>
+      <td><p>your MySportsFeeds API key (version 2.0!)</p></td>
     </tr>
     </table>
     
@@ -126,16 +130,14 @@
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>`msf_past_nba_games` adds two columns at the right of the tibble:
-  `season`, the source season of the row, and `startEastern`, the game
-  start time in the Eastern USA timezone ("EST5EDT").</p>
+  `season`, the source season of the row, and `date`, the game
+  date (started) in the Eastern USA timezone ("EST5EDT").</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
 <span class='no'>apikey</span> <span class='kw'>&lt;-</span> <span class='st'>"your_API key"</span>
 <span class='fu'>library</span>(<span class='no'>dfstools</span>)
-<span class='fu'>library</span>(<span class='no'>mysportsfeedsR</span>)
-<span class='fu'><a href='http://www.rdocumentation.org/packages/mysportsfeedsR/topics/authenticate_v2_x'>authenticate_v2_x</a></span>(<span class='no'>apikey</span>)
 <span class='no'>seasons</span> <span class='kw'>&lt;-</span> <span class='fu'>c</span>(
   <span class='st'>"2018-playoff"</span>,
   <span class='st'>"2017-2018-regular"</span>,
@@ -143,7 +145,7 @@
   <span class='st'>"2016-2017-regular"</span>,
   <span class='st'>"2016-playoff"</span>,
   <span class='st'>"2015-2016-regular"</span>)
-<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='fu'>msf_past_nba_games</span>(<span class='no'>seasons</span>)
+<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='fu'>msf_past_nba_games</span>(<span class='no'>seasons</span>, <span class='no'>apikey</span>)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

@@ -13,7 +13,9 @@ RoxygenNote: 6.1.0
 Imports: tibble,
     mysportsfeedsR,
     dplyr,
-    lubridate
+    lubridate,
+    httr,
+    jsonlite
 Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown

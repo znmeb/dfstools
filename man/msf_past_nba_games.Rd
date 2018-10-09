@@ -4,28 +4,29 @@
 \alias{msf_past_nba_games}
 \title{MySportsFeeds Past NBA Games}
 \usage{
-msf_past_nba_games(seasons)
+msf_past_nba_games(seasons, apikey)
 }
 \arguments{
 \item{seasons}{vector of season codes}
+
+\item{apikey}{your MySportsFeeds API key (version 2.0!)}
 }
 \value{
 a tibble of completed NBA games
 }
 \description{
-Returns a data frame of past NBA games from MySportsFeeds
+Returns a data frame of past NBA games from MySportsFeeds version 2.0 API
 }
 \details{
 `msf_past_nba_games` adds two columns at the right of the tibble:
-  `season`, the source season of the row, and `startEastern`, the game
-  start time in the Eastern USA timezone ("EST5EDT").
+  `season`, the source season of the row, and `date`, the game
+  date (started) in the Eastern USA timezone ("EST5EDT"). The returned
+  tibble will be sorted in chronological order.
 }
 \examples{
 \dontrun{
 apikey <- "your_API key"
 library(dfstools)
-library(mysportsfeedsR)
-authenticate_v2_x(apikey)
 seasons <- c(
   "2018-playoff",
   "2017-2018-regular",
@@ -33,6 +34,6 @@ seasons <- c(
   "2016-2017-regular",
   "2016-playoff",
   "2015-2016-regular")
-nba_games <- msf_past_nba_games(seasons)
+nba_games <- msf_past_nba_games(seasons, apikey)
 }
 }
