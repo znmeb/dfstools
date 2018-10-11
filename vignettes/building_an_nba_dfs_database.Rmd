@@ -86,10 +86,11 @@ for (ixteam in teams$team) {
   for (ixseason in seasons) {
     gamelogs <- dfstools::msf_seasonal_player_gamelogs(
       ixseason, "nba", ixteam, apikey)$gamelogs
+    if (length(gamelogs) < 1) {next}
+    
     colnames(gamelogs) <- colnames(gamelogs) %>% 
       snakecase::to_any_case()
-    print(DBI::dbDataType(connection, gamelogs))
-
+    print(length(colnames(games)))
     if (
       ixseason == "2015-2016-regular" &&
       ixteam == "ATL"
