@@ -15,7 +15,9 @@ Imports: tibble,
     dplyr,
     lubridate,
     httr,
-    jsonlite
+    jsonlite,
+    DBI,
+    RSQLite
 Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown
