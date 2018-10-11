@@ -44,7 +44,7 @@ seasons <- c(
 )
 
 # you will need to set the enviromnment variable `APIKEY` to your MySportsFeeds API v2.0 API key
-apikey <- Sys.getenv("APIKEY")
+#apikey <- Sys.getenv("APIKEY")
 for (ixseason in seasons) {
   games <-
     dfstools::msf_seasonal_games("nba", ixseason, apikey)$games
@@ -57,14 +57,17 @@ for (ixseason in seasons) {
       -score.currentQuarter:-score.currentIntermission,
       -score.quarters
     )
-  if (ixseason == "2015-2016-regular") {
+  colnames(games) <- colnames(games) %>% 
+    snakecase::to_any_case()
+
+if (ixseason == "2015-2016-regular") {
     DBI::dbCreateTable(connection, "nba_games", games)
     
     # dbCreateTable creates an empty table, so we append the data
     DBI::dbAppendTable(connection, "nba_games", games)
-    teams <- games %>% dplyr::select(schedule.homeTeam.abbreviation) %>% 
+    teams <- games %>% dplyr::select(schedule_home_team_abbreviation) %>% 
       dplyr::distinct() %>%
-      dplyr::select(team = schedule.homeTeam.abbreviation) %>% 
+      dplyr::select(team = schedule_home_team_abbreviation) %>% 
       dplyr::arrange(team)
   } else {
     DBI::dbAppendTable(connection, "nba_games", games)
