@@ -10,6 +10,7 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
+source("../.env")
 library(magrittr)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -99,14 +100,16 @@ for (ixteam in teams$team) {
         x = colnames(gamelogs),
         value = TRUE, 
         invert = TRUE
-      ) %>% dplyr::vars()
-      gamelogs <- gamelogs %>% dplyr::select_at(
-        .vars = columns_to_keep
       )
-      stop("test")
+      gamelogs <- gamelogs %>% dplyr::select_at(
+        .vars = dplyr::vars(columns_to_keep)
+      )
       DBI::dbCreateTable(connection, "nba_gamelogs", gamelogs)
       DBI::dbAppendTable(connection, "nba_gamelogs", gamelogs)
     } else {
+      gamelogs <- gamelogs %>% dplyr::select_at(
+        .vars = dplyr::vars(columns_to_keep)
+      )
       DBI::dbAppendTable(connection, "nba_gamelogs", gamelogs)
     }
   }
