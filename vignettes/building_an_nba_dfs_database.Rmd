@@ -10,56 +10,59 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
+apikey <- Sys.getenv("APIKEY")
+library(magrittr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+## Creating the database
+The first order of business is to create an empty database to hold out NBA data. We use SQLite.
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+```{r}
+connection <- DBI::dbConnect(drv = RSQLite::SQLite(), dbname = "nba_data.sqlite")
+print(connection)
 
-## Vignette Info
-
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
-
-## Styles
-
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
-
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
-
-## Figures
-
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
+if (DBI::dbExistsTable(connection, "nba_games")) {
+  DBI::dbRemoveTable(connection, "nba_games")
+}
+DBI::dbListTables(connection)
 ```
 
-You can enable figure captions by `fig_caption: yes` in YAML:
+## Getting the past seasons
+The MySportsFeeds API has DFS data for all NBA seasons from the 2015-2016 regular seasons. So we create a list of those seasons and then fetch them and add them to the database.
 
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
+```{r}
+seasons <- c(
+  "2015-2016-regular",
+  "2016-playoff",
+  "2016-2017-regular",
+  "2017-playoff",
+  "2017-2018-regular",
+  "2018-playoff"
+)
 
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
+for (ixseason in seasons) {
+  games <- 
+    dfstools::msf_seasonal_games("nba", ixseason, apikey)$games
+  games <- games %>% 
+    dplyr::select(
+      -schedule.endedTime,
+      -schedule.originalStartTime,
+      -schedule.delayedOrPostponedReason,
+      -schedule.attendance:-schedule.weather,
+      -score.currentQuarter:-score.currentIntermission,
+      -score.quarters
+    )
+  if (ixseason == "2015-2016-regular") {
+    DBI::dbCreateTable(connection, "nba_games", games)
+    DBI::dbAppendTable(connection, "nba_games", games)
+  } else {
+    DBI::dbAppendTable(connection, "nba_games", games)
+  }
+}
+DBI::dbDisconnect(connection)
 ```
 
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
