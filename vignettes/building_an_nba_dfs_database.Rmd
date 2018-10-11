@@ -73,11 +73,42 @@ if (ixseason == "2015-2016-regular") {
     DBI::dbAppendTable(connection, "nba_games", games)
   }
 }
-
 print(teams)
-
-DBI::dbDisconnect(connection)
 ```
 
 ## Get the player game logs (box scores) one team at a time
+
+```{r}
+for (ixteam in teams) {
+  gamelogs <- dfstools::msf_seasonal_player_gamelogs(
+    "nba", ixteam, apikey)$gamelogs
+  stop("test")
+  gamelogs <- gamelogs %>%
+    dplyr::select(
+      -schedule.endedTime,
+      -schedule.originalStartTime,
+      -schedule.delayedOrPostponedReason,
+      -schedule.attendance:-schedule.weather,
+      -score.currentQuarter:-score.currentIntermission,
+      -score.quarters
+    )
+  colnames(gamelogs) <- colnames(gamelogs) %>% 
+    snakecase::to_any_case()
+
+if (ixteam == "2015-2016-regular") {
+    DBI::dbCreateTable(connection, "nba_gamelogs", gamelogs)
+    
+    # dbCreateTable creates an empty table, so we append the data
+    DBI::dbAppendTable(connection, "nba_gamelogs", gamelogs)
+    teams <- gamelogs %>% dplyr::select(schedule_home_team_abbreviation) %>% 
+      dplyr::distinct() %>%
+      dplyr::select(team = schedule_home_team_abbreviation) %>% 
+      dplyr::arrange(team)
+  } else {
+    DBI::dbAppendTable(connection, "nba_gamelogs", gamelogs)
+  }
+}
+DBI::dbDisconnect(connection)
+
+```
 
