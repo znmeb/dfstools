@@ -90,11 +90,20 @@ for (ixteam in teams$team) {
     
     colnames(gamelogs) <- colnames(gamelogs) %>% 
       snakecase::to_any_case()
-    print(length(colnames(games)))
     if (
       ixseason == "2015-2016-regular" &&
       ixteam == "ATL"
     ) {
+      columns_to_keep <- grep(
+        pattern = "_per_game", 
+        x = colnames(gamelogs),
+        value = TRUE, 
+        invert = TRUE
+      ) %>% dplyr::vars()
+      gamelogs <- gamelogs %>% dplyr::select_at(
+        .vars = columns_to_keep
+      )
+      stop("test")
       DBI::dbCreateTable(connection, "nba_gamelogs", gamelogs)
       DBI::dbAppendTable(connection, "nba_gamelogs", gamelogs)
     } else {
