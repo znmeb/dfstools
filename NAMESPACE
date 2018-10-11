@@ -2,6 +2,7 @@
 
 export(get_msf_api)
 export(msf_seasonal_games)
+export(msf_seasonal_player_gamelogs)
 export(msf_seasonal_team_dfs)
 importFrom(dplyr,"%>%")
 importFrom(dplyr,arrange)
