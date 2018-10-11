@@ -10,7 +10,6 @@ vignette: >
 ---
 
 ```{r setup, include = FALSE}
-apikey <- Sys.getenv("APIKEY")
 library(magrittr)
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -44,10 +43,12 @@ seasons <- c(
   "2018-playoff"
 )
 
+# you will need to set the enviromnment variable `APIKEY` to your MySportsFeeds API v2.0 API key
+apikey <- Sys.getenv("APIKEY")
 for (ixseason in seasons) {
-  games <- 
+  games <-
     dfstools::msf_seasonal_games("nba", ixseason, apikey)$games
-  games <- games %>% 
+  games <- games %>%
     dplyr::select(
       -schedule.endedTime,
       -schedule.originalStartTime,
@@ -58,11 +59,22 @@ for (ixseason in seasons) {
     )
   if (ixseason == "2015-2016-regular") {
     DBI::dbCreateTable(connection, "nba_games", games)
+    
+    # dbCreateTable creates an empty table, so we append the data
     DBI::dbAppendTable(connection, "nba_games", games)
+    teams <- games %>% dplyr::select(schedule.homeTeam.abbreviation) %>% 
+      dplyr::distinct() %>%
+      dplyr::select(team = schedule.homeTeam.abbreviation) %>% 
+      dplyr::arrange(team)
   } else {
     DBI::dbAppendTable(connection, "nba_games", games)
   }
 }
+
+print(teams)
+
 DBI::dbDisconnect(connection)
 ```
+
+## Get the player game logs (box scores) one team at a time
 
