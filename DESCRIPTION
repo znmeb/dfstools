@@ -18,7 +18,8 @@ Imports: tibble,
     jsonlite,
     DBI,
     RSQLite,
-    snakecase
+    snakecase,
+    keyring
 Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown
