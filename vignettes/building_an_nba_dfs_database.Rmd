@@ -81,7 +81,7 @@ print(teams)
 
 ## Get the player game logs (box scores) one team at a time
 
-```{r message==FALSE}
+```{r}
 for (ixteam in teams$team) {
   for (ixseason in seasons) {
     gamelogs <- dfstools::msf_seasonal_player_gamelogs(
