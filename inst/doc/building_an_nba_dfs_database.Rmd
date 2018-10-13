@@ -4,14 +4,13 @@ author: "M. Edward (Ed) Borasky"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Building an NBA DFS Database}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
-source("../.env")
-library(magrittr)
+library(dplyr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -48,7 +47,7 @@ seasons <- c(
 )
 
 # you will need to set the enviromnment variable `APIKEY` to your MySportsFeeds API v2.0 API key
-#apikey <- Sys.getenv("APIKEY")
+apikey <- keyring::key_get("MySportsFeeds")
 for (ixseason in seasons) {
   games <-
     dfstools::msf_seasonal_games("nba", ixseason, apikey)$games
@@ -115,6 +114,11 @@ for (ixteam in teams$team) {
   }
 }
 
+
+```
+
+## Disconnect from the database
+```{r}
 DBI::dbDisconnect(connection)
 
 ```

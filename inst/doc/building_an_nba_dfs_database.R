@@ -1,6 +1,5 @@
 ## ----setup, include = FALSE----------------------------------------------
-source("../.env")
-library(magrittr)
+library(dplyr)
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -29,7 +28,7 @@ seasons <- c(
 )
 
 # you will need to set the enviromnment variable `APIKEY` to your MySportsFeeds API v2.0 API key
-#apikey <- Sys.getenv("APIKEY")
+apikey <- keyring::key_get("MySportsFeeds")
 for (ixseason in seasons) {
   games <-
     dfstools::msf_seasonal_games("nba", ixseason, apikey)$games
@@ -93,6 +92,9 @@ for (ixteam in teams$team) {
   }
 }
 
+
+
+## ------------------------------------------------------------------------
 DBI::dbDisconnect(connection)
 
 

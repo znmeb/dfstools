@@ -12,7 +12,7 @@
 
 <meta name="author" content="M. Edward (Ed) Borasky" />
 
-<meta name="date" content="2018-10-11" />
+<meta name="date" content="2018-10-12" />
 
 <title>Building an NBA DFS Database</title>
 
@@ -278,7 +278,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Building an NBA DFS Database</h1>
 <h4 class="author"><em>M. Edward (Ed) Borasky</em></h4>
-<h4 class="date"><em>2018-10-11</em></h4>
+<h4 class="date"><em>2018-10-12</em></h4>
 
 
 
@@ -313,7 +313,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb2-8" data-line-number="8">)</a>
 <a class="sourceLine" id="cb2-9" data-line-number="9"></a>
 <a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co"># you will need to set the enviromnment variable `APIKEY` to your MySportsFeeds API v2.0 API key</span></a>
-<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#apikey &lt;- Sys.getenv(&quot;APIKEY&quot;)</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11">apikey &lt;-<span class="st"> </span>keyring<span class="op">::</span><span class="kw">key_get</span>(<span class="st">&quot;MySportsFeeds&quot;</span>)</a>
 <a class="sourceLine" id="cb2-12" data-line-number="12"><span class="cf">for</span> (ixseason <span class="cf">in</span> seasons) {</a>
 <a class="sourceLine" id="cb2-13" data-line-number="13">  games &lt;-</a>
 <a class="sourceLine" id="cb2-14" data-line-number="14"><span class="st">    </span>dfstools<span class="op">::</span><span class="kw">msf_seasonal_games</span>(<span class="st">&quot;nba&quot;</span>, ixseason, apikey)<span class="op">$</span>games</a>
@@ -576,9 +576,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <a class="sourceLine" id="cb3-208" data-line-number="208"><span class="co">#&gt; No encoding supplied: defaulting to UTF-8.</span></a>
 <a class="sourceLine" id="cb3-209" data-line-number="209"><span class="co">#&gt; No encoding supplied: defaulting to UTF-8.</span></a>
 <a class="sourceLine" id="cb3-210" data-line-number="210"><span class="co">#&gt; No encoding supplied: defaulting to UTF-8.</span></a>
-<a class="sourceLine" id="cb3-211" data-line-number="211"><span class="co">#&gt; No encoding supplied: defaulting to UTF-8.</span></a>
-<a class="sourceLine" id="cb3-212" data-line-number="212"></a>
-<a class="sourceLine" id="cb3-213" data-line-number="213">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(connection)</a></code></pre></div>
+<a class="sourceLine" id="cb3-211" data-line-number="211"><span class="co">#&gt; No encoding supplied: defaulting to UTF-8.</span></a></code></pre></div>
+</div>
+<div id="disconnect-from-the-database" class="section level2">
+<h2>Disconnect from the database</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">DBI<span class="op">::</span><span class="kw">dbDisconnect</span>(connection)</a></code></pre></div>
 </div>
 
 
