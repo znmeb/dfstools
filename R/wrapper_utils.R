@@ -34,14 +34,14 @@ get_msf_api <- function(url, apikey) {
     return(list(
       status_code = status_code,
       data = jsonlite::fromJSON(
-        httr::content(response, as = "text"),
+        httr::content(response, as = "text", encoding = "UTF-8"),
         flatten = TRUE
       ))
     )
   } else {
     return(list(
       status_code = status_code,
-      data = httr::content(response, as = "text")
+      data = httr::content(response, as = "text", encoding = "UTF-8")
     ))
   }
 }

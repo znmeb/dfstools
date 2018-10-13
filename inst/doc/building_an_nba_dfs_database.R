@@ -59,7 +59,7 @@ if (ixseason == "2015-2016-regular") {
 }
 print(teams)
 
-## ------------------------------------------------------------------------
+## ----message==FALSE------------------------------------------------------
 for (ixteam in teams$team) {
   for (ixseason in seasons) {
     gamelogs <- dfstools::msf_seasonal_player_gamelogs(
