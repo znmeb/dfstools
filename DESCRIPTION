@@ -22,5 +22,6 @@ Imports: tibble,
     keyring
 Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    pkgdown
 VignetteBuilder: knitr
