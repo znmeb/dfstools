@@ -1,34 +1,35 @@
----
-title: "Building an NBA DFS Database"
-author: "M. Edward (Ed) Borasky"
-date: "`r Sys.Date()`"
-output: github_document
----
-
-```{r setup, include = FALSE}
-library(dplyr)
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+Building an NBA DFS Database
+================
+M. Edward (Ed) Borasky
+2018-10-19
 
 ## Creating the database
-The first order of business is to create an empty database to hold out NBA data. We use SQLite.
 
-```{r}
+The first order of business is to create an empty database to hold out
+NBA data. We use SQLite.
+
+``` r
 dir.create("~/DFS/nba", recursive = TRUE)
+#> Warning in dir.create("~/DFS/nba", recursive = TRUE): '/home/znmeb/DFS/nba'
+#> already exists
 unlink("~/DFS/nba/dfs_database.sqlite")
 connection <- dfstools::connect_database_file(
   "~/DFS/nba/dfs_database.sqlite")
 print(connection)
+#> <SQLiteConnection>
+#>   Path: /home/znmeb/DFS/nba/dfs_database.sqlite
+#>   Extensions: TRUE
 DBI::dbListTables(connection)
+#> character(0)
 ```
 
 ## Getting the past seasons
-The MySportsFeeds API has DFS data for all NBA seasons from the 2015-2016 regular seasons. So we create a list of those seasons and then fetch them and add them to the database.
 
-```{r}
+The MySportsFeeds API has DFS data for all NBA seasons from the
+2015-2016 regular seasons. So we create a list of those seasons and then
+fetch them and add them to the database.
+
+``` r
 seasons <- c(
   "2015-2016-regular",
   "2016-playoff",
@@ -56,13 +57,28 @@ for (ixseason in seasons) {
   }
 }
 print(teams)
+#> # A tibble: 30 x 1
+#>    team 
+#>    <chr>
+#>  1 ATL  
+#>  2 BOS  
+#>  3 BRO  
+#>  4 CHA  
+#>  5 CHI  
+#>  6 CLE  
+#>  7 DAL  
+#>  8 DEN  
+#>  9 DET  
+#> 10 GSW  
+#> # ... with 20 more rows
 all_games <- DBI::dbReadTable(connection, "games")
 print(nrow(all_games))
+#> [1] 3937
 ```
 
 ## Get the player game logs (box scores) one team at a time
 
-```{r}
+``` r
 for (ixteam in teams$team) {
   for (ixseason in seasons) {
     gamelogs <- dfstools::msf_seasonal_player_gamelogs(
@@ -94,13 +110,10 @@ for (ixteam in teams$team) {
     }
   }
 }
-
-
 ```
 
 ## Disconnect from the database
-```{r}
+
+``` r
 DBI::dbDisconnect(connection)
-
 ```
-
