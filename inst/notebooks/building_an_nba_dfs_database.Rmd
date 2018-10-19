@@ -2,11 +2,7 @@
 title: "Building an NBA DFS Database"
 author: "M. Edward (Ed) Borasky"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Building an NBA DFS Database}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output: html_notebook
 ---
 
 ```{r setup, include = FALSE}
