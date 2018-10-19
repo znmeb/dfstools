@@ -1,6 +1,5 @@
 pandoc: 2.3.1
 pkgdown: 1.1.0
 pkgdown_sha: ~
-articles:
-  building_an_nba_dfs_database: building_an_nba_dfs_database.html
+articles: {}
 
