@@ -95,8 +95,8 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
 #' @param verbose print a message before each API call (default TRUE)
 #' @return a DBI connection object pointing to the database
 
-create_nba_database <- function(
-  sqlite_file, apikey, verbose = TRUE) {
+create_nba_database <- function(sqlite_file, apikey,
+                                verbose = TRUE) {
   unlink(sqlite_file, force = TRUE) # nuke it!
   connection <- connect_database_file(sqlite_file)
 
@@ -133,75 +133,47 @@ create_nba_database <- function(
   # now we can get the tables that must be fetched a team at a time
   teams <- DBI::dbReadTable(connection, "teams")
   for (ixrow in 1:nrow(teams)) {
+    ixleague <- teams$league[ixrow]
+    ixseason <- teams$season[ixrow]
+    ixteam <- teams$team[ixrow]
 
     # gamelogs (player box scores)
-    if (verbose) print(paste(
-      teams$league[ixrow],
-      teams$season[ixrow],
-      teams$team[ixrow],
-      "gamelogs"
-    ))
-
-    ntries <- 5
-    sleep_seconds <- 3
-    for (ixtry in 1:ntries) {
-      gamelogs <- msf_seasonal_player_gamelogs(
-        teams$season[ixrow],
-        teams$league[ixrow],
-        teams$team[ixrow],
-        apikey
-      )
-      status_code <- gamelogs[["status_code"]]
-      if (status_code == 200) break # it worked!!
-      if (verbose) print(paste(
-        "sleeping",
-        sleep_seconds,
-        "seconds"
-      ))
-      Sys.sleep(sleep_seconds)
-      next
+    gamelogs <- msf_retry_call(
+      ntries = 5,
+      sleep_seconds = 3,
+      function_name = "msf_seasonal_player_gamelogs",
+      league = ixleague,
+      season = ixseason,
+      team = ixteam,
+      apikey = apikey,
+      verbose = verbose
+    )
+    status_code <- gamelogs[["status_code"]]
+    if (status_code == 200) {
+      gamelogs <- gamelogs %>%
+        select_nba_gamelogs_columns()
+      append_table(connection, "gamelogs", gamelogs)
     }
-    if (ixtry == ntries) stop(paste("failed", status_code))
-
-    gamelogs <- gamelogs %>%
-      select_nba_gamelogs_columns()
-    append_table(connection, "gamelogs", gamelogs)
 
     # DFS
-    if (verbose) print(paste(
-      teams$league[ixrow],
-      teams$season[ixrow],
-      teams$team[ixrow],
-      "dfs"
-    ))
-
-    for (ixtry in 1:ntries) {
-      dfs <- msf_seasonal_team_dfs(
-        teams$season[ixrow],
-        teams$league[ixrow],
-        teams$team[ixrow],
-        apikey
-      )
-      status_code <- dfs[["status_code"]]
-      if (status_code == 200) break # it worked!!
-      if (verbose) print(paste(
-        "sleeping",
-        sleep_seconds,
-        "seconds"
-      ))
-      Sys.sleep(sleep_seconds)
-      next
+    dfs <- msf_retry_call(
+      ntries = 5,
+      sleep_seconds = 3,
+      function_name = "msf_seasonal_team_dfs",
+      league = ixleague,
+      season = ixseason,
+      team = ixteam,
+      apikey = apikey,
+      verbose = verbose
+    )
+    status_code <- dfs[["status_code"]]
+    if (status_code == 200) {
+      dfs <- dfs[["dfs"]]
+      colnames(dfs) <- colnames(dfs) %>% snakecase::to_any_case()
+      append_table(connection, "dfs", dfs)
     }
-    if(ixtry == ntries) stop(paste("failed", status_code))
-
-    dfs <- dfs[["dfs"]]
-    colnames(dfs) <- colnames(dfs) %>% snakecase::to_any_case()
-    append_table(connection, "dfs", dfs)
-
   }
-
   return(connection)
-
 }
 
 utils::globalVariables(c(

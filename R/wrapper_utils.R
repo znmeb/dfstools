@@ -192,7 +192,6 @@ msf_seasonal_team_dfs <- function(season, league, team, apikey) {
   }
 }
 
-
 #' @title MySportsFeeds Seasonal Player Gamelogs
 #' @name msf_seasonal_player_gamelogs
 #' @description Gets gamelogs object from from MySportsFeeds version 2.0 API
@@ -244,6 +243,53 @@ msf_seasonal_player_gamelogs <- function(season, league, team, apikey) {
       gamelogs = gamelogs
     ))
   }
+}
+
+#' @title MySportsFeeds Retry Call
+#' @name msf_retry_call
+#' @description Retries calls till they work or a specified number of failures
+#' @export msf_retry_call
+#' @param ntries number of times to try the call
+#' @param sleep_seconds seconds to sleep after failure
+#' @param function_name the function to call,
+#' @param league the league to fetch
+#' @param season the season to fetch
+#' @param team the team to fetch
+#' @param apikey your MySportsFeeds API key (version 2.0!)
+#' @param verbose print status if TRUE
+#' @return the last response from the call, successful or not
+
+msf_retry_call <- function(
+  ntries, sleep_seconds, function_name,
+  league, season, team, apikey, verbose
+) {
+  if (verbose) print(paste(
+    league,
+    season,
+    team,
+    function_name
+  ))
+  FUN <- match.fun(function_name)
+
+  for (ixtry in 1:ntries) {
+    response <- FUN(
+      season = season,
+      league = league,
+      team = team,
+      apikey = apikey
+    )
+    status_code <- response[["status_code"]]
+    if (status_code == 200) break # it worked!!
+    if (verbose) print(paste(
+      status_code,
+      "sleeping",
+      sleep_seconds,
+      "seconds"
+    ))
+    Sys.sleep(sleep_seconds)
+  }
+
+  return(response)
 }
 
 utils::globalVariables(c(
