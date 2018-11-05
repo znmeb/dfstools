@@ -20,7 +20,6 @@ Imports: DBI,
     RSQLite,
     snakecase,
     tibble
-Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown,
     pkgdown
