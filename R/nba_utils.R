@@ -91,9 +91,11 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
 #' @param apikey your MuSportsFeeds 2.0 API key
+#' @param verbose print a message before each API call (default TRUE)
 #' @return a DBI connection object pointing to the database
 
-create_nba_database <- function(sqlite_file, apikey) {
+create_nba_database <- function(
+  sqlite_file, apikey, verbose = TRUE) {
   unlink(sqlite_file, force = TRUE) # nuke it!
   connection <- connect_database_file(sqlite_file)
 
@@ -109,6 +111,11 @@ create_nba_database <- function(sqlite_file, apikey) {
 
   # populate the `games` and `teams` tables
   for (ixseason in seasons) {
+    if (verbose) print(paste(
+      "nba",
+      ixseason,
+      "games"
+    ))
     games <- msf_seasonal_games("nba", ixseason, apikey) %>%
       select_nba_games_columns()
     append_table(connection, "games", games)
@@ -125,13 +132,34 @@ create_nba_database <- function(sqlite_file, apikey) {
   # now we can get the tables that must be fetched a team at a time
   teams <- DBI::dbReadTable(connection, "teams")
   for (ixrow in 1:nrow(teams)) {
-    gamelogs <- msf_seasonal_player_gamelogs(
-      teams$season[ixrow],
+    if (verbose) print(paste(
       teams$league[ixrow],
+      teams$season[ixrow],
       teams$team[ixrow],
-      apikey
-    ) %>%
+      "gamelogs"
+    ))
+    ntries <- 5
+    for (ixtry in 1:ntries) {
+      gamelogs <- msf_seasonal_player_gamelogs(
+        teams$season[ixrow],
+        teams$league[ixrow],
+        teams$team[ixrow],
+        apikey
+      )
+      status_code <- gamelogs[["status_code"]]
+      if (status_code == 200) break # it worked!!
+
+      # are we throttled?
+      if (status_code == 429) {
+        if (verbose) print ("Throttled")
+        Sys.sleep(1)
+        next
+      }
+      stop(paste("failed", status_code))
+    }
+    gamelogs <- gamelogs %>%
       select_nba_gamelogs_columns()
+    append_table(connection, "gamelogs", gamelogs)
   }
   return(connection)
 }

@@ -4,12 +4,14 @@
 \alias{create_nba_database}
 \title{Create NBA Database}
 \usage{
-create_nba_database(sqlite_file, apikey)
+create_nba_database(sqlite_file, apikey, verbose = TRUE)
 }
 \arguments{
 \item{sqlite_file}{a valid file path; it will be overwritten if it exists and created if it doesn't}
 
 \item{apikey}{your MuSportsFeeds 2.0 API key}
+
+\item{verbose}{print a message before each API call (default TRUE)}
 }
 \value{
 a DBI connection object pointing to the database
