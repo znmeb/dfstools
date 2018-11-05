@@ -141,7 +141,9 @@ create_nba_database <- function(
       teams$team[ixrow],
       "gamelogs"
     ))
+
     ntries <- 5
+    sleep_seconds <- 3
     for (ixtry in 1:ntries) {
       gamelogs <- msf_seasonal_player_gamelogs(
         teams$season[ixrow],
@@ -151,15 +153,16 @@ create_nba_database <- function(
       )
       status_code <- gamelogs[["status_code"]]
       if (status_code == 200) break # it worked!!
-
-      # are we throttled?
-      if (status_code == 429) {
-        if (verbose) print ("Throttled")
-        Sys.sleep(2)
-        next
-      }
-      stop(paste("failed", status_code))
+      if (verbose) print(paste(
+        "sleeping",
+        sleep_seconds,
+        "seconds"
+      ))
+      Sys.sleep(sleep_seconds)
+      next
     }
+    if (ixtry == ntries) stop(paste("failed", status_code))
+
     gamelogs <- gamelogs %>%
       select_nba_gamelogs_columns()
     append_table(connection, "gamelogs", gamelogs)
@@ -171,8 +174,7 @@ create_nba_database <- function(
       teams$team[ixrow],
       "dfs"
     ))
-    ntries <- 5
-    sleep_seconds <- 3
+
     for (ixtry in 1:ntries) {
       dfs <- msf_seasonal_team_dfs(
         teams$season[ixrow],
@@ -182,23 +184,24 @@ create_nba_database <- function(
       )
       status_code <- dfs[["status_code"]]
       if (status_code == 200) break # it worked!!
-      if (status_code == 429) {
-        if (verbose) print(paste(
-          "sleeping",
-          sleep_seconds,
-          "seconds"
-        ))
-        Sys.sleep(sleep_seconds)
-        next
-      }
-      stop(paste("failed", status_code))
+      if (verbose) print(paste(
+        "sleeping",
+        sleep_seconds,
+        "seconds"
+      ))
+      Sys.sleep(sleep_seconds)
+      next
     }
+    if(ixtry == ntries) stop(paste("failed", status_code))
+
     dfs <- dfs[["dfs"]]
     colnames(dfs) <- colnames(dfs) %>% snakecase::to_any_case()
     append_table(connection, "dfs", dfs)
 
   }
+
   return(connection)
+
 }
 
 utils::globalVariables(c(
