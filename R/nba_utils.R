@@ -88,6 +88,7 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
 #' @importFrom dplyr %>%
 #' @importFrom dplyr distinct
 #' @importFrom dplyr select
+#' @importFrom snakecase to_any_case
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
 #' @param apikey your MuSportsFeeds 2.0 API key
@@ -132,6 +133,8 @@ create_nba_database <- function(
   # now we can get the tables that must be fetched a team at a time
   teams <- DBI::dbReadTable(connection, "teams")
   for (ixrow in 1:nrow(teams)) {
+
+    # gamelogs (player box scores)
     if (verbose) print(paste(
       teams$league[ixrow],
       teams$season[ixrow],
@@ -160,6 +163,35 @@ create_nba_database <- function(
     gamelogs <- gamelogs %>%
       select_nba_gamelogs_columns()
     append_table(connection, "gamelogs", gamelogs)
+
+    # DFS
+    if (verbose) print(paste(
+      teams$league[ixrow],
+      teams$season[ixrow],
+      teams$team[ixrow],
+      "dfs"
+    ))
+    ntries <- 5
+    for (ixtry in 1:ntries) {
+      dfs <- msf_seasonal_team_dfs(
+        teams$season[ixrow],
+        teams$league[ixrow],
+        teams$team[ixrow],
+        apikey
+      )
+      status_code <- dfs[["status_code"]]
+      if (status_code == 200) break # it worked!!
+      if (status_code == 429) {
+        if (verbose) print ("Throttled")
+        Sys.sleep(2)
+        next
+      }
+      stop(paste("failed", status_code))
+    }
+    dfs <- dfs[["dfs"]]
+    colnames(dfs) <- colnames(dfs) %>% snakecase::to_any_case()
+    append_table(connection, "dfs", dfs)
+
   }
   return(connection)
 }
