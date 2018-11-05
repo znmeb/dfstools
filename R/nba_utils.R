@@ -152,7 +152,7 @@ create_nba_database <- function(
       # are we throttled?
       if (status_code == 429) {
         if (verbose) print ("Throttled")
-        Sys.sleep(1)
+        Sys.sleep(2)
         next
       }
       stop(paste("failed", status_code))
