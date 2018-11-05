@@ -28,12 +28,16 @@ select_nba_games_columns <- function(games_object) {
 #' @name create_nba_database
 #' @description Creates an SQLite database for all completed NBA seasons with DFS data
 #' @importFrom dplyr %>%
+#' @importFrom dplyr arrange
+#' @importFrom dplyr distinct
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
 #' @param apikey your MuSportsFeeds 2.0 API key
 #' @return a DBI connection object pointing to the database
 
-create_nba_database <- function(sqlite_file, api) {
+create_nba_database <- function(sqlite_file, apikey) {
   unlink(sqlite_file, force = TRUE) # nuke it!
   connection <- connect_database_file(sqlite_file)
 
@@ -64,3 +68,9 @@ create_nba_database <- function(sqlite_file, api) {
 
   return(connection)
 }
+
+utils::globalVariables(c(
+  "apikey",
+  "schedule_home_team_abbreviation",
+  "team"
+))
