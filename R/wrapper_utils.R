@@ -224,19 +224,17 @@ msf_seasonal_player_gamelogs <- function(season, league, team, apikey) {
   }
 }
 
-if(getRversion() >= "2.15.1") utils::globalVariables(c(
+utils::globalVariables(c(
   ".",
   "schedule.attendance",
+  "schedule.awayTeam.abbreviation",
   "schedule.delayedOrPostponedReason",
   "schedule.endedTime",
+  "schedule.homeTeam.abbreviation",
   "schedule.originalStartTime",
+  "schedule.startTime",
   "schedule.weather",
   "score.currentIntermission",
   "score.currentQuarter",
-  "score.quarters",
-  "schedule.awayTeam.abbreviation",
-  "schedule.homeTeam.abbreviation",
-  "schedule.startTime",
-  "startEastern",
-  "season"
+  "score.quarters"
 ))
