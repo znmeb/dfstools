@@ -28,9 +28,7 @@ select_nba_games_columns <- function(games_object) {
 #' @name create_nba_database
 #' @description Creates an SQLite database for all completed NBA seasons with DFS data
 #' @importFrom dplyr %>%
-#' @importFrom dplyr arrange
 #' @importFrom dplyr distinct
-#' @importFrom dplyr mutate
 #' @importFrom dplyr select
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
@@ -58,11 +56,11 @@ create_nba_database <- function(sqlite_file, apikey) {
     append_table(connection, "games", games)
 
     teams <- games %>%
-      dplyr::select(schedule_home_team_abbreviation) %>%
-      dplyr::distinct() %>%
-      dplyr::select(team = schedule_home_team_abbreviation) %>%
-      dplyr::arrange(team) %>%
-      dplyr::mutate(season = ixseason)
+      dplyr::select(
+        team = schedule_home_team_abbreviation,
+        league,
+        season
+      ) %>% dplyr::distinct()
     append_table(connection, "teams", teams)
   }
 
@@ -71,6 +69,8 @@ create_nba_database <- function(sqlite_file, apikey) {
 
 utils::globalVariables(c(
   "apikey",
+  "league",
   "schedule_home_team_abbreviation",
+  "season",
   "team"
 ))
