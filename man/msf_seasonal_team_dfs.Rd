@@ -28,8 +28,7 @@ Gets DFS data object from from MySportsFeeds version 2.0 API
 \examples{
 \dontrun{
 apikey <- "your_API key"
-library(dfstools)
-nba_dfs <- msf_seasonal_team_dfs(
+nba_dfs <- dfstools::msf_seasonal_team_dfs(
   season = "2018-playoff",
   league = "nba",
   team = "GSW",

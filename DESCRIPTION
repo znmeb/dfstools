@@ -11,15 +11,16 @@ LazyData: true
 URL: https://github.com/znmeb/dfstools
 BugReports: https://github.com/znmeb/dfstools/issues/new/choose
 RoxygenNote: 6.1.0
-Imports: tibble,
+Imports: DBI,
+    dfstools,
     dplyr,
-    lubridate,
     httr,
     jsonlite,
-    DBI,
+    keyring,
+    lubridate,
     RSQLite,
     snakecase,
-    keyring
+    tibble
 Remotes: znmeb/mysportsfeeds-r
 Suggests: knitr,
     rmarkdown,

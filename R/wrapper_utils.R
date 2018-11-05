@@ -17,8 +17,7 @@
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
-#' library(dfstools)
-#' response <- get_msf_api(
+#' response <- dfstools::get_msf_api(
 #'   "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json",
 #'   apikey
 #' )
@@ -75,9 +74,8 @@ get_msf_api <- function(url, apikey) {
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
-#' library(dfstools)
 #' nba_games <-
-#'   msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
+#'   dfstools::msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
 #' }
 
 msf_seasonal_games <- function(league, season, apikey) {
@@ -134,8 +132,7 @@ msf_seasonal_games <- function(league, season, apikey) {
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
-#' library(dfstools)
-#' nba_dfs <- msf_seasonal_team_dfs(
+#' nba_dfs <- dfstools::msf_seasonal_team_dfs(
 #'   season = "2018-playoff",
 #'   league = "nba",
 #'   team = "GSW",
@@ -195,8 +192,7 @@ msf_seasonal_team_dfs <- function(season, league, team, apikey) {
 #' @examples
 #' \dontrun{
 #' apikey <- "your_API key"
-#' library(dfstools)
-#' nba_gamelogs <- msf_seasonal_player_gamelogs(
+#' nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
 #'   season = "2018-playoff",
 #'   league = "nba",
 #'   team = "GSW",

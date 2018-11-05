@@ -36,8 +36,7 @@ The returned tibble will be sorted in chronological order.
 \examples{
 \dontrun{
 apikey <- "your_API key"
-library(dfstools)
 nba_games <-
-  msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
+  dfstools::msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
 }
 }

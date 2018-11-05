@@ -28,8 +28,7 @@ Gets gamelogs object from from MySportsFeeds version 2.0 API
 \examples{
 \dontrun{
 apikey <- "your_API key"
-library(dfstools)
-nba_gamelogs <- msf_seasonal_player_gamelogs(
+nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
   season = "2018-playoff",
   league = "nba",
   team = "GSW",

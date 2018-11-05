@@ -8,8 +8,7 @@
 #' @return a DBI connection object
 #' @examples
 #' \dontrun{
-#' library(dfstools)
-#' connection <- connect_database_file("~/DFS/nba/dfs_database.sqlite")
+#' connection <- dfstools::connect_database_file("~/DFS/nba/dfs_database.sqlite")
 #' }
 
 connect_database_file <- function(path) {

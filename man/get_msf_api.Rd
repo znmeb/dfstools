@@ -24,8 +24,7 @@ GETs data from the MySportsFeeds 2.0 API
 \examples{
 \dontrun{
 apikey <- "your_API key"
-library(dfstools)
-response <- get_msf_api(
+response <- dfstools::get_msf_api(
   "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json",
   apikey
 )

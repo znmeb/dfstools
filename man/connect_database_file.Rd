@@ -17,7 +17,6 @@ creates an SQLite database file if needed and returns its connection
 }
 \examples{
 \dontrun{
-library(dfstools)
-connection <- connect_database_file("~/DFS/nba/dfs_database.sqlite")
+connection <- dfstools::connect_database_file("~/DFS/nba/dfs_database.sqlite")
 }
 }

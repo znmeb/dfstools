@@ -2,6 +2,7 @@
 
 export(append_table)
 export(connect_database_file)
+export(create_nba_database)
 export(get_msf_api)
 export(msf_seasonal_games)
 export(msf_seasonal_player_gamelogs)
