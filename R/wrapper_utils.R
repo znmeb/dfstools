@@ -1,3 +1,25 @@
+#' @title Set MySportsFeeds API key
+#' @name set_msf_apikey
+#' @description sets the MySportsFeeds API key into the keyring
+#' @importFrom keyring key_set_with_value
+#' @export set_msf_apikey
+#' @param apikey the API key
+
+set_msf_apikey <- function(apikey) {
+  keyring::key_set_with_value("MySportsFeeds", password = apikey)
+}
+
+#' @title Get MySportsFeeds API key
+#' @name get_msf_apikey
+#' @description gets the MySportsFeeds API key saved in the keyring
+#' @importFrom keyring key_get
+#' @export get_msf_apikey
+#' @return the API key
+
+get_msf_apikey <- function() {
+  return(keyring::key_get("MySportsFeeds"))
+}
+
 #' @title GET from MySportsFeeds API
 #' @name get_msf_api
 #' @description GETs data from the MySportsFeeds 2.0 API
