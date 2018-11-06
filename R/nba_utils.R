@@ -156,7 +156,7 @@ select_nba_team_gamelogs_columns <- function(team_gamelogs_object) {
     "stats_standings_wins",
     "stats_standings_losses",
     "stats_standings_win_pct",
-    "stats_standings_games_back"             
+    "stats_standings_games_back"
   )
   team_gamelogs <- team_gamelogs_object[["team_gamelogs"]]
   colnames(team_gamelogs) <-colnames(team_gamelogs) %>%
@@ -222,6 +222,20 @@ create_nba_database <- function(sqlite_file, verbose = TRUE) {
     ixleague <- teams$league[ixrow]
     ixseason <- teams$season[ixrow]
     ixteam <- teams$team[ixrow]
+
+    # team_gamelogs (team box scores)
+    team_gamelogs <- msf_seasonal_team_gamelogs(
+      league = ixleague,
+      season = ixseason,
+      team = ixteam,
+      verbose
+    )
+    status_code <- team_gamelogs[["status_code"]]
+    if (status_code == 200) {
+      team_gamelogs <- team_gamelogs %>%
+        select_nba_team_gamelogs_columns()
+      append_table(connection, "team_gamelogs", team_gamelogs)
+    }
 
     # player_gamelogs (player box scores)
     player_gamelogs <- msf_seasonal_player_gamelogs(
