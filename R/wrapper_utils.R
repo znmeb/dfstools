@@ -4,9 +4,9 @@
 #' @importFrom keyring key_set_with_value
 #' @export set_msf_apikey
 #' @param apikey the API key
-#' @details \code{dfstools} uses the \code{keyring} package
+#' @details `dfstools` uses the `keyring` package
 #' to manage the MySportsFeeds API key. This is portable; it
-#' will work on any platform where \code{keyring} can be
+#' will work on any platform where `keyring`` can be
 #' installed, including Linux, MacOS and Windows.
 #'
 #' Usage:
@@ -20,7 +20,7 @@
 #'   This package does \strong{not} support the v1.x APIs.
 #'   \item In R, paste the API key in the following:
 #'
-#'     \code{dfstools::set_msf_apikey("paste API key here")}
+#'     dfstools::set_msf_apikey("paste API key here")
 #'  }
 #'
 
@@ -242,9 +242,10 @@ msf_seasonal_team_dfs <- function(
 #' @return a list of two items
 #' \itemize{
 #'   \item status_code the HTTP status code (200 for success,
-#'     -200 for HTTP success but no DFS data)
-#'   \item  response if status_code == 200, a tibble of DFS data;
-#'     otherwise, the raw text.}
+#'     -200 for HTTP success but no data)
+#'   \item  response if status_code == 200, a `player_gamelogs``
+#'      object; otherwise, the raw text.
+#'  }
 #' @examples
 #' \dontrun{
 #' nba_player_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
@@ -295,7 +296,7 @@ msf_seasonal_player_gamelogs <-
 #' \itemize{
 #'   \item status_code the HTTP status code (200 for success,
 #'     -200 for HTTP success but no DFS data)
-#'   \item  response if status_code == 200, a \code{team_gamelogs}
+#'   \item  response if status_code == 200, a `team_gamelogs``
 #'      object; otherwise, the raw text.
 #'  }
 #' @examples
