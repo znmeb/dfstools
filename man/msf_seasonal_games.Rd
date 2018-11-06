@@ -4,12 +4,19 @@
 \alias{msf_seasonal_games}
 \title{MySportsFeeds Seasonal Games}
 \usage{
-msf_seasonal_games(league, season)
+msf_seasonal_games(league, season, verbose = TRUE, tries = 5,
+  sleep_seconds = 10)
 }
 \arguments{
 \item{league}{the league to fetch}
 
 \item{season}{the season to fetch}
+
+\item{verbose}{print status info}
+
+\item{tries}{number of times to retry on failure}
+
+\item{sleep_seconds}{seconds to sleep after failure}
 }
 \value{
 a list of two items

@@ -9,11 +9,11 @@ get_msf_api(url, verbose = TRUE, tries = 5, sleep_seconds = 10)
 \arguments{
 \item{url}{the URL to GET}
 
-\item{verbose}{print status info (default TRUE)}
+\item{verbose}{print status info}
 
-\item{tries}{number of times to retry on failure (default 5)}
+\item{tries}{number of times to retry on failure}
 
-\item{sleep_seconds}{seconds to sleep after failure (default 10)}
+\item{sleep_seconds}{seconds to sleep after failure}
 }
 \value{
 a list of two items

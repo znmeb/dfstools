@@ -4,7 +4,8 @@
 \alias{msf_seasonal_player_gamelogs}
 \title{MySportsFeeds Seasonal Player Gamelogs}
 \usage{
-msf_seasonal_player_gamelogs(season, league, team)
+msf_seasonal_player_gamelogs(season, league, team, verbose = TRUE,
+  tries = 5, sleep_seconds = 10)
 }
 \arguments{
 \item{season}{the season to fetch}
@@ -12,6 +13,12 @@ msf_seasonal_player_gamelogs(season, league, team)
 \item{league}{the league to fetch}
 
 \item{team}{the team to fetch}
+
+\item{verbose}{print status info}
+
+\item{tries}{number of times to retry on failure}
+
+\item{sleep_seconds}{seconds to sleep after failure}
 }
 \value{
 a list of two items
