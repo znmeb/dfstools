@@ -11,6 +11,7 @@ LazyData: true
 URL: https://github.com/znmeb/dfstools
 BugReports: https://github.com/znmeb/dfstools/issues/new/choose
 RoxygenNote: 6.1.0
+Roxygen: list(markdown = TRUE)
 Imports: DBI,
     dplyr,
     httr,
