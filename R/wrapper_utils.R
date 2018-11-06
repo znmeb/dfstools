@@ -4,6 +4,24 @@
 #' @importFrom keyring key_set_with_value
 #' @export set_msf_apikey
 #' @param apikey the API key
+#' @details \code{dfstools} uses the \code{keyring} package
+#' to manage the MySportsFeeds API key. This is portable; it
+#' will work on any platform where it can be installed, including
+#' Linux, MacOS and Windows.
+#'
+#' Usage:
+#' \enumerate{
+#' \item {Go to the MySportsFeeds Patreon page
+#' \url{https://www.patreon.com/mysportsfeeds/posts} and become a
+#' patron. You'll need to be a patron to use the API v2.0.
+#' }
+#' \item{Go to the MySportsFeeds home page
+#' \url{https://www.mysportsfeeds.com/} and sign up.}
+#' \item{Create an API v2.0 API key and copy it to the clipboard.
+#' This package does \strong{not} work with the v1.x APIs.}
+#' \item{In R, paste the API key in the following:
+#' \code{dfstools::set_msf_apikey("paste API key here")}}}
+#'
 
 set_msf_apikey <- function(apikey) {
   keyring::key_set_with_value("MySportsFeeds", password = apikey)
@@ -30,9 +48,9 @@ get_msf_apikey <- function() {
 #' @importFrom jsonlite fromJSON
 #' @export get_msf_api
 #' @param url the URL to GET
-#' @param verbose print status info (default TRUE)
-#' @param tries number of times to retry on failure (default 5)
-#' @param sleep_seconds seconds to sleep after failure (default 10)
+#' @param verbose print status info
+#' @param tries number of times to retry on failure
+#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success))
@@ -45,8 +63,10 @@ get_msf_apikey <- function() {
 #' )
 #' }
 
-get_msf_api <-
-  function(url, verbose = TRUE, tries = 5, sleep_seconds = 10) {
+get_msf_api <- function(
+  url,
+  verbose = TRUE, tries = 5, sleep_seconds = 10
+) {
   apikey <- dfstools::get_msf_apikey()
   for (ixtry in 1:tries) {
     if (verbose) print(url)
@@ -90,6 +110,9 @@ get_msf_api <-
 #' @export msf_seasonal_games
 #' @param league the league to fetch
 #' @param season the season to fetch
+#' @param verbose print status info
+#' @param tries number of times to retry on failure
+#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success))
@@ -110,13 +133,19 @@ get_msf_api <-
 #' )
 #' }
 
-msf_seasonal_games <- function(league, season) {
+msf_seasonal_games <- function(
+  league, season,
+  verbose = TRUE, tries = 5, sleep_seconds = 10
+) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
     league,
     season
   )
-  response <- get_msf_api(url)
+  response <- get_msf_api(
+    url,
+    verbose = verbose, tries = tries, sleep_seconds = sleep_seconds
+  )
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -155,6 +184,9 @@ msf_seasonal_games <- function(league, season) {
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
+#' @param verbose print status info
+#' @param tries number of times to retry on failure
+#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
@@ -169,14 +201,20 @@ msf_seasonal_games <- function(league, season) {
 #' )
 #' }
 
-msf_seasonal_team_dfs <- function(season, league, team) {
+msf_seasonal_team_dfs <- function(
+  season, league, team,
+  verbose = TRUE, tries = 5, sleep_seconds = 10
+) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(url)
+  response <- get_msf_api(
+    url,
+    verbose = verbose, tries = tries, sleep_seconds = sleep_seconds
+  )
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -212,6 +250,9 @@ msf_seasonal_team_dfs <- function(season, league, team) {
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
+#' @param verbose print status info
+#' @param tries number of times to retry on failure
+#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
@@ -226,7 +267,10 @@ msf_seasonal_team_dfs <- function(season, league, team) {
 #' )
 #' }
 
-msf_seasonal_player_gamelogs <- function(season, league, team) {
+msf_seasonal_player_gamelogs <- function(
+  season, league, team,
+  verbose = TRUE, tries = 5, sleep_seconds = 10
+) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
     league,
