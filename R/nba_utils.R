@@ -82,6 +82,90 @@ select_nba_player_gamelogs_columns <- function(player_gamelogs_object) {
   return(player_gamelogs)
 }
 
+#' @title Select NBA Team Gamelogs Columns
+#' @name select_nba_team_gamelogs_columns
+#' @description Extracts the relevant data from a MySportsFeeds
+#' NBA "team_gamelogs" object
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select_at
+#' @importFrom dplyr vars
+#' @importFrom snakecase to_any_case
+#' @export select_nba_team_gamelogs_columns
+#' @param team_gamelogs_object a `team_gamelogs` object returmed
+#' from msf_seasonal_gamelogs for the NBA!
+#' @return a `gamelogs` data frame with some columns removed
+#' @details The NBA `team_gamelogs` object that comes from the
+#' NBA has some columns with data issues. Some are all `NA`, and others are list columns that databases can't handle. So we remove them with `dplyr::select`.
+
+select_nba_team_gamelogs_columns <- function(team_gamelogs_object) {
+  columns_to_keep <- c(
+    "game_id",
+    "game_start_time",
+    "game_away_team_abbreviation",
+    "game_home_team_abbreviation",
+    "team_id",
+    "team_abbreviation",
+    "stats_field_goals_fg_2_pt_att",
+    "stats_field_goals_fg_2_pt_att_per_game",
+    "stats_field_goals_fg_2_pt_made",
+    "stats_field_goals_fg_2_pt_made_per_game",
+    "stats_field_goals_fg_2_pt_pct",
+    "stats_field_goals_fg_3_pt_att",
+    "stats_field_goals_fg_3_pt_att_per_game",
+    "stats_field_goals_fg_3_pt_made",
+    "stats_field_goals_fg_3_pt_made_per_game",
+    "stats_field_goals_fg_3_pt_pct",
+    "stats_field_goals_fg_att",
+    "stats_field_goals_fg_att_per_game",
+    "stats_field_goals_fg_made",
+    "stats_field_goals_fg_made_per_game",
+    "stats_field_goals_fg_pct",
+    "stats_free_throws_ft_att",
+    "stats_free_throws_ft_att_per_game",
+    "stats_free_throws_ft_made",
+    "stats_free_throws_ft_made_per_game",
+    "stats_free_throws_ft_pct",
+    "stats_rebounds_off_reb",
+    "stats_rebounds_off_reb_per_game",
+    "stats_rebounds_def_reb",
+    "stats_rebounds_def_reb_per_game",
+    "stats_rebounds_reb",
+    "stats_rebounds_reb_per_game",
+    "stats_offense_ast",
+    "stats_offense_ast_per_game",
+    "stats_offense_pts",
+    "stats_offense_pts_per_game",
+    "stats_defense_tov",
+    "stats_defense_tov_per_game",
+    "stats_defense_stl",
+    "stats_defense_stl_per_game",
+    "stats_defense_blk",
+    "stats_defense_blk_per_game",
+    "stats_defense_blk_against",
+    "stats_defense_blk_against_per_game",
+    "stats_defense_pts_against",
+    "stats_defense_pts_against_per_game",
+    "stats_miscellaneous_fouls",
+    "stats_miscellaneous_fouls_per_game",
+    "stats_miscellaneous_foul_pers",
+    "stats_miscellaneous_foul_pers_per_game",
+    "stats_miscellaneous_foul_tech",
+    "stats_miscellaneous_foul_tech_per_game",
+    "stats_miscellaneous_plus_minus",
+    "stats_miscellaneous_plus_minus_per_game",
+    "stats_standings_wins",
+    "stats_standings_losses",
+    "stats_standings_win_pct",
+    "stats_standings_games_back"             
+  )
+  team_gamelogs <- team_gamelogs_object[["team_gamelogs"]]
+  colnames(team_gamelogs) <-colnames(team_gamelogs) %>%
+    snakecase::to_any_case()
+  team_gamelogs <- team_gamelogs %>%
+    dplyr::select_at(.vars = dplyr::vars(columns_to_keep))
+  return(team_gamelogs)
+}
+
 #' @title Create NBA Database
 #' @name create_nba_database
 #' @description Creates an SQLite database for all completed NBA seasons with DFS data
