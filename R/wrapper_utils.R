@@ -30,7 +30,9 @@ get_msf_apikey <- function() {
 #' @importFrom jsonlite fromJSON
 #' @export get_msf_api
 #' @param url the URL to GET
-#' @param apikey your MySportsFeeds API key (version 2.0!)
+#' @param verbose print status info (default TRUE)
+#' @param tries number of times to retry on failure (default 5)
+#' @param sleep_seconds seconds to sleep after failure (default 10)
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success))
@@ -38,33 +40,42 @@ get_msf_apikey <- function() {
 #' }
 #' @examples
 #' \dontrun{
-#' apikey <- "your_API key"
 #' response <- dfstools::get_msf_api(
-#'   "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json",
-#'   apikey
+#'   "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
 #' )
 #' }
 
-get_msf_api <- function(url, apikey) {
-  response <- httr::GET(
-    url,
-    httr::authenticate(apikey, "MYSPORTSFEEDS")
-  )
-  status_code <- httr::status_code(response)
-  if (status_code == 200) {
-    return(list(
-      status_code = status_code,
-      data = jsonlite::fromJSON(
-        httr::content(response, as = "text", encoding = "UTF-8"),
-        flatten = TRUE
-      ))
+get_msf_api <-
+  function(url, verbose = TRUE, tries = 5, sleep_seconds = 10) {
+  apikey <- dfstools::get_msf_apikey()
+  for (ixtry in 1:tries) {
+    if (verbose) print(url)
+    response <- httr::GET(
+      url,
+      httr::authenticate(apikey, "MYSPORTSFEEDS")
     )
-  } else {
-    return(list(
-      status_code = status_code,
-      data = httr::content(response, as = "text", encoding = "UTF-8")
-    ))
+    status_code <- httr::status_code(response)
+    if (status_code == 200) {
+      return(list(
+        status_code = status_code,
+        data = jsonlite::fromJSON(
+          httr::content(response, as = "text", encoding = "UTF-8"),
+          flatten = TRUE
+        )
+      ))
+    } else {
+      if (verbose) {
+        print(paste(
+          status_code, "sleeping", sleep_seconds
+        ))
+      }
+      Sys.sleep(sleep_seconds)
+    }
   }
+  return(list(
+    status_code = status_code,
+    data = httr::content(response, as = "text", encoding = "UTF-8")
+  ))
 }
 
 #' @title MySportsFeeds Seasonal Games
@@ -79,7 +90,6 @@ get_msf_api <- function(url, apikey) {
 #' @export msf_seasonal_games
 #' @param league the league to fetch
 #' @param season the season to fetch
-#' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success))
@@ -95,18 +105,18 @@ get_msf_api <- function(url, apikey) {
 #' The returned tibble will be sorted in chronological order.
 #' @examples
 #' \dontrun{
-#' apikey <- "your_API key"
-#' nba_games <-
-#'   dfstools::msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
+#' nba_games <- dfstools::msf_seasonal_games(
+#'   season = "2017-2018-regular", league = "nba"
+#' )
 #' }
 
-msf_seasonal_games <- function(league, season, apikey) {
+msf_seasonal_games <- function(league, season) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
     league,
     season
   )
-  response <- get_msf_api(url, apikey)
+  response <- get_msf_api(url)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -145,7 +155,6 @@ msf_seasonal_games <- function(league, season, apikey) {
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
-#' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
@@ -153,22 +162,21 @@ msf_seasonal_games <- function(league, season, apikey) {
 #' }
 #' @examples
 #' \dontrun{
-#' apikey <- "your_API key"
 #' nba_dfs <- dfstools::msf_seasonal_team_dfs(
 #'   season = "2018-playoff",
 #'   league = "nba",
-#'   team = "GSW",
-#'   apikey)
+#'   team = "GSW"
+#' )
 #' }
 
-msf_seasonal_team_dfs <- function(season, league, team, apikey) {
+msf_seasonal_team_dfs <- function(season, league, team) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(url, apikey)
+  response <- get_msf_api(url)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -204,7 +212,6 @@ msf_seasonal_team_dfs <- function(season, league, team, apikey) {
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
-#' @param apikey your MySportsFeeds API key (version 2.0!)
 #' @return a list of two items
 #' \itemize{
 #' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
@@ -212,22 +219,21 @@ msf_seasonal_team_dfs <- function(season, league, team, apikey) {
 #' }
 #' @examples
 #' \dontrun{
-#' apikey <- "your_API key"
 #' nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
 #'   season = "2018-playoff",
 #'   league = "nba",
-#'   team = "GSW",
-#'   apikey)
+#'   team = "GSW"
+#' )
 #' }
 
-msf_seasonal_player_gamelogs <- function(season, league, team, apikey) {
+msf_seasonal_player_gamelogs <- function(season, league, team) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(url, apikey)
+  response <- get_msf_api(url)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -243,53 +249,6 @@ msf_seasonal_player_gamelogs <- function(season, league, team, apikey) {
       gamelogs = gamelogs
     ))
   }
-}
-
-#' @title MySportsFeeds Retry Call
-#' @name msf_retry_call
-#' @description Retries calls till they work or a specified number of failures
-#' @export msf_retry_call
-#' @param ntries number of times to try the call
-#' @param sleep_seconds seconds to sleep after failure
-#' @param function_name the function to call,
-#' @param league the league to fetch
-#' @param season the season to fetch
-#' @param team the team to fetch
-#' @param apikey your MySportsFeeds API key (version 2.0!)
-#' @param verbose print status if TRUE
-#' @return the last response from the call, successful or not
-
-msf_retry_call <- function(
-  ntries, sleep_seconds, function_name,
-  league, season, team, apikey, verbose
-) {
-  if (verbose) print(paste(
-    league,
-    season,
-    team,
-    function_name
-  ))
-  FUN <- match.fun(function_name)
-
-  for (ixtry in 1:ntries) {
-    response <- FUN(
-      season = season,
-      league = league,
-      team = team,
-      apikey = apikey
-    )
-    status_code <- response[["status_code"]]
-    if (status_code == 200) break # it worked!!
-    if (verbose) print(paste(
-      status_code,
-      "sleeping",
-      sleep_seconds,
-      "seconds"
-    ))
-    Sys.sleep(sleep_seconds)
-  }
-
-  return(response)
 }
 
 utils::globalVariables(c(

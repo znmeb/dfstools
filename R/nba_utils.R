@@ -91,12 +91,9 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
 #' @importFrom snakecase to_any_case
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
-#' @param apikey your MuSportsFeeds 2.0 API key
-#' @param verbose print a message before each API call (default TRUE)
 #' @return a DBI connection object pointing to the database
 
-create_nba_database <- function(sqlite_file, apikey,
-                                verbose = TRUE) {
+create_nba_database <- function(sqlite_file) {
   unlink(sqlite_file, force = TRUE) # nuke it!
   connection <- connect_database_file(sqlite_file)
 
@@ -112,12 +109,7 @@ create_nba_database <- function(sqlite_file, apikey,
 
   # populate the `games` and `teams` tables
   for (ixseason in seasons) {
-    if (verbose) print(paste(
-      "nba",
-      ixseason,
-      "games"
-    ))
-    games <- msf_seasonal_games("nba", ixseason, apikey) %>%
+    games <- msf_seasonal_games("nba", ixseason) %>%
       select_nba_games_columns()
     append_table(connection, "games", games)
 
@@ -130,7 +122,7 @@ create_nba_database <- function(sqlite_file, apikey,
     append_table(connection, "teams", teams)
   }
 
-  # now we can get the tables that must be fetched a team at a time
+  # now get tables that must be fetched one team at a time
   teams <- DBI::dbReadTable(connection, "teams")
   for (ixrow in 1:nrow(teams)) {
     ixleague <- teams$league[ixrow]
@@ -138,15 +130,10 @@ create_nba_database <- function(sqlite_file, apikey,
     ixteam <- teams$team[ixrow]
 
     # gamelogs (player box scores)
-    gamelogs <- msf_retry_call(
-      ntries = 5,
-      sleep_seconds = 3,
-      function_name = "msf_seasonal_player_gamelogs",
+    gamelogs <- msf_seasonal_player_gamelogs(
       league = ixleague,
       season = ixseason,
-      team = ixteam,
-      apikey = apikey,
-      verbose = verbose
+      team = ixteam
     )
     status_code <- gamelogs[["status_code"]]
     if (status_code == 200) {
@@ -156,15 +143,10 @@ create_nba_database <- function(sqlite_file, apikey,
     }
 
     # DFS
-    dfs <- msf_retry_call(
-      ntries = 5,
-      sleep_seconds = 3,
-      function_name = "msf_seasonal_team_dfs",
+    dfs <- msf_seasonal_team_dfs(
       league = ixleague,
       season = ixseason,
-      team = ixteam,
-      apikey = apikey,
-      verbose = verbose
+      team = ixteam
     )
     status_code <- dfs[["status_code"]]
     if (status_code == 200) {

@@ -4,14 +4,12 @@
 \alias{msf_seasonal_games}
 \title{MySportsFeeds Seasonal Games}
 \usage{
-msf_seasonal_games(league, season, apikey)
+msf_seasonal_games(league, season)
 }
 \arguments{
 \item{league}{the league to fetch}
 
 \item{season}{the season to fetch}
-
-\item{apikey}{your MySportsFeeds API key (version 2.0!)}
 }
 \value{
 a list of two items
@@ -35,8 +33,8 @@ The returned tibble will be sorted in chronological order.
 }
 \examples{
 \dontrun{
-apikey <- "your_API key"
-nba_games <-
-  dfstools::msf_seasonal_games(season = "2017-2018-regular", league = "nba", apikey)
+nba_games <- dfstools::msf_seasonal_games(
+  season = "2017-2018-regular", league = "nba"
+)
 }
 }

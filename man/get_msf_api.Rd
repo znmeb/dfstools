@@ -4,12 +4,16 @@
 \alias{get_msf_api}
 \title{GET from MySportsFeeds API}
 \usage{
-get_msf_api(url, apikey)
+get_msf_api(url, verbose = TRUE, tries = 5, sleep_seconds = 10)
 }
 \arguments{
 \item{url}{the URL to GET}
 
-\item{apikey}{your MySportsFeeds API key (version 2.0!)}
+\item{verbose}{print status info (default TRUE)}
+
+\item{tries}{number of times to retry on failure (default 5)}
+
+\item{sleep_seconds}{seconds to sleep after failure (default 10)}
 }
 \value{
 a list of two items
@@ -23,10 +27,8 @@ GETs data from the MySportsFeeds 2.0 API
 }
 \examples{
 \dontrun{
-apikey <- "your_API key"
 response <- dfstools::get_msf_api(
-  "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json",
-  apikey
+  "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
 )
 }
 }

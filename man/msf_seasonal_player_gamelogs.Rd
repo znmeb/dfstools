@@ -4,7 +4,7 @@
 \alias{msf_seasonal_player_gamelogs}
 \title{MySportsFeeds Seasonal Player Gamelogs}
 \usage{
-msf_seasonal_player_gamelogs(season, league, team, apikey)
+msf_seasonal_player_gamelogs(season, league, team)
 }
 \arguments{
 \item{season}{the season to fetch}
@@ -12,8 +12,6 @@ msf_seasonal_player_gamelogs(season, league, team, apikey)
 \item{league}{the league to fetch}
 
 \item{team}{the team to fetch}
-
-\item{apikey}{your MySportsFeeds API key (version 2.0!)}
 }
 \value{
 a list of two items
@@ -27,11 +25,10 @@ Gets gamelogs object from from MySportsFeeds version 2.0 API
 }
 \examples{
 \dontrun{
-apikey <- "your_API key"
 nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
   season = "2018-playoff",
   league = "nba",
-  team = "GSW",
-  apikey)
+  team = "GSW"
+)
 }
 }
