@@ -20,7 +20,7 @@
 #'   This package does \strong{not} support the v1.x APIs.
 #'   \item In R, paste the API key in the following:
 #'
-#'     \code{dfstools::set_msf_apikey("paste API key here")
+#'     \code{dfstools::set_msf_apikey("paste API key here")}
 #'  }
 #'
 
