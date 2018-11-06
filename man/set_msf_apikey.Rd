@@ -12,22 +12,3 @@ set_msf_apikey(apikey)
 \description{
 sets the MySportsFeeds API key into the keyring
 }
-\details{
-\code{dfstools} uses the \code{keyring} package
-to manage the MySportsFeeds API key. This is portable; it
-will work on any platform where it can be installed, including
-Linux, MacOS and Windows.
-
-Usage:
-\enumerate{
-\item {Go to the MySportsFeeds Patreon page
-\url{https://www.patreon.com/mysportsfeeds/posts} and become a
-patron. You'll need to be a patron to use the API v2.0.
-}
-\item{Go to the MySportsFeeds home page
-\url{https://www.mysportsfeeds.com/} and sign up.}
-\item{Create an API v2.0 API key and copy it to the clipboard.
-This package does \strong{not} work with the v1.x APIs.}
-\item{In R, paste the API key in the following:
-\code{dfstools::set_msf_apikey("paste API key here")}}}
-}

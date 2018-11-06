@@ -24,19 +24,19 @@ select_nba_games_columns <- function(games_object) {
   return(games)
 }
 
-#' @title Select NBA Gamelogs Columns
-#' @name select_nba_gamelogs_columns
-#' @description Extracts the relevant data from a MySportsFeeds NBA "gamelogs" object
+#' @title Select NBA Player Gamelogs Columns
+#' @name select_nba_player_gamelogs_columns
+#' @description Extracts the relevant data from a MySportsFeeds NBA "player_gamelogs" object
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select_at
 #' @importFrom dplyr vars
 #' @importFrom snakecase to_any_case
-#' @export select_nba_gamelogs_columns
-#' @param gamelogs_object a `gamelogs` object returmed from msf_seasonal_gamelogs for the NBA!
+#' @export select_nba_player_gamelogs_columns
+#' @param player_gamelogs_object a `player_gamelogs` object returmed from msf_seasonal_gamelogs for the NBA!
 #' @return a `gamelogs` data frame with some columns removed
-#' @details The NBA `gamelogs` object that comes from the NBA has some columns with data issues. Some are all `NA`, and others are list columns that databases can't handle. So we remove them with `dplyr::select`.
+#' @details The NBA `player_gamelogs` object that comes from the NBA has some columns with data issues. Some are all `NA`, and others are list columns that databases can't handle. So we remove them with `dplyr::select`.
 
-select_nba_gamelogs_columns <- function(gamelogs_object) {
+select_nba_player_gamelogs_columns <- function(player_gamelogs_object) {
   columns_to_keep <- c(
     "game_id",
     "game_start_time",
@@ -74,12 +74,12 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
     "stats_miscellaneous_plus_minus",
     "stats_miscellaneous_min_seconds"
   )
-  gamelogs <- gamelogs_object[["gamelogs"]]
-  colnames(gamelogs) <-colnames(gamelogs) %>%
+  player_gamelogs <- player_gamelogs_object[["player_gamelogs"]]
+  colnames(player_gamelogs) <-colnames(player_gamelogs) %>%
     snakecase::to_any_case()
-  gamelogs <- gamelogs %>%
+  player_gamelogs <- player_gamelogs %>%
     dplyr::select_at(.vars = dplyr::vars(columns_to_keep))
-  return(gamelogs)
+  return(player_gamelogs)
 }
 
 #' @title Create NBA Database
@@ -91,9 +91,10 @@ select_nba_gamelogs_columns <- function(gamelogs_object) {
 #' @importFrom snakecase to_any_case
 #' @export create_nba_database
 #' @param sqlite_file a valid file path; it will be overwritten if it exists and created if it doesn't
+#' @param verbose print status information
 #' @return a DBI connection object pointing to the database
 
-create_nba_database <- function(sqlite_file) {
+create_nba_database <- function(sqlite_file, verbose = TRUE) {
   unlink(sqlite_file, force = TRUE) # nuke it!
   connection <- connect_database_file(sqlite_file)
 
@@ -107,9 +108,9 @@ create_nba_database <- function(sqlite_file) {
     "2018 playoff"
   )
 
-  # populate the `games` and `teams` tables
+  # populate the `games`, `teams` and `dates` tables
   for (ixseason in seasons) {
-    games <- msf_seasonal_games("nba", ixseason) %>%
+    games <- msf_seasonal_games("nba", ixseason, verbose) %>%
       select_nba_games_columns()
     append_table(connection, "games", games)
 
@@ -120,6 +121,15 @@ create_nba_database <- function(sqlite_file) {
         season
       ) %>% dplyr::distinct()
     append_table(connection, "teams", teams)
+
+    dates <- games %>%
+      dplyr::select(
+        date,
+        league,
+        season
+      ) %>% dplyr::distinct()
+    append_table(connection, "dates", dates)
+
   }
 
   # now get tables that must be fetched one team at a time
@@ -129,24 +139,26 @@ create_nba_database <- function(sqlite_file) {
     ixseason <- teams$season[ixrow]
     ixteam <- teams$team[ixrow]
 
-    # gamelogs (player box scores)
-    gamelogs <- msf_seasonal_player_gamelogs(
+    # player_gamelogs (player box scores)
+    player_gamelogs <- msf_seasonal_player_gamelogs(
       league = ixleague,
       season = ixseason,
-      team = ixteam
+      team = ixteam,
+      verbose
     )
-    status_code <- gamelogs[["status_code"]]
+    status_code <- player_gamelogs[["status_code"]]
     if (status_code == 200) {
-      gamelogs <- gamelogs %>%
-        select_nba_gamelogs_columns()
-      append_table(connection, "gamelogs", gamelogs)
+      player_gamelogs <- player_gamelogs %>%
+        select_nba_player_gamelogs_columns()
+      append_table(connection, "player_gamelogs", player_gamelogs)
     }
 
     # DFS
     dfs <- msf_seasonal_team_dfs(
       league = ixleague,
       season = ixseason,
-      team = ixteam
+      team = ixteam,
+      verbose
     )
     status_code <- dfs[["status_code"]]
     if (status_code == 200) {
@@ -159,7 +171,6 @@ create_nba_database <- function(sqlite_file) {
 }
 
 utils::globalVariables(c(
-  "apikey",
   "league",
   "schedule_home_team_abbreviation",
   "season",

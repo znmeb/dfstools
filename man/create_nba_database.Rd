@@ -4,10 +4,12 @@
 \alias{create_nba_database}
 \title{Create NBA Database}
 \usage{
-create_nba_database(sqlite_file)
+create_nba_database(sqlite_file, verbose = TRUE)
 }
 \arguments{
 \item{sqlite_file}{a valid file path; it will be overwritten if it exists and created if it doesn't}
+
+\item{verbose}{print status information}
 }
 \value{
 a DBI connection object pointing to the database

@@ -6,21 +6,22 @@
 #' @param apikey the API key
 #' @details \code{dfstools} uses the \code{keyring} package
 #' to manage the MySportsFeeds API key. This is portable; it
-#' will work on any platform where it can be installed, including
-#' Linux, MacOS and Windows.
+#' will work on any platform where \code{keyring} can be
+#' installed, including Linux, MacOS and Windows.
 #'
 #' Usage:
 #' \enumerate{
-#' \item {Go to the MySportsFeeds Patreon page
-#' \url{https://www.patreon.com/mysportsfeeds/posts} and become a
-#' patron. You'll need to be a patron to use the API v2.0.
-#' }
-#' \item{Go to the MySportsFeeds home page
-#' \url{https://www.mysportsfeeds.com/} and sign up.}
-#' \item{Create an API v2.0 API key and copy it to the clipboard.
-#' This package does \strong{not} work with the v1.x APIs.}
-#' \item{In R, paste the API key in the following:
-#' \code{dfstools::set_msf_apikey("paste API key here")}}}
+#'   \item Go to the MySportsFeeds Patreon page
+#'   \url{https://www.patreon.com/mysportsfeeds/posts} and become
+#'   a patron. You'll need to be a patron to use the v2.0 API.
+#'   \item Go to the MySportsFeeds home page
+#'   \url{https://www.mysportsfeeds.com/} and sign up.
+#'   \item Create a v2.0 API key and copy it to the clipboard.
+#'   This package does \strong{not} support the v1.x APIs.
+#'   \item In R, paste the API key in the following:
+#'
+#'     \code{dfstools::set_msf_apikey("paste API key here")
+#'  }
 #'
 
 set_msf_apikey <- function(apikey) {
@@ -49,24 +50,24 @@ get_msf_apikey <- function() {
 #' @export get_msf_api
 #' @param url the URL to GET
 #' @param verbose print status info
-#' @param tries number of times to retry on failure
-#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
-#' \item status_code the HTTP status code (200 for success))
-#' \item response if status_code == 200, the JSON object; otherwise, the raw text.
+#'   \item status_code the HTTP status code (200 for success)
+#'   \item response if status_code == 200, the JSON object;
+#'     otherwise, the raw text.
 #' }
 #' @examples
 #' \dontrun{
 #' response <- dfstools::get_msf_api(
-#'   "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
-#' )
-#' }
+#' "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
+#' )}
 
-get_msf_api <- function(
-  url,
-  verbose = TRUE, tries = 5, sleep_seconds = 10
-) {
+get_msf_api <- function(url, verbose = FALSE) {
+
+  # you shouldn't have to change these!
+  tries <- 5
+  sleep_seconds <- 10
+
   apikey <- dfstools::get_msf_apikey()
   for (ixtry in 1:tries) {
     if (verbose) print(url)
@@ -111,41 +112,35 @@ get_msf_api <- function(
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param verbose print status info
-#' @param tries number of times to retry on failure
-#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
-#' \item status_code the HTTP status code (200 for success))
-#' \item response if status_code == 200, a tibble of games; otherwise, the raw text.
+#'   \item status_code the HTTP status code (200 for success)
+#'   \item response if status_code == 200, a tibble of games;
+#'   otherwise, the raw text.
 #' }
 #' @details `msf_seasonal_games` adds four columns at the right of the tibble:
 #' \itemize{
-#' \item league the source league of the data
-#' \item season the source season of the data, and
-#' \item date the game date (started) in the Eastern USA timezone ("EST5EDT").
-#' \item slug the game slug (date-away_team-home_team)
+#'   \item league the source league of the data
+#'   \item season the source season of the data, and
+#'   \item date the game date (started) in the Eastern USA
+#'     timezone ("EST5EDT").
+#'   \item slug the game slug (date-away_team-home_team)
 #' }
+#'
 #' The returned tibble will be sorted in chronological order.
 #' @examples
 #' \dontrun{
 #' nba_games <- dfstools::msf_seasonal_games(
-#'   season = "2017-2018-regular", league = "nba"
-#' )
-#' }
+#' season = "2017-2018-regular", league = "nba"
+#' )}
 
-msf_seasonal_games <- function(
-  league, season,
-  verbose = TRUE, tries = 5, sleep_seconds = 10
-) {
+msf_seasonal_games <- function(league, season, verbose = FALSE) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
     league,
     season
   )
-  response <- get_msf_api(
-    url,
-    verbose = verbose, tries = tries, sleep_seconds = sleep_seconds
-  )
+  response <- get_msf_api(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -185,36 +180,28 @@ msf_seasonal_games <- function(
 #' @param season the season to fetch
 #' @param team the team to fetch
 #' @param verbose print status info
-#' @param tries number of times to retry on failure
-#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
-#' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
-#' \item response if status_code == 200, a tibble of DFS data; otherwise, the raw text.
+#'   \item status_code the HTTP status code (200 for success,
+#'     -200 for HTTP success but no DFS data)
+#'   \item response if status_code == 200, a tibble of DFS data;
+#'     otherwise, the raw response text.
 #' }
 #' @examples
 #' \dontrun{
 #' nba_dfs <- dfstools::msf_seasonal_team_dfs(
-#'   season = "2018-playoff",
-#'   league = "nba",
-#'   team = "GSW"
-#' )
-#' }
+#' season = "2018-playoff", league = "nba", team = "GSW"
+#' )}
 
 msf_seasonal_team_dfs <- function(
-  season, league, team,
-  verbose = TRUE, tries = 5, sleep_seconds = 10
-) {
+  season, league, team, verbose = FALSE) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(
-    url,
-    verbose = verbose, tries = tries, sleep_seconds = sleep_seconds
-  )
+  response <- get_msf_api(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -240,7 +227,7 @@ msf_seasonal_team_dfs <- function(
 
 #' @title MySportsFeeds Seasonal Player Gamelogs
 #' @name msf_seasonal_player_gamelogs
-#' @description Gets gamelogs object from from MySportsFeeds version 2.0 API
+#' @description Gets player gamelogs object from from MySportsFeeds version 2.0 API
 #' @export msf_seasonal_player_gamelogs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
@@ -251,33 +238,27 @@ msf_seasonal_team_dfs <- function(
 #' @param season the season to fetch
 #' @param team the team to fetch
 #' @param verbose print status info
-#' @param tries number of times to retry on failure
-#' @param sleep_seconds seconds to sleep after failure
 #' @return a list of two items
 #' \itemize{
-#' \item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
-#' \item response if status_code == 200, a tibble of DFS data; otherwise, the raw text.
-#' }
+#'   \item status_code the HTTP status code (200 for success,
+#'     -200 for HTTP success but no DFS data)
+#'   \item  response if status_code == 200, a tibble of DFS data;
+#'     otherwise, the raw text.}
 #' @examples
 #' \dontrun{
-#' nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
-#'   season = "2018-playoff",
-#'   league = "nba",
-#'   team = "GSW"
-#' )
-#' }
+#' nba_player_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
+#' season = "2018-playoff", league = "nba", team = "GSW"
+#' )}
 
-msf_seasonal_player_gamelogs <- function(
-  season, league, team,
-  verbose = TRUE, tries = 5, sleep_seconds = 10
-) {
+msf_seasonal_player_gamelogs <-
+  function(season, league, team, verbose = FALSE) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(url)
+  response <- get_msf_api(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -287,10 +268,10 @@ msf_seasonal_player_gamelogs <- function(
       return(list(-200, response))
     }
 
-    gamelogs <- response[["data"]][["gamelogs"]]
+    player_gamelogs <- response[["data"]][["gamelogs"]]
     return(list(
       status_code = 200,
-      gamelogs = gamelogs
+      player_gamelogs = player_gamelogs
     ))
   }
 }

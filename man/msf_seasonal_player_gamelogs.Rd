@@ -4,8 +4,7 @@
 \alias{msf_seasonal_player_gamelogs}
 \title{MySportsFeeds Seasonal Player Gamelogs}
 \usage{
-msf_seasonal_player_gamelogs(season, league, team, verbose = TRUE,
-  tries = 5, sleep_seconds = 10)
+msf_seasonal_player_gamelogs(season, league, team, verbose = FALSE)
 }
 \arguments{
 \item{season}{the season to fetch}
@@ -15,27 +14,21 @@ msf_seasonal_player_gamelogs(season, league, team, verbose = TRUE,
 \item{team}{the team to fetch}
 
 \item{verbose}{print status info}
-
-\item{tries}{number of times to retry on failure}
-
-\item{sleep_seconds}{seconds to sleep after failure}
 }
 \value{
 a list of two items
 \itemize{
-\item status_code the HTTP status code (200 for success, -200 for HTTP success but no DFS data))
-\item response if status_code == 200, a tibble of DFS data; otherwise, the raw text.
-}
+  \item status_code the HTTP status code (200 for success,
+    -200 for HTTP success but no DFS data)
+  \item  response if status_code == 200, a tibble of DFS data;
+    otherwise, the raw text.}
 }
 \description{
-Gets gamelogs object from from MySportsFeeds version 2.0 API
+Gets player gamelogs object from from MySportsFeeds version 2.0 API
 }
 \examples{
 \dontrun{
-nba_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
-  season = "2018-playoff",
-  league = "nba",
-  team = "GSW"
-)
-}
+nba_player_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
+season = "2018-playoff", league = "nba", team = "GSW"
+)}
 }
