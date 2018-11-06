@@ -18,10 +18,10 @@ msf_seasonal_player_gamelogs(season, league, team, verbose = FALSE)
 \value{
 a list of two items
 \itemize{
-  \item status_code the HTTP status code (200 for success,
-    -200 for HTTP success but no DFS data)
-  \item  response if status_code == 200, a tibble of DFS data;
-    otherwise, the raw text.}
+\item status_code the HTTP status code (200 for success,
+-200 for HTTP success but no DFS data)
+\item  response if status_code == 200, a tibble of DFS data;
+otherwise, the raw text.}
 }
 \description{
 Gets player gamelogs object from from

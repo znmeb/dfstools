@@ -7,17 +7,17 @@
 select_nba_team_gamelogs_columns(team_gamelogs_object)
 }
 \arguments{
-\item{team_gamelogs_object}{a `team_gamelogs` object returmed
+\item{team_gamelogs_object}{a \code{team_gamelogs} object returmed
 from msf_seasonal_gamelogs for the NBA!}
 }
 \value{
-a `gamelogs` data frame with some columns removed
+a \code{gamelogs} data frame with some columns removed
 }
 \description{
 Extracts the relevant data from a MySportsFeeds
 NBA "team_gamelogs" object
 }
 \details{
-The NBA `team_gamelogs` object that comes from the
-NBA has some columns with data issues. Some are all `NA`, and others are list columns that databases can't handle. So we remove them with `dplyr::select`.
+The NBA \code{team_gamelogs} object that comes from the
+NBA has some columns with data issues. Some are all \code{NA}, and others are list columns that databases can't handle. So we remove them with \code{dplyr::select}.
 }

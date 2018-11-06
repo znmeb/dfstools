@@ -119,13 +119,33 @@
     </tr>
     </table>
     
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p><code>dfstools</code> uses the <code>keyring</code> package
+to manage the MySportsFeeds API key. This is portable; it
+will work on any platform where <code>keyring</code> can be
+installed, including Linux, MacOS and Windows.</p>
+<p>Usage:</p><ol>
+<li><p>Go to the MySportsFeeds Patreon page
+<a href='https://www.patreon.com/mysportsfeeds/posts'>https://www.patreon.com/mysportsfeeds/posts</a> and become
+a patron. You'll need to be a patron to use the v2.0 API.</p></li>
+<li><p>Go to the MySportsFeeds home page
+<a href='https://www.mysportsfeeds.com/'>https://www.mysportsfeeds.com/</a> and sign up.</p></li>
+<li><p>Create a v2.0 API key and copy it to the clipboard.
+This package does <strong>not</strong> support the v1.x APIs.</p></li>
+<li><p>In R, paste the API key in the following:</p><pre>\code{dfstools::set_msf_apikey("paste API key here")}
+</pre></li>
+</ol>
+    
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>
     <ul class="nav nav-pills nav-stacked">
       <li><a href="#arguments">Arguments</a></li>
-                </ul>
+      
+      <li><a href="#details">Details</a></li>
+          </ul>
 
   </div>
 </div>

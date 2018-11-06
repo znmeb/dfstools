@@ -132,17 +132,17 @@
     <p>a list of two items</p><ul>
 <li><p>status_code the HTTP status code (200 for success)</p></li>
 <li><p>response if status_code == 200, a tibble of games;
-  otherwise, the raw text.</p></li>
+otherwise, the raw text.</p></li>
 </ul>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>`msf_seasonal_games` adds four columns at the right of the tibble:</p><ul>
+    <p><code>msf_seasonal_games</code> adds four columns at the right of the tibble:</p><ul>
 <li><p>league the source league of the data</p></li>
 <li><p>season the source season of the data, and</p></li>
 <li><p>date the game date (started) in the Eastern USA
-    timezone ("EST5EDT").</p></li>
+timezone ("EST5EDT").</p></li>
 <li><p>slug the game slug (date-away_team-home_team)</p></li>
 </ul>
     <p>The returned tibble will be sorted in chronological order.</p>

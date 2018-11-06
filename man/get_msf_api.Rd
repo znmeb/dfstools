@@ -14,9 +14,9 @@ get_msf_api(url, verbose = FALSE)
 \value{
 a list of two items
 \itemize{
-  \item status_code the HTTP status code (200 for success)
-  \item response if status_code == 200, the JSON object;
-    otherwise, the raw text.
+\item status_code the HTTP status code (200 for success)
+\item response if status_code == 200, the JSON object;
+otherwise, the raw text.
 }
 }
 \description{

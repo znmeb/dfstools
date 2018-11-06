@@ -6,5 +6,5 @@
 \alias{dfstools-package}
 \title{dfstools: Daily Fantasy Sports tools}
 \description{
-Companion package for _Mastering DFS Analytics_ eBook
+Companion package for \emph{Mastering DFS Analytics} eBook
 }
