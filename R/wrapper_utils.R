@@ -167,6 +167,55 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
   }
 }
 
+#' @title MySportsFeeds Seasonal Players
+#' @name msf_seasonal_players
+#' @description Returns a data frame of players from
+#' MySportsFeeds version 2.0 API
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
+#' @importFrom tibble tibble
+#' @importFrom lubridate with_tz
+#' @importFrom lubridate as_datetime
+#' @export msf_seasonal_players
+#' @param league the league to fetch
+#' @param season the season to fetch
+#' @param verbose print status info
+#' @return a list of two items
+#' \itemize{
+#'   \item status_code the HTTP status code (200 for success)
+#'   \item response if status_code == 200, a tibble of players;
+#'   otherwise, the raw text.
+#' }
+#' @examples
+#' \dontrun{
+#' nba_players <- dfstools::msf_seasonal_players(
+#' season = "2017-2018-regular", league = "nba"
+#' )}
+
+msf_seasonal_players <- function(league, season, verbose = FALSE) {
+  url <- sprintf(
+    "https://api.mysportsfeeds.com/v2.0/pull/%s/players.json?season=%s",
+    league,
+    season
+  )
+  response <- get_msf_api(url, verbose = verbose)
+  status_code <- response[["status_code"]]
+  if (status_code != 200) {
+    return(response)
+  } else {
+    players <- response[["data"]][["players"]] %>%
+      tibble::as_tibble() %>%
+      dplyr::mutate(
+        league = league,
+        season = season)
+    return(list(
+      status_code = status_code,
+      players = players
+    ))
+  }
+}
+
 #' @title MySportsFeeds Seasonal Team DFS
 #' @name msf_seasonal_team_dfs
 #' @description Gets DFS data object from from MySportsFeeds version 2.0 API
