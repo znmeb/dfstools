@@ -39,6 +39,49 @@ get_msf_apikey <- function() {
   return(keyring::key_get("MySportsFeeds"))
 }
 
+#' @title MySportsFeeds Seasons
+#' @name msf_seasons
+#' @description list the league / season combinations for which
+#' MySportsFeeds has DFS data
+#' @importFrom tibble tribble
+#' @export msf_seasons
+#' @return a tibble where each row is a league / season pair
+#' @examples
+#' \dontrun{
+#' seasons <- dfstools::msf_seasons()
+#' seasons
+#' }
+
+msf_seasons <- function() {
+  tibble::tribble(
+    ~league, ~season,
+    "nba", "2015-2016-regular",
+    "nba", "2016-playoff",
+    "nba", "2016-2017-regular",
+    "nba", "2017-playoff",
+    "nba", "2017-2018-regular",
+    "nba", "2018-playoff",
+    "nhl", "2015-2016-regular",
+    "nhl", "2016-playoff",
+    "nhl", "2016-2017-regular",
+    "nhl", "2017-playoff",
+    "nhl", "2017-2018-regular",
+    "nhl", "2018-playoff",
+    "nfl", "2015-regular",
+    "nfl", "2016-playoff",
+    "nfl", "2016-regular",
+    "nfl", "2017-playoff",
+    "nfl", "2017-regular",
+    "nfl", "2018-playoff",
+    "mlb", "2016-regular",
+    "mlb", "2016-playoff",
+    "mlb", "2017-regular",
+    "mlb", "2017-playoff",
+    "mlb", "2018-playoff",
+    "mlb", "2018-playoff"
+  )
+}
+
 #' @title GET from MySportsFeeds API
 #' @name get_msf_api
 #' @description GETs data from the MySportsFeeds 2.0 API
