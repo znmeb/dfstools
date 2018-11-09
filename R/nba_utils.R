@@ -252,7 +252,7 @@ create_nba_database <- function(sqlite_file, verbose = TRUE) {
     }
 
     # DFS
-    dfs <- msf_seasonal_team_dfs(
+    dfs <- msf_seasonal_dfs(
       league = ixleague,
       season = ixseason,
       team = ixteam,

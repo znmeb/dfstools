@@ -259,10 +259,10 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
   }
 }
 
-#' @title MySportsFeeds Seasonal Team DFS
-#' @name msf_seasonal_team_dfs
+#' @title MySportsFeeds Seasonal DFS
+#' @name msf_seasonal_dfs
 #' @description Gets DFS data object from from MySportsFeeds version 2.0 API
-#' @export msf_seasonal_team_dfs
+#' @export msf_seasonal_dfs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
 #' @importFrom dplyr bind_rows
@@ -281,11 +281,11 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
 #' }
 #' @examples
 #' \dontrun{
-#' nba_dfs <- dfstools::msf_seasonal_team_dfs(
+#' nba_dfs <- dfstools::msf_seasonal_dfs(
 #' season = "2018-playoff", league = "nba", team = "GSW"
 #' )}
 
-msf_seasonal_team_dfs <- function(
+msf_seasonal_dfs <- function(
   season, league, team, verbose = FALSE) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
