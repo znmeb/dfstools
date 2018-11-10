@@ -8,7 +8,7 @@ for (league in c("nba", "nhl", "nfl", "mlb")) {
   table <- "games"
   print(paste(league, table))
   games <- msf_seasonal_games(
-    season, league, verbose = TRUE)$games
+    league, season, verbose = TRUE)$games
   column_names <- games %>%
     colnames() %>% to_snake_case()
   rows <- tibble(league, season, table, column_names)
@@ -24,7 +24,7 @@ for (league in c("nba", "nhl", "nfl", "mlb")) {
   table <- "players"
   print(paste(league, table))
   column_names <- msf_seasonal_players(
-    season, league, verbose = TRUE)$players %>%
+    league, season, verbose = TRUE)$players %>%
     colnames() %>% to_snake_case()
   rows <- tibble(league, season, table, column_names)
   column_name_table <- column_name_table %>%
@@ -33,7 +33,7 @@ for (league in c("nba", "nhl", "nfl", "mlb")) {
   table <- "dfs"
   print(paste(league, table))
   column_names <- msf_seasonal_dfs(
-    season, league, team, verbose = TRUE) %>%
+    league, season, team, verbose = TRUE) %>%
     colnames() %>% to_snake_case()
   rows <- tibble(league, season, table, column_names)
   column_name_table <- column_name_table %>%
@@ -42,7 +42,7 @@ for (league in c("nba", "nhl", "nfl", "mlb")) {
   table <- "player_gamelogs"
   print(paste(league, table))
   column_names <- msf_seasonal_player_gamelogs(
-    season, league, team, verbose = TRUE)$player_gamelogs %>%
+    league, season, team, verbose = TRUE)$player_gamelogs %>%
     colnames() %>% to_snake_case()
   rows <- tibble(league, season, table, column_names)
   column_name_table <- column_name_table %>%
@@ -51,7 +51,7 @@ for (league in c("nba", "nhl", "nfl", "mlb")) {
   table <- "team_gamelogs"
   print(paste(league, table))
   column_names <- msf_seasonal_team_gamelogs(
-    season, league, team, verbose = TRUE)$team_gamelogs %>%
+    league, season, team, verbose = TRUE)$team_gamelogs %>%
     colnames() %>% to_snake_case()
   rows <- tibble(league, season, table, column_names)
   column_name_table <- column_name_table %>%

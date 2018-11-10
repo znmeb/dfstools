@@ -286,7 +286,7 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
 #' )}
 
 msf_seasonal_dfs <- function(
-  season, league, team, verbose = FALSE) {
+  league, season, team, verbose = FALSE) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
     league,
@@ -345,7 +345,7 @@ msf_seasonal_dfs <- function(
 #' )}
 
 msf_seasonal_player_gamelogs <-
-  function(season, league, team, verbose = FALSE) {
+  function(league, season, team, verbose = FALSE) {
     url <- sprintf(
       "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
       league,
@@ -398,7 +398,7 @@ msf_seasonal_player_gamelogs <-
 #' )}
 
 msf_seasonal_team_gamelogs <-
-  function(season, league, team, verbose = FALSE) {
+  function(league, season, team, verbose = FALSE) {
     url <- sprintf(
       "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/team_gamelogs.json?team=%s",
       league,

@@ -4,12 +4,12 @@
 \alias{msf_seasonal_dfs}
 \title{MySportsFeeds Seasonal DFS}
 \usage{
-msf_seasonal_dfs(season, league, team, verbose = FALSE)
+msf_seasonal_dfs(league, season, team, verbose = FALSE)
 }
 \arguments{
-\item{season}{the season to fetch}
-
 \item{league}{the league to fetch}
+
+\item{season}{the season to fetch}
 
 \item{team}{the team to fetch}
 
