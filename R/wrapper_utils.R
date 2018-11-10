@@ -1,3 +1,12 @@
+# locals
+
+.good_column <- function(x) {
+  !all(is.na(x)) & (typeof(x) != "list")
+}
+.good_columns <- function(df) {
+  dplyr::select_if(.tbl = df, .predicate = .good_column)
+}
+
 #' @title Set MySportsFeeds API key
 #' @name set_msf_apikey
 #' @description sets the MySportsFeeds API key into the keyring
@@ -151,6 +160,7 @@ get_msf_api <- function(url, verbose = FALSE) {
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
+#' @importFrom snakecase to_snake_case
 #' @export msf_seasonal_games
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -190,6 +200,7 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
   } else {
     games <- response[["data"]][["games"]] %>%
       tibble::as_tibble() %>%
+      .good_columns() %>%
       dplyr::mutate(
         league = league,
         season = season,
@@ -203,9 +214,11 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
           schedule.homeTeam.abbreviation
         )
       )
+    colnames(games) <- colnames(games) %>%
+      snakecase::to_snake_case()
     return(list(
       status_code = status_code,
-      games = games %>% dplyr::arrange(schedule.startTime)
+      games = games %>% dplyr::arrange(schedule_start_time)
     ))
   }
 }
@@ -220,6 +233,7 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
+#' @importFrom snakecase to_snake_case
 #' @export msf_seasonal_players
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -249,9 +263,12 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
   } else {
     players <- response[["data"]][["players"]] %>%
       tibble::as_tibble() %>%
+      .good_columns() %>%
       dplyr::mutate(
         league = league,
         season = season)
+    colnames(players) <- colnames(players) %>%
+      snakecase::to_snake_case()
     return(list(
       status_code = status_code,
       players = players
@@ -268,6 +285,7 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
@@ -310,6 +328,9 @@ msf_seasonal_dfs <- function(
         dplyr::mutate(dfs_site = site)
       dfs <- dplyr::bind_rows(dfs, frame)
     }
+    dfs <- dfs %>% .good_columns()
+    colnames(dfs) <- colnames(dfs) %>%
+      snakecase::to_snake_case()
     return(list(
       status_code = 200,
       dfs = dfs
@@ -327,6 +348,7 @@ msf_seasonal_dfs <- function(
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
@@ -362,7 +384,11 @@ msf_seasonal_player_gamelogs <-
         return(list(-200, response))
       }
 
-      player_gamelogs <- response[["data"]][["gamelogs"]]
+      player_gamelogs <- response[["data"]][["gamelogs"]] %>%
+        tibble::as_tibble() %>%
+        .good_columns()
+      colnames(player_gamelogs) <- colnames(player_gamelogs) %>%
+        snakecase::to_snake_case()
       return(list(
         status_code = 200,
         player_gamelogs = player_gamelogs
@@ -380,6 +406,7 @@ msf_seasonal_player_gamelogs <-
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
 #' @param team the team to fetch
@@ -415,7 +442,11 @@ msf_seasonal_team_gamelogs <-
         return(list(-200, response))
       }
 
-      team_gamelogs <- response[["data"]][["gamelogs"]]
+      team_gamelogs <- response[["data"]][["gamelogs"]] %>%
+        tibble::as_tibble() %>%
+        .good_columns()
+      colnames(team_gamelogs) <- colnames(team_gamelogs) %>%
+        snakecase::to_snake_case()
       return(list(
         status_code = 200,
         team_gamelogs = team_gamelogs
@@ -432,6 +463,7 @@ utils::globalVariables(c(
   "schedule.homeTeam.abbreviation",
   "schedule.originalStartTime",
   "schedule.startTime",
+  "schedule_start_time",
   "schedule.weather",
   "score.currentIntermission",
   "score.currentQuarter",
