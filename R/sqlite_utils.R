@@ -39,3 +39,91 @@ append_table <- function(connection, table, dataframe) {
   table_append <- DBI::dbAppendTable(connection, table, dataframe)
   return(list(table_create = table_create, table_append = table_append))
 }
+
+#' @title Create Database
+#' @name create_database
+#' @description Creates an SQLite database for a league and season
+#' @importFrom dplyr %>%
+#' @importFrom dplyr distinct
+#' @importFrom dplyr select
+#' @importFrom DBI dbDisconnect
+#' @export create_database
+#' @param directory valid path to a directory where the database file
+#' will be stored. It will be created if it doesn't exist.
+#' @param league the league ("nba", "nhl", "nfl" or "mlb")
+#' @param season a valid season descriptor for the league
+#' @param verbose print status information
+#' @return a DBI connection object pointing to the database.
+#' `create_database` will disconnect before returning.
+#' @details The database will be saved to file
+#' `<directory>/<league>_<season>.sqlite`"`. It will be overwritten if
+#' it exists and created if it doesn't.
+
+create_database <- function(directory, league, season, verbose = TRUE) {
+  dir.create(directory, recursive = TRUE)
+  sqlite_file <- sprintf("%s/%s_%s.sqlite", directory, league, season)
+  unlink(sqlite_file, force = TRUE) # nuke it!
+  connection <- connect_database_file(sqlite_file)
+
+  # populate the `games`, `teams` and `dates` tables
+  games <- msf_seasonal_games(league, season, verbose)$games
+  append_table(connection, "games", games)
+
+  teams <- games %>%
+    dplyr::select(
+      team = schedule_home_team_abbreviation,
+      league,
+      season
+    ) %>% dplyr::distinct()
+  append_table(connection, "teams", teams)
+
+  dates <- games %>%
+    dplyr::select(
+      date,
+      league,
+      season
+    ) %>% dplyr::distinct()
+  append_table(connection, "dates", dates)
+
+  # now get tables that must be fetched one team at a time
+  teams <- DBI::dbReadTable(connection, "teams")
+  for (ixrow in 1:nrow(teams)) {
+    ixteam <- teams$team[ixrow]
+
+    # team_gamelogs (team box scores)
+    team_gamelogs <- msf_seasonal_team_gamelogs(
+      league, season, ixteam, verbose
+    )
+    status_code <- team_gamelogs[["status_code"]]
+    if (status_code == 200) {
+      append_table(
+        connection, "team_gamelogs", team_gamelogs$team_gamelogs)
+    }
+
+    # player_gamelogs (player box scores)
+    player_gamelogs <- msf_seasonal_player_gamelogs(
+      league, season, ixteam, verbose
+    )
+    status_code <- player_gamelogs[["status_code"]]
+    if (status_code == 200) {
+      append_table(
+        connection, "player_gamelogs", player_gamelogs$player_gamelogs)
+    }
+
+    # DFS
+    dfs <- msf_seasonal_dfs(
+      league, season, ixteam, verbose
+    )
+    status_code <- dfs[["status_code"]]
+    if (status_code == 200) {
+      dfs <- dfs[["dfs"]]
+      append_table(connection, "dfs", dfs)
+    }
+  }
+  DBI::dbDisconnect(connection)
+  return(connection)
+}
+
+utils::globalVariables(c(
+  "schedule_home_team_abbreviation"
+))
