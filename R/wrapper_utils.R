@@ -1,5 +1,9 @@
 # locals
 
+# We want to ignore two types of columns:
+# 1. List columns - databases don't like them, and
+# 2. Columns that are filled with NAs - they waste
+#    space and time.
 .good_column <- function(x) {
   !all(is.na(x)) & (typeof(x) != "list")
 }
@@ -8,10 +12,10 @@
 }
 
 #' @title Set MySportsFeeds API key
-#' @name set_msf_apikey
+#' @name msf_set_apikey
 #' @description sets the MySportsFeeds API key into the keyring
 #' @importFrom keyring key_set_with_value
-#' @export set_msf_apikey
+#' @export msf_set_apikey
 #' @param apikey the API key
 #' @details `dfstools` uses the `keyring` package
 #' to manage the MySportsFeeds API key. This is portable; it
@@ -29,22 +33,22 @@
 #'   This package does \strong{not} support the v1.x APIs.
 #'   \item In R, paste the API key in the following:
 #'
-#'     dfstools::set_msf_apikey("paste API key here")
+#'     dfstools::msf_set_apikey("paste API key here")
 #'  }
 #'
 
-set_msf_apikey <- function(apikey) {
+msf_set_apikey <- function(apikey) {
   keyring::key_set_with_value("MySportsFeeds", password = apikey)
 }
 
 #' @title Get MySportsFeeds API key
-#' @name get_msf_apikey
+#' @name msf_get_apikey
 #' @description gets the MySportsFeeds API key saved in the keyring
 #' @importFrom keyring key_get
-#' @export get_msf_apikey
+#' @export msf_get_apikey
 #' @return the API key
 
-get_msf_apikey <- function() {
+msf_get_apikey <- function() {
   return(keyring::key_get("MySportsFeeds"))
 }
 
@@ -92,14 +96,14 @@ msf_seasons <- function() {
 }
 
 #' @title GET from MySportsFeeds API
-#' @name get_msf_api
-#' @description GETs data from the MySportsFeeds 2.0 API
+#' @name msf_get_feed
+#' @description GETs data from the MySportsFeeds 2.0 API feed
 #' @importFrom httr GET
 #' @importFrom httr authenticate
 #' @importFrom httr status_code
 #' @importFrom httr content
 #' @importFrom jsonlite fromJSON
-#' @export get_msf_api
+#' @export msf_get_feed
 #' @param url the URL to GET
 #' @param verbose print status info
 #' @return a list of two items
@@ -110,17 +114,21 @@ msf_seasons <- function() {
 #' }
 #' @examples
 #' \dontrun{
-#' response <- dfstools::get_msf_api(
+#' response <- dfstools::msf_get_feed(
 #' "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
 #' )}
 
-get_msf_api <- function(url, verbose = FALSE) {
+msf_get_feed <- function(url, verbose) {
 
   # you shouldn't have to change these!
   tries <- 5
   sleep_seconds <- 10
 
-  apikey <- dfstools::get_msf_apikey()
+  # only some response codes should be retried
+  # see https://www.mysportsfeeds.com/data-feeds/api-docs
+  retry_allowed <- c(429, 499, 500, 502, 503)
+
+  apikey <- dfstools::msf_get_apikey()
   for (ixtry in 1:tries) {
     if (verbose) print(url)
     response <- httr::GET(
@@ -128,6 +136,8 @@ get_msf_api <- function(url, verbose = FALSE) {
       httr::authenticate(apikey, "MYSPORTSFEEDS")
     )
     status_code <- httr::status_code(response)
+
+    # was the GET successful?
     if (status_code == 200) {
       return(list(
         status_code = status_code,
@@ -136,18 +146,32 @@ get_msf_api <- function(url, verbose = FALSE) {
           flatten = TRUE
         )
       ))
-    } else {
-      if (verbose) {
-        print(paste(
-          status_code, "sleeping", sleep_seconds
-        ))
-      }
-      Sys.sleep(sleep_seconds)
     }
+
+    # is it a fatal code?
+    if (!(status_code %in% retry_allowed)) {
+      return(list(
+        status_code = status_code,
+        data = httr::content(
+          response, as = "text", encoding = "UTF-8"
+        )
+      ))
+    }
+
+    # GET failed but we can retry - sleep and continue retry loop
+    if (verbose) {
+      print(paste(
+        status_code, "sleeping", sleep_seconds
+      ))
+    }
+    Sys.sleep(sleep_seconds)
   }
+
+  # no retry succeeded - return the raw stuff
   return(list(
     status_code = status_code,
-    data = httr::content(response, as = "text", encoding = "UTF-8")
+    data = httr::content(
+      response, as = "text", encoding = "UTF-8")
   ))
 }
 
@@ -157,6 +181,7 @@ get_msf_api <- function(url, verbose = FALSE) {
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
+#' @importFrom dplyr select_if
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
@@ -187,13 +212,13 @@ get_msf_api <- function(url, verbose = FALSE) {
 #' season = "2017-2018-regular", league = "nba"
 #' )}
 
-msf_seasonal_games <- function(league, season, verbose = FALSE) {
+msf_seasonal_games <- function(league, season, verbose) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
     league,
     season
   )
-  response <- get_msf_api(url, verbose = verbose)
+  response <- msf_get_feed(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -230,6 +255,7 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
+#' @importFrom dplyr select_if
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
@@ -250,13 +276,13 @@ msf_seasonal_games <- function(league, season, verbose = FALSE) {
 #' season = "2017-2018-regular", league = "nba"
 #' )}
 
-msf_seasonal_players <- function(league, season, verbose = FALSE) {
+msf_seasonal_players <- function(league, season, verbose) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/players.json?season=%s",
     league,
     season
   )
-  response <- get_msf_api(url, verbose = verbose)
+  response <- msf_get_feed(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -285,6 +311,7 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom dplyr select_if
 #' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -304,14 +331,14 @@ msf_seasonal_players <- function(league, season, verbose = FALSE) {
 #' )}
 
 msf_seasonal_dfs <- function(
-  league, season, team, verbose = FALSE) {
+  league, season, team, verbose) {
   url <- sprintf(
     "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
     league,
     season,
     team
   )
-  response <- get_msf_api(url, verbose = verbose)
+  response <- msf_get_feed(url, verbose = verbose)
   status_code <- response[["status_code"]]
   if (status_code != 200) {
     return(response)
@@ -348,6 +375,7 @@ msf_seasonal_dfs <- function(
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom dplyr select_if
 #' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -367,14 +395,14 @@ msf_seasonal_dfs <- function(
 #' )}
 
 msf_seasonal_player_gamelogs <-
-  function(league, season, team, verbose = FALSE) {
+  function(league, season, team, verbose) {
     url <- sprintf(
       "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
       league,
       season,
       team
     )
-    response <- get_msf_api(url, verbose = verbose)
+    response <- msf_get_feed(url, verbose = verbose)
     status_code <- response[["status_code"]]
     if (status_code != 200) {
       return(response)
@@ -406,6 +434,7 @@ msf_seasonal_player_gamelogs <-
 #' @importFrom dplyr bind_rows
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
+#' @importFrom dplyr select_if
 #' @importFrom snakecase to_snake_case
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -425,14 +454,14 @@ msf_seasonal_player_gamelogs <-
 #' )}
 
 msf_seasonal_team_gamelogs <-
-  function(league, season, team, verbose = FALSE) {
+  function(league, season, team, verbose) {
     url <- sprintf(
       "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/team_gamelogs.json?team=%s",
       league,
       season,
       team
     )
-    response <- get_msf_api(url, verbose = verbose)
+    response <- msf_get_feed(url, verbose = verbose)
     status_code <- response[["status_code"]]
     if (status_code != 200) {
       return(response)

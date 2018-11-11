@@ -4,7 +4,7 @@
 \alias{msf_seasonal_games}
 \title{MySportsFeeds Seasonal Games}
 \usage{
-msf_seasonal_games(league, season, verbose = FALSE)
+msf_seasonal_games(league, season, verbose)
 }
 \arguments{
 \item{league}{the league to fetch}
