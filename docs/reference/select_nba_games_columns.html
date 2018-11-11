@@ -98,7 +98,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Select NBA Games Columns</h1>
-    <small class="dont-index">Source: <a href='https://github.com/znmeb/dfstools/blob/master/R/wrapper_utils.R'><code>R/wrapper_utils.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/znmeb/dfstools/blob/master/R/nba_utils.R'><code>R/nba_utils.R</code></a></small>
     <div class="hidden name"><code>select_nba_games_columns.Rd</code></div>
     </div>
 
@@ -115,17 +115,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>games_object</th>
-      <td><p>a `games` object returmed from msf_seasonal_games for the NBA!</p></td>
+      <td><p>a <code>games</code> object returmed from msf_seasonal_games for the NBA!</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a `games` data frame with some columns removed</p>
+    <p>a <code>games</code> data frame with some columns removed</p>
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>The NBA `games` object that comes from the NBA has some columns with data issues. Some are all `NA`, and others are list columns that databases can't handle. So we remove them with `dplyr::select`.</p>
+    <p>The NBA <code>games</code> object that comes from the NBA has some columns with data issues. Some are all <code>NA</code>, and others are list columns that databases can't handle. So we remove them with <code><a href='http://dplyr.tidyverse.org/reference/select.html'>dplyr::select</a></code>.</p>
     
 
   </div>

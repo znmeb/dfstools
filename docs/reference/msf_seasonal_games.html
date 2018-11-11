@@ -61,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dfstools</a>
-        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.1.0</span>
+        <span class="label label-default" data-toggle="tooltip" data-placement="bottom" title="Released package">0.9.5</span>
       </span>
     </div>
 
@@ -108,7 +108,7 @@
     
     </div>
 
-    <pre class="usage"><span class='fu'>msf_seasonal_games</span>(<span class='no'>league</span>, <span class='no'>season</span>, <span class='no'>apikey</span>)</pre>
+    <pre class="usage"><span class='fu'>msf_seasonal_games</span>(<span class='no'>league</span>, <span class='no'>season</span>, <span class='no'>verbose</span>)</pre>
     
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -122,35 +122,37 @@
       <td><p>the season to fetch</p></td>
     </tr>
     <tr>
-      <th>apikey</th>
-      <td><p>your MySportsFeeds API key (version 2.0!)</p></td>
+      <th>verbose</th>
+      <td><p>print status info</p></td>
     </tr>
     </table>
     
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>a list of two items</p><ul>
-<li><p>status_code the HTTP status code (200 for success))</p></li>
-<li><p>response if status_code == 200, a tibble of games; otherwise, the raw text.</p></li>
+<li><p>status_code the HTTP status code (200 for success)</p></li>
+<li><p>response if status_code == 200, a tibble of games;
+otherwise, the raw text.</p></li>
 </ul>
 
     
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>`msf_seasonal_games` adds four columns at the right of the tibble:</p><ul>
+    <p><code>msf_seasonal_games</code> adds four columns at the right of the tibble:</p><ul>
 <li><p>league the source league of the data</p></li>
 <li><p>season the source season of the data, and</p></li>
-<li><p>date the game date (started) in the Eastern USA timezone ("EST5EDT").</p></li>
+<li><p>date the game date (started) in the Eastern USA
+timezone ("EST5EDT").</p></li>
 <li><p>slug the game slug (date-away_team-home_team)</p></li>
-</ul><p>The returned tibble will be sorted in chronological order.</p>
+</ul>
+    <p>The returned tibble will be sorted in chronological order.</p>
     
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><span class='co'># NOT RUN {</span>
-<span class='no'>apikey</span> <span class='kw'>&lt;-</span> <span class='st'>"your_API key"</span>
-<span class='fu'>library</span>(<span class='no'>dfstools</span>)
-<span class='no'>nba_games</span> <span class='kw'>&lt;-</span>
-  <span class='fu'>msf_seasonal_games</span>(<span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>, <span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>, <span class='no'>apikey</span>)
+<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='http://www.rdocumentation.org/packages/dfstools/topics/msf_seasonal_games'>msf_seasonal_games</a></span>(
+<span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>, <span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>
+)
 <span class='co'># }</span></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">

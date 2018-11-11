@@ -1,7 +1,7 @@
 Package: dfstools
 Type: Package
 Title: Tidy Data Analytics from Sports Data APIs
-Version: 0.1.0
+Version: 0.9.5
 Authors@R: person("M. Edward (Ed)", "Borasky", role = c("aut", "cre"), email = "znmeb@znmeb.net")
 Maintainer: M. Edward (Ed) Borasky <znmeb@znmeb.net>
 Description: MySportsFeeds.com is a site that offers current and historical sports data via an API. Historical data is free for non-commercial use, but there is a charge for current data.
@@ -10,17 +10,17 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/znmeb/dfstools
 BugReports: https://github.com/znmeb/dfstools/issues/new/choose
-RoxygenNote: 6.1.0
-Imports: tibble,
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)
+Imports: DBI,
     dplyr,
-    lubridate,
     httr,
     jsonlite,
-    DBI,
+    keyring,
+    lubridate,
     RSQLite,
     snakecase,
-    keyring
-Remotes: znmeb/mysportsfeeds-r
+    tibble
 Suggests: knitr,
     rmarkdown,
     pkgdown
