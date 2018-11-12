@@ -72,7 +72,7 @@ sq_append_table <- function(connection, table, dataframe) {
 
 sq_create_database <-
   function(directory, league, season, verbose) {
-  dir.create(directory, recursive = TRUE)
+  dir.create(directory, recursive = TRUE, showWarnings = FALSE)
   sqlite_file <-
     sprintf("%s/%s_%s.sqlite", directory, league, season)
   if (verbose) {
