@@ -1,7 +1,7 @@
 Package: dfstools
 Type: Package
 Title: Tidy Data Analytics from Sports Data APIs
-Version: 0.9.5
+Version: 1.0.0
 Authors@R: person("M. Edward (Ed)", "Borasky", role = c("aut", "cre"), email = "znmeb@znmeb.net")
 Maintainer: M. Edward (Ed) Borasky <znmeb@znmeb.net>
 Description: MySportsFeeds.com is a site that offers current and historical sports data via an API. Historical data is free for non-commercial use, but there is a charge for current data.
