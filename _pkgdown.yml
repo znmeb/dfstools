@@ -1,3 +1,5 @@
 template:
   params:
-    bootswatch: spacelab
+    bootswatch: flatly
+development:
+  mode: release
