@@ -8,3 +8,6 @@ CONTRIBUTING.md
 CODE_OF_CONDUCT.md
 .github
 .env
+arch_install.bash
+install_me.R
+ubuntu_install.bash
