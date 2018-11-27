@@ -1,9 +1,14 @@
 #! /usr/bin/env Rscript
 
-library <- Sys.getenv("R_LIBS_USER")
-install.packages(c("devtools", "pkgdown"), lib = library)
+CRAN <- "https://cloud.r-project.org/"
+LIB <- Sys.getenv("R_LIBS_USER")
+dir.create(LIB, recursive = TRUE, mode = '0755')
+.libPaths(LIB)
+
+update.packages(ask = FALSE, lib = LIB, repos = CRAN)
+install.packages(c("devtools", "pkgdown"), lib = LIB, repos = CRAN)
 devtools::install(
-  lib = library,
+  lib = LIB,
   dependencies = TRUE,
   quiet = TRUE,
   build_vignettes = TRUE
