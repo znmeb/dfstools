@@ -1,5 +1,6 @@
 #! /bin/bash
 
 sudo pacman -Syu \
-  libsodium
+  libsodium \
+  qpdf
 ./install_me.R
