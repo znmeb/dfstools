@@ -1,12 +1,16 @@
 #! /usr/bin/env Rscript
 
-CRAN <- "https://cloud.r-project.org/"
-LIB <- Sys.getenv("R_LIBS_USER")
-dir.create(LIB, recursive = TRUE, mode = '0755')
-.libPaths(LIB)
+# create personal library if it doesn't exist
+CRAN <- "https://cloud.r-project.org/" # CRAN URL
+LIB <- Sys.getenv("R_LIBS_USER") # library path
+if (!dir.exists(LIB)) {
+  dir.create(LIB, recursive = TRUE, mode = '0755')
+}
+.libPaths(LIB) # add to search path
 
-update.packages(ask = FALSE, lib = LIB, repos = CRAN)
-install.packages(c("devtools", "pkgdown"), lib = LIB, repos = CRAN)
+update.packages(ask = FALSE, lib = LIB, repos = CRAN, quiet = TRUE)
+install.packages(c("devtools", "pkgdown"), lib = LIB, repos = CRAN,
+                 quiet = TRUE)
 devtools::install(
   lib = LIB,
   dependencies = TRUE,
