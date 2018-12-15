@@ -88,8 +88,6 @@
 </ul>
 </li>
 <li>Browse the MySportsFeeds API docs at <a href="https://www.mysportsfeeds.com/data-feeds/api-docs" class="uri">https://www.mysportsfeeds.com/data-feeds/api-docs</a>. This package uses v2.0 and there is no plan to use the older API versions.</li>
-<li>If you find this package useful, you can <a href="https://www.patreon.com/znmeb/posts">support my work on Patreon</a> at <a href="https://www.patreon.com/znmeb/posts" class="uri">https://www.patreon.com/znmeb/posts</a>. <strong><em>You do not need to support me to use the package!</em></strong>
-</li>
 </ol>
 </div>
 <div id="installing-the-package" class="section level2">
@@ -149,14 +147,6 @@ I test regularly on Windows 10 Pro, Arch Linux and the <a href="https://github.c
 <a href="#about-some-of-the-design-decisions" class="anchor"></a>About some of the design decisions</h2>
 <p>Earlier versions of this package used the R wrapper provided by MySportsFeeds, <a href="https://github.com/MySportsFeeds/mysportsfeeds-r" class="uri">https://github.com/MySportsFeeds/mysportsfeeds-r</a>. I found I was spending so much time troubleshooting networking issues that I decided to write my own low-level routine, <code>msf_get_feed</code>, and build my own API on top of that.</p>
 <p>I decided to use SQLite for the database because both the R interface and the database administration process are much simpler than PostgreSQL or MySQL. The databases we’re dealing with aren’t big enough to require an industrial-strength relational database management system.</p>
-</div>
-<div id="patreon-links" class="section level2">
-<h2 class="hasAnchor">
-<a href="#patreon-links" class="anchor"></a>Patreon links</h2>
-<ul>
-<li><a href="https://www.patreon.com/znmeb/posts">M. Edward (Ed) Borasky</a></li>
-<li><a href="https://www.patreon.com/mysportsfeeds/posts">MySportsFeeds</a></li>
-</ul>
 </div>
   </div>
 

@@ -1,9 +1,6 @@
 dfstools - Tidy Data Analytics from Sports Data APIs
 ================
 
-[![Build
-Status](https://travis-ci.org/znmeb/dfstools.svg?branch=master)](https://travis-ci.org/znmeb/dfstools)
-
 ## License: MIT
 
 ## What is this thing?
@@ -25,10 +22,6 @@ tables to SQLite database files.
 3.  Browse the MySportsFeeds API docs at
     <https://www.mysportsfeeds.com/data-feeds/api-docs>. This package
     uses v2.0 and there is no plan to use the older API versions.
-4.  If you find this package useful, you can [support my work on
-    Patreon](https://www.patreon.com/znmeb/posts) at
-    <https://www.patreon.com/znmeb/posts>. ***You do not need to support
-    me to use the package\!***
 
 ## Installing the package
 
@@ -122,8 +115,3 @@ I decided to use SQLite for the database because both the R interface
 and the database administration process are much simpler than PostgreSQL
 or MySQL. The databases we’re dealing with aren’t big enough to require
 an industrial-strength relational database management system.
-
-## Patreon links
-
-  - [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb/posts)
-  - [MySportsFeeds](https://www.patreon.com/mysportsfeeds/posts)

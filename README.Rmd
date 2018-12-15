@@ -17,7 +17,6 @@ knitr::opts_chunk$set(echo = TRUE)
 2. Sign up for monthly support of MySportsFeeds on Patreon. After you do that, they will activate your login / API token.
     * [MySportsFeeds.com Patreon](https://www.patreon.com/mysportsfeeds)
 3. Browse the MySportsFeeds API docs at <https://www.mysportsfeeds.com/data-feeds/api-docs>. This package uses v2.0 and there is no plan to use the older API versions.
-4. If you find this package useful, you can [support my work on Patreon](https://www.patreon.com/znmeb/posts) at <https://www.patreon.com/znmeb/posts>. ***You do not need to support me to use the package!***
 
 ## Installing the package    
 1. Install git, R and RStudio for your work environment. This is a developers' release; for the moment, you'll need to be familiar with git / GitHub, R and RStudio. 
@@ -60,7 +59,3 @@ And yes, I will be adding support for MLB as soon as I get the NBA analytics don
 Earlier versions of this package used the R wrapper provided by MySportsFeeds, <https://github.com/MySportsFeeds/mysportsfeeds-r>. I found I was spending so much time troubleshooting networking issues that I decided to write my own low-level routine, `msf_get_feed`, and build my own API on top of that.
 
 I decided to use SQLite for the database because both the R interface and the database administration process are much simpler than PostgreSQL or MySQL. The databases we're dealing with aren't big enough to require an industrial-strength relational database management system.
-
-## Patreon links
-* [M. Edward (Ed) Borasky](https://www.patreon.com/znmeb/posts)
-* [MySportsFeeds](https://www.patreon.com/mysportsfeeds/posts)
