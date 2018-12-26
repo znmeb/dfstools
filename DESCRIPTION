@@ -12,7 +12,8 @@ URL: https://github.com/znmeb/dfstools
 BugReports: https://github.com/znmeb/dfstools/issues/new/choose
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
-Imports: DBI,
+Imports: 
+    DBI,
     dplyr,
     httr,
     jsonlite,
@@ -20,8 +21,13 @@ Imports: DBI,
     lubridate,
     RSQLite,
     snakecase,
-    tibble
-Suggests: knitr,
+    tibble,
+    SportsAnalytics,
+    Anthropometry,
+    ggtern
+Suggests: 
+    knitr,
     rmarkdown,
-    pkgdown
+    pkgdown,
+    miniUI
 VignetteBuilder: knitr
