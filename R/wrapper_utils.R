@@ -38,7 +38,7 @@
 #'
 
 msf_set_apikey <- function(apikey) {
-  keyring::key_set_with_value("MySportsFeeds", password = apikey)
+  keyring::key_set_with_value("MySportsFeeds", password = apikey, keyring = "")
 }
 
 #' @title Get MySportsFeeds API key
@@ -479,6 +479,63 @@ msf_seasonal_team_gamelogs <-
       return(list(
         status_code = 200,
         team_gamelogs = team_gamelogs
+      ))
+    }
+  }
+
+#' @title MySportsFeeds Seasonal Player Stats Totals
+#' @name msf_seasonal_player_stats_totals
+#' @description Gets player gamelogs object from from
+#' MySportsFeeds version 2.0 API
+#' @export msf_seasonal_player_stats_totals
+#' @importFrom tibble tibble
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select_if
+#' @importFrom snakecase to_snake_case
+#' @param league the league to fetch
+#' @param season the season to fetch
+#' @param verbose print status info
+#' @return a list of two items
+#' \itemize{
+#'   \item status_code the HTTP status code (200 for success,
+#'     -200 for HTTP success but no data)
+#'   \item  response if status_code == 200, a `player_stats_totals`
+#'      object; otherwise, the raw text.
+#'  }
+#' @examples
+#' \dontrun{
+#' nba_player_totals <- dfstools::msf_seasonal_player_stats_totals(
+#' season = "current", league = "nba", verbose = TRUE
+#' )}
+
+msf_seasonal_player_stats_totals <-
+  function(league, season, verbose) {
+    url <- sprintf(
+      "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_stats_totals.json",
+      league,
+      season
+    )
+    response <- msf_get_feed(url, verbose = verbose)
+    status_code <- response[["status_code"]]
+    if (status_code != 200) {
+      return(response)
+    } else {
+
+      if (length(response[["data"]][["playerStatsTotals"]]) == 0) {
+        return(list(-200, response))
+      }
+
+      player_stats_totals <- response[["data"]][["playerStatsTotals"]] %>%
+        tibble::as_tibble() %>%
+        .good_columns()
+      colnames(player_stats_totals) <- colnames(player_stats_totals) %>%
+        snakecase::to_snake_case()
+      return(list(
+        status_code = 200,
+        player_stats_totals = player_stats_totals
       ))
     }
   }
