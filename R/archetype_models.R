@@ -7,6 +7,7 @@
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
+#' @importFrom scales rescale
 #' @export nba_archetypes
 #' @param player_totals a tibble returned by `nba_player_season_totals`
 #' @param num_archetypes number of archetypes to use (default 3)

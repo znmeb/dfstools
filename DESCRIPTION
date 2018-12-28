@@ -23,7 +23,8 @@ Imports:
     snakecase,
     tibble,
     archetypes,
-    ggtern
+    ggtern,
+    scales
 Suggests: 
     knitr,
     rmarkdown,
