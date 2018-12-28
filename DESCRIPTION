@@ -24,7 +24,7 @@ Imports:
     tibble,
     archetypes,
     ggtern,
-    scales
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,

@@ -32,6 +32,7 @@ Returns a data frame of games from MySportsFeeds version 2.0 API
 \item date the game date (started) in the Eastern USA
 timezone ("EST5EDT").
 \item slug the game slug (date-away_team-home_team)
+\item ot number of overtime periods
 }
 
 The returned tibble will be sorted in chronological order.

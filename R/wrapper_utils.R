@@ -182,10 +182,13 @@ msf_get_feed <- function(url, verbose) {
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
 #' @importFrom dplyr select_if
+#' @importFrom dplyr summarize
+#' @importFrom dplyr full_join
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
 #' @importFrom snakecase to_snake_case
+#' @importFrom tidyr unnest
 #' @export msf_seasonal_games
 #' @param league the league to fetch
 #' @param season the season to fetch
@@ -203,6 +206,7 @@ msf_get_feed <- function(url, verbose) {
 #'   \item date the game date (started) in the Eastern USA
 #'     timezone ("EST5EDT").
 #'   \item slug the game slug (date-away_team-home_team)
+#'   \item ot number of overtime periods
 #' }
 #'
 #' The returned tibble will be sorted in chronological order.
@@ -224,23 +228,34 @@ msf_seasonal_games <- function(league, season, verbose) {
     return(response)
   } else {
     games <- response[["data"]][["games"]] %>%
-      tibble::as_tibble() %>%
+      tibble::as_tibble()
+    colnames(games) <- colnames(games) %>%
+      snakecase::to_snake_case()
+
+    # save the quarter scores for OT calculation
+    score_quarters <- games[["score_quarters"]]
+
+    games <- games %>%
       .good_columns() %>%
       dplyr::mutate(
+        score_quarters = score_quarters,
         league = league,
         season = season,
-        date = lubridate::as_datetime(schedule.startTime) %>%
+        date = lubridate::as_datetime(schedule_start_time) %>%
           lubridate::with_tz("EST5EDT") %>%
           strftime(., format = "%Y%m%d"),
         slug = sprintf(
           "%s-%s-%s",
           date,
-          schedule.awayTeam.abbreviation,
-          schedule.homeTeam.abbreviation
+          schedule_away_team_abbreviation,
+          schedule_home_team_abbreviation
         )
       )
-    colnames(games) <- colnames(games) %>%
-      snakecase::to_snake_case()
+    ot_counts <- games %>% tidyr::unnest() %>%
+      group_by(slug) %>%
+      summarize(ot = n() - 4)
+    games <- dplyr::full_join(games, ot_counts) %>%
+      dplyr::select(-score_quarters)
     return(list(
       status_code = status_code,
       games = games %>% dplyr::arrange(schedule_start_time)
@@ -542,16 +557,18 @@ msf_seasonal_player_stats_totals <-
 
 utils::globalVariables(c(
   ".",
+  "n",
   "schedule.attendance",
-  "schedule.awayTeam.abbreviation",
+  "schedule_away_team_abbreviation",
   "schedule.delayedOrPostponedReason",
   "schedule.endedTime",
-  "schedule.homeTeam.abbreviation",
+  "schedule_home_team_abbreviation",
   "schedule.originalStartTime",
   "schedule.startTime",
   "schedule_start_time",
   "schedule.weather",
   "score.currentIntermission",
   "score.currentQuarter",
-  "score.quarters"
+  "score.quarters",
+  "slug"
 ))
