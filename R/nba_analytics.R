@@ -13,9 +13,17 @@
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select_at
+#' @importFrom dplyr group_by
+#' @importFrom dplyr summarize
+#' @importFrom dplyr arrange
+#' @importFrom dplyr vars
+#' @importFrom dplyr funs
+#' @importFrom dplyr full_join
+#' @importFrom dplyr desc
 #' @export nba_player_season_totals
 #' @param season a valid MySportsFeeds v2.0 API season name
-#' @return a tibble of tidied basic box scores
+#' @return a tibble of season total box score statistics, arranged by
+#' descending total points scored
 #' @examples
 #' \dontrun{
 #' player_totals <- dfstools::nba_player_season_totals("current")
@@ -34,16 +42,18 @@ nba_player_season_totals <- function(season) {
       player_height_cm = .feet_inches_to_cm(player_height),
       stats_minutes_played = stats_miscellaneous_min_seconds / 60.0
     )
-  use_columns <- c(
+  label_columns <- c(
     "player_name",
     "player_primary_position",
-    "team_abbreviation",
     "player_height",
     "player_height_cm",
     "player_weight",
     "player_birth_date",
     "player_age",
-    "player_rookie",
+    "player_rookie"
+  )
+  stats_columns <- c(
+    "player_name",
     "stats_minutes_played",
     "stats_games_played",
     "stats_miscellaneous_games_started",
@@ -65,7 +75,23 @@ nba_player_season_totals <- function(season) {
     "stats_defense_blk",
     "stats_miscellaneous_fouls"
   )
-  return(raw_data %>% dplyr::select_at(.vars = use_columns))
+  totals <- raw_data %>%
+    dplyr::select_at(.vars = stats_columns) %>%
+    dplyr::group_by(
+      player_name
+    ) %>%
+    dplyr::summarize_at(
+      .vars = dplyr::vars(stats_minutes_played:stats_miscellaneous_fouls),
+      .funs = dplyr::funs(sum)
+    ) %>%
+    dplyr::ungroup()
+  labels <- raw_data %>%
+    dplyr::select_at(.vars = label_columns) %>%
+    unique()
+  return(
+    dplyr::full_join(labels, totals) %>%
+      dplyr::arrange(desc(stats_offense_pts))
+  )
 }
 
 utils::globalVariables(c(
@@ -73,5 +99,9 @@ utils::globalVariables(c(
   "player_first_name",
   "player_height",
   "player_last_name",
-  "stats_miscellaneous_min_seconds"
+  "player_name",
+  "stats_minutes_played",
+  "stats_miscellaneous_fouls",
+  "stats_miscellaneous_min_seconds",
+  "stats_offense_pts"
 ))
