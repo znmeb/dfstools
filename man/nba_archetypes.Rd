@@ -25,5 +25,5 @@ perform an "archetypal athletes" analysis
 \dontrun{
 player_totals <- dfstools::nba_player_season_totals("current")
 the_archtypes <- dfstools::nba_archetypes(player_totals)
-)}
+}
 }
