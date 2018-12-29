@@ -23,7 +23,6 @@ Imports:
     snakecase,
     tibble,
     archetypes,
-    ggtern,
     tidyr
 Suggests: 
     knitr,
