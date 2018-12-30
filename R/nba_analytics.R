@@ -1,9 +1,9 @@
-#  Text feet and inches to centimeters
-.feet_inches_to_cm <- function(height) {
+#  Text feet and inches to feet and decimals
+.feet_inches_to_ft <- function(height) {
   feet <- as.numeric(sub("\'.*$", "", height))
   inches <- sub("^.*\'", "", height)
   inches <- as.numeric(sub("\".*$", "", inches))
-  return(2.54 * (12.0 * feet + inches))
+  return(feet + inches / 12.0)
 }
 
 #' @title NBA Player Season Totals
@@ -39,14 +39,15 @@ nba_player_season_totals <- function(season) {
     dplyr::filter(player_current_roster_status == "ROSTER") %>%
     dplyr::mutate(
       player_name = paste(player_first_name, player_last_name),
-      player_height_cm = .feet_inches_to_cm(player_height),
+      player_height_ft = .feet_inches_to_ft(player_height),
       stats_minutes_played = stats_miscellaneous_min_seconds / 60.0
     )
   label_columns <- c(
     "player_name",
     "player_primary_position",
+    "player_current_team_abbreviation",
     "player_height",
-    "player_height_cm",
+    "player_height_ft",
     "player_weight",
     "player_birth_date",
     "player_age",
