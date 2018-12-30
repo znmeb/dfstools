@@ -19,7 +19,7 @@
 #' \dontrun{
 #' player_totals <- dfstools::nba_player_season_totals("current")
 #' the_archtypes <- dfstools::nba_archetypes(player_totals)
-#' )}
+#' }
 
 nba_archetypes <- function(player_totals, num_archetypes = 3) {
 
