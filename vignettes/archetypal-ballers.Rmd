@@ -7,7 +7,7 @@ bibliography: ternary.bib
 nocite: | 
   @Shea2014, @Shea2013, @Oliver2004, @Vinué2017, @Vinué2018
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Archetypal Ballers and Ternary Plots}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
