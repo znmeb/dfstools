@@ -86,7 +86,7 @@ knitr::opts_chunk$set(
 # (top_overall %>% dplyr::select(-Bench)) %>% display_table()
 ```
 
-## Ternary Plots [@Hamilton2016]
+## Ternary Plots [@Hamilton2018]
 "A ternary plot, ternary graph, triangle plot, simplex plot, or de Finetti diagram is a barycentric plot on three variables which sum to a constant. It graphically depicts the ratios of the three variables as positions in an equilateral triangle. " - <https://en.wikipedia.org/wiki/Ternary_plot>
 
 * But that's exactly what each entry in the player table is!
