@@ -23,6 +23,12 @@
 
 nba_archetypes <- function(player_totals, num_archetypes = 3) {
 
+  player_labels <- player_totals %>% dplyr::select(
+    player_name:player_current_team_abbreviation,
+    player_height,
+    player_height_ft,
+    player_rookie
+  )
   input_matrix <- player_totals %>%
     dplyr::select(
       player_name, stats_minutes_played:stats_miscellaneous_fouls
@@ -52,11 +58,12 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 
   # column names
   colnames(archetype_parameters) <- colnames(player_alphas) <-
-    c("rebounds", "threes", "bench")
+    c("rim", "floor", "bench")
 
   # make tibbles
   player_alphas <- player_alphas %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "player_name") %>% as_tibble()
+  player_alphas <- dplyr::left_join(player_labels, player_alphas)
   archetype_parameters <- archetype_parameters %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "statistic") %>% as_tibble()
 
@@ -65,3 +72,9 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
     player_alphas = player_alphas,
     archetype_model = archetype_model))
 }
+
+utils::globalVariables(c(
+  "player_current_team_abbreviation",
+  "player_height_ft",
+  "player_rookie"
+))
