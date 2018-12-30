@@ -1,0 +1,146 @@
+---
+title: "Archetypal Ballers and Ternary Plots"
+author: "M. Edward (Ed) Borasky"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+bibliography: ternary.bib
+nocite: | 
+  @Shea2014, @Shea2013, @Oliver2004
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+---
+
+```{r echo=FALSE}
+# library(magrittr)
+# library(dfstools)
+# num_players <- 12 # number of players to display
+# load("~/Projects/mastering-dfs-analytics-package/test-notebooks/ternary-data.RData")
+# display_table <- function(table) {
+#   knitr::kable(table, digits = 4)
+# }
+# player_table %<>% dplyr::filter(Bench < 0.99)
+
+```
+
+## Archetypal Analysis [@Eugster2009]
+* Goal:
+    - Dimensionality reduction
+    - Reduce a dataset with 17 box score metrics to three archetypes
+    - Represent players' skills in terms of the archetypes
+* Inputs:
+    - Player box scores for the season (2016-17 to date)
+    - About 450 players
+* Outputs:
+    - Archetype table
+    - Player table
+
+## The Three Archetypes
+* Weighted box score metrics
+* Each archetype represents a skill set
+    - Front: skills for a frontcourt player (Center, Power Forward, Small Forward)
+        - dominated by rebounds
+    - Back: skills for a backcourt player (Point Guard, Shooting Guard) 
+        - dominated by three-point shots
+    - Bench: the "bad" archetype - players with low overall skills
+
+## The Player Table
+* For each player, the percentage of a player's skill in each archetype
+* Total of Front, Back and Bench for each player is 1.0
+* Sum of Front and Back represents Overall skill
+* The archetypal player is the one with the largest value for the archetype
+* So who are the archetypal players?
+
+## Top Twelve Backcourt
+```{r echo=FALSE}
+# top_back <- player_table %>% 
+#   dplyr::top_n(num_players, Back) %>% 
+#   dplyr::arrange(desc(Back))
+# (top_back %>% dplyr::select(-Bench)) %>% display_table()
+
+```
+
+## Top Twelve Frontcourt
+```{r echo=FALSE}
+# top_front <- player_table %>% 
+#   dplyr::top_n(num_players, Front) %>% 
+#   dplyr::arrange(desc(Front))
+# (top_front %>% dplyr::select(-Bench)) %>% display_table()
+```
+
+## Top Twelve Overall #BallIsLife
+```{r echo=FALSE}
+# top_overall <- player_table %>% 
+#   dplyr::top_n(num_players, Overall) %>% 
+#   dplyr::arrange(desc(Overall))
+# (top_overall %>% dplyr::select(-Bench)) %>% display_table()
+```
+
+## Ternary Plots [@Hamilton2016]
+"A ternary plot, ternary graph, triangle plot, simplex plot, or de Finetti diagram is a barycentric plot on three variables which sum to a constant. It graphically depicts the ratios of the three variables as positions in an equilateral triangle. " - <https://en.wikipedia.org/wiki/Ternary_plot>
+
+* But that's exactly what each entry in the player table is!
+    - Three variables - Front, Back and Bench - that sum to a constant 1.0.
+* So we can plot players as points on a ternary plot.
+
+## Top Twelve Backcourt
+```{r echo=FALSE}
+# ternary_plot(
+#   player_table = top_back, 
+#   plot_title = "NBA Top Twelve Backcourt", 
+#   top_label = "Back", 
+#   left_label = "Front") %>% print()
+```
+
+## Top Twelve Frontcourt
+```{r echo=FALSE}
+# ternary_plot(
+#   player_table = top_front, 
+#   plot_title = "NBA Top Twelve Frontcourt", 
+#   top_label = "Back", 
+#   left_label = "Front") %>% print()
+```
+
+## Top Twelve Overall #ThisIsWhyWePlay
+```{r echo=FALSE}
+# ternary_plot(
+#   player_table = top_overall, 
+#   plot_title = "NBA Top Twelve Overall", 
+#   top_label = "Back", 
+#   left_label = "Front") %>% print()
+```
+
+## Portland Trail Blazers #RipCity
+```{r echo=FALSE}
+# blazers <- player_table %>% 
+#   dplyr::filter(Team == "Portland") %>% 
+#   dplyr::top_n(num_players, Overall) %>% 
+#   dplyr::arrange(desc(Overall))
+# (blazers %>% dplyr::select(-Bench)) %>% display_table()
+```
+
+## Portland Trail Blazers
+```{r echo=FALSE}
+# ternary_plot(
+#   player_table = blazers, 
+#   plot_title = "Portland Trail Blazers", 
+#   top_label = "Back", 
+#   left_label = "Front") %>% print()
+```
+
+## Pop Quiz!
+1. Who is the archetypal backcourt player?
+2. Who is the archetypal frontcourt player?
+3. Who are the three best Trail Blazers?
+
+## References
