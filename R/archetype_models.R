@@ -73,6 +73,86 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
     archetype_model = archetype_model))
 }
 
+#' @title NBA Archetype Search
+#' @name nba_archetype_search
+#' @description stepwise search of archetype counts
+#' @importFrom archetypes stepArchetypes
+#' @importFrom archetypes bestModel
+#' @importFrom archetypes robustArchetypes
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble as_tibble
+#' @export nba_archetype_search
+#' @param player_totals a tibble returned by `nba_player_season_totals`
+#' @param num_steps number of steps to use (default 5)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item player_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object - the `bestModel` with `num_steps`
+#' archetypes
+#' \item all of the models}
+#' @examples
+#' \dontrun{
+#' player_totals <- dfstools::nba_player_season_totals("current")
+#' the_archtypes <- dfstools::nba_archetype_search(player_totals)
+#' }
+
+
+nba_archetype_search <- function(player_totals, num_steps = 5) {
+
+  player_labels <- player_totals %>% dplyr::select(
+    player_name:player_current_team_abbreviation,
+    player_height,
+    player_height_ft,
+    player_rookie
+  )
+  input_matrix <- player_totals %>%
+    dplyr::select(
+      player_name, stats_minutes_played:stats_miscellaneous_fouls
+    ) %>%
+    tibble::column_to_rownames(var = "player_name") %>%
+    as.matrix()
+  set.seed(1776)
+  archetype_models <- archetypes::stepArchetypes(
+    data = input_matrix,
+    k = 1:num_steps,
+    nrep = 16,
+    method = robustArchetypes,
+    verbose = TRUE
+  )
+  archetype_model <- archetypes::bestModel(archetype_models[num_steps])
+
+  # get the archetype_parameters
+  archetype_parameters <- t(archetypes::parameters(archetype_model))
+
+  # compute the ordering
+  ordering <- order(-archetype_parameters["stats_rebounds_reb", ])
+
+  # get the player_alphas
+  player_alphas <- archetype_model[["alphas"]]
+  rownames(player_alphas) <- rownames(input_matrix)
+
+  # reorder the columns
+  archetype_parameters <- archetype_parameters[, ordering]
+  player_alphas <- player_alphas[, ordering]
+
+  # make tibbles
+  player_alphas <- player_alphas %>% as.data.frame() %>%
+    tibble::rownames_to_column(var = "player_name") %>% as_tibble()
+  player_alphas <- dplyr::left_join(player_labels, player_alphas)
+  archetype_parameters <- archetype_parameters %>% as.data.frame() %>%
+    tibble::rownames_to_column(var = "statistic") %>% as_tibble()
+
+  return(list(
+    archetype_parameters = archetype_parameters,
+    player_alphas = player_alphas,
+    archetype_model = archetype_model,
+    archetype_models = archetype_models))
+}
+
 utils::globalVariables(c(
   "player_current_team_abbreviation",
   "player_height_ft",
