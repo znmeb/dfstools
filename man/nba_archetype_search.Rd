@@ -4,12 +4,12 @@
 \alias{nba_archetype_search}
 \title{NBA Archetype Search}
 \usage{
-nba_archetype_search(player_totals, num_steps = 10)
+nba_archetype_search(player_totals, num_steps = 5)
 }
 \arguments{
 \item{player_totals}{a tibble returned by \code{nba_player_season_totals}}
 
-\item{num_steps}{number of steps to use (default 10)}
+\item{num_steps}{number of steps to use (default 5)}
 }
 \value{
 a list of
