@@ -23,7 +23,8 @@ Imports:
     snakecase,
     tibble,
     archetypes,
-    tidyr
+    tidyr,
+    rvest
 Suggests: 
     knitr,
     rmarkdown,
