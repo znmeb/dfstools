@@ -39,7 +39,7 @@
 
 msf_set_apikey <- function(apikey) {
   keyring::key_set_with_value(
-    "MySportsFeeds", password = apikey, keyring = "Default keyring")
+    "MySportsFeeds", password = apikey, keyring = "")
 }
 
 #' @title Get MySportsFeeds API key
@@ -50,7 +50,7 @@ msf_set_apikey <- function(apikey) {
 #' @return the API key
 
 msf_get_apikey <- function() {
-  return(keyring::key_get("MySportsFeeds", keyring = "Default keyring"))
+  return(keyring::key_get("MySportsFeeds", keyring = ""))
 }
 
 #' @title MySportsFeeds Seasons
