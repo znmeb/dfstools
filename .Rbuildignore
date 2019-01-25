@@ -10,4 +10,5 @@ CODE_OF_CONDUCT.md
 .env
 arch_install.bash
 install_me.R
-ubuntu_install.bash
+debian_ubuntu_install.bash
+fedora_install.bash
