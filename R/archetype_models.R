@@ -17,8 +17,11 @@
 #' \item archetype_model the model object}
 #' @examples
 #' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
 #' player_totals <- dfstools::nba_player_season_totals("current")
-#' the_archtypes <- dfstools::nba_archetypes(player_totals)
+#' the_archetypes <- dfstools::nba_archetypes(player_totals)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' View(player_alphas)
 #' }
 
 nba_archetypes <- function(player_totals, num_archetypes = 3) {
@@ -46,7 +49,7 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
   archetype_parameters <- t(archetypes::parameters(archetype_model))
 
   # compute the ordering
-  ordering <- order(-archetype_parameters["stats_rebounds_reb", ])
+  ordering <- order(-archetype_parameters["stats_minutes_played", ])
 
   # get the player_alphas
   player_alphas <- archetype_model[["alphas"]]
@@ -56,9 +59,13 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
   archetype_parameters <- archetype_parameters[, ordering]
   player_alphas <- player_alphas[, ordering]
 
-  # column names
-  colnames(archetype_parameters) <- colnames(player_alphas) <-
-    c("rim", "floor", "bench")
+  # use archetypal players for column names
+  name_vector <- c()
+  for (i in 1:ncol(player_alphas)) {
+    name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
+  }
+  colnames(archetype_parameters) <- name_vector
+  colnames(player_alphas) <- name_vector
 
   # make tibbles
   player_alphas <- player_alphas %>% as.data.frame() %>%
@@ -86,7 +93,7 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' @importFrom tibble as_tibble
 #' @export nba_archetype_search
 #' @param player_totals a tibble returned by `nba_player_season_totals`
-#' @param num_steps number of steps to use (default 5)
+#' @param num_steps number of steps to use (default 7)
 #' @return a list of
 #' \itemize{
 #' \item archetype_parameters the parameters that define each archetype
@@ -96,12 +103,15 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' \item all of the models}
 #' @examples
 #' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
 #' player_totals <- dfstools::nba_player_season_totals("current")
-#' the_archtypes <- dfstools::nba_archetype_search(player_totals)
+#' the_archetypes <- dfstools::nba_archetype_search(player_totals)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' View(player_alphas)
 #' }
 
 
-nba_archetype_search <- function(player_totals, num_steps = 5) {
+nba_archetype_search <- function(player_totals, num_steps = 7) {
 
   player_labels <- player_totals %>% dplyr::select(
     player_name:player_current_team_abbreviation,
@@ -129,7 +139,7 @@ nba_archetype_search <- function(player_totals, num_steps = 5) {
   archetype_parameters <- t(archetypes::parameters(archetype_model))
 
   # compute the ordering
-  ordering <- order(-archetype_parameters["stats_rebounds_reb", ])
+  ordering <- order(-archetype_parameters["stats_minutes_played", ])
 
   # get the player_alphas
   player_alphas <- archetype_model[["alphas"]]
@@ -138,6 +148,14 @@ nba_archetype_search <- function(player_totals, num_steps = 5) {
   # reorder the columns
   archetype_parameters <- archetype_parameters[, ordering]
   player_alphas <- player_alphas[, ordering]
+
+  # use archetypal players for column names
+  name_vector <- c()
+  for (i in 1:ncol(player_alphas)) {
+    name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
+  }
+  colnames(archetype_parameters) <- name_vector
+  colnames(player_alphas) <- name_vector
 
   # make tibbles
   player_alphas <- player_alphas %>% as.data.frame() %>%

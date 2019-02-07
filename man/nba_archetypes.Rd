@@ -23,7 +23,10 @@ perform an "archetypal athletes" analysis
 }
 \examples{
 \dontrun{
+dfstools::msf_set_apikey("your MySportsFeeds API key")
 player_totals <- dfstools::nba_player_season_totals("current")
-the_archtypes <- dfstools::nba_archetypes(player_totals)
+the_archetypes <- dfstools::nba_archetypes(player_totals)
+player_alphas <- the_archetypes[["player_alphas"]]
+View(player_alphas)
 }
 }

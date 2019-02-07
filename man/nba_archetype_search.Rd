@@ -4,12 +4,12 @@
 \alias{nba_archetype_search}
 \title{NBA Archetype Search}
 \usage{
-nba_archetype_search(player_totals, num_steps = 5)
+nba_archetype_search(player_totals, num_steps = 7)
 }
 \arguments{
 \item{player_totals}{a tibble returned by \code{nba_player_season_totals}}
 
-\item{num_steps}{number of steps to use (default 5)}
+\item{num_steps}{number of steps to use (default 7)}
 }
 \value{
 a list of
@@ -25,7 +25,10 @@ stepwise search of archetype counts
 }
 \examples{
 \dontrun{
+dfstools::msf_set_apikey("your MySportsFeeds API key")
 player_totals <- dfstools::nba_player_season_totals("current")
-the_archtypes <- dfstools::nba_archetype_search(player_totals)
+the_archetypes <- dfstools::nba_archetype_search(player_totals)
+player_alphas <- the_archetypes[["player_alphas"]]
+View(player_alphas)
 }
 }
