@@ -24,7 +24,10 @@ Imports:
     tibble,
     archetypes,
     tidyr,
-    rvest
+    rvest,
+    stringr,
+    magrittr,
+    mvglmmRank
 Suggests: 
     knitr,
     rmarkdown,
