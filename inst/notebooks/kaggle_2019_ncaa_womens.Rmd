@@ -1,0 +1,69 @@
+---
+title: "Google Cloud & NCAA® ML Competition 2019-Women's"
+output: html_notebook
+---
+
+## Load the input data
+```{r message=FALSE}
+library(readr)
+library(dplyr)
+library(tibble)
+library(dfstools)
+library(knitr)
+RegularSeasonCompactResults <- read_csv(
+  "~/DFS/kaggle/WRegularSeasonCompactResults.csv",
+  col_types = cols(
+    DayNum = col_integer(), 
+    LScore = col_integer(), 
+    LTeamID = col_integer(),
+    NumOT = col_integer(), 
+    Season = col_integer(),
+    WScore = col_integer(), 
+    WTeamID = col_integer())) %>% 
+  filter(Season == 2019)
+SampleSubmissionStage2 <- read_csv("~/DFS/kaggle/WSampleSubmissionStage2.csv")
+Teams <- read_csv(
+  "~/DFS/kaggle/WTeams.csv",
+  col_types = cols(
+    FirstD1Season = col_integer(),
+    LastD1Season = col_integer(), 
+    TeamID = col_integer()))
+
+```
+
+## Wrangle the data into an mvglmmRank `game.data` input file
+```{r}
+game_data <- kaggle_game_data(RegularSeasonCompactResults)
+
+```
+
+## Run the fast model (NB.mov)
+```{r}
+nb_mov_model <- mvglmmRank_model(game_data)
+
+```
+
+## Compute fast rating tibble
+```{r}
+nb_mov_ratings <- kaggle_ratings(nb_mov_model, Teams)
+nb_mov_ratings$TeamID <- as.character(nb_mov_ratings$TeamID)
+nb_mov_ratings %>% top_n(16) %>% kable(row.names = TRUE, digits = 2)
+
+```
+
+## Fill out the submission
+```{r}
+nb_mov_submission <- SampleSubmissionStage2
+for (i in 1:nrow(nb_mov_submission)) {
+  nb_mov_submission$Pred[i] <- kaggle_probability(
+    nb_mov_model, nb_mov_submission$ID[i])
+}
+write_csv(
+  nb_mov_submission, path = "~/DFS/kaggle/womens_2019_nb_mov_submission.csv")
+
+```
+
+## Session info
+```{r}
+sessionInfo()
+```
