@@ -47,7 +47,9 @@ nb_mov_model <- mvglmmRank_model(game_data)
 ```{r}
 nb_mov_ratings <- kaggle_ratings(nb_mov_model, Teams)
 nb_mov_ratings$TeamID <- as.character(nb_mov_ratings$TeamID)
-nb_mov_ratings %>% top_n(16) %>% kable(row.names = TRUE, digits = 2)
+nb_mov_ratings %>% top_n(16) %>% select(-TeamID) %>% kable(
+  row.names = TRUE, digits = 2, format = "pandoc",
+  caption = "Women's NCAA® Ratings")
 
 ```
 

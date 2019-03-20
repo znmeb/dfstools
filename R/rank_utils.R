@@ -131,7 +131,7 @@ kaggle_ratings <- function(model, teams) {
   ratings$TeamID <- as.integer(ratings$TeamID)
   ratings %<>%  dplyr::left_join(teams, by = "TeamID") %>%
     dplyr::arrange(desc(Rating)) %>%
-    dplyr::select(TeamID, TeamName, Rating)
+    dplyr::select(TeamID, "Team Name" = TeamName, Rating)
   return(ratings)
 }
 
