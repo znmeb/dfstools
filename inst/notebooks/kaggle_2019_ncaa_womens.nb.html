@@ -1820,107 +1820,151 @@ Teams &lt;- read_csv(
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmJfbW92X21vZGVsIDwtIG12Z2xtbVJhbmtfbW9kZWwoZ2FtZV9kYXRhKVxuYGBgIn0= -->
 <pre class="r"><code>nb_mov_model &lt;- mvglmmRank_model(game_data)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiMjAxOS0wMy0yMCAxNDo1NTo0NSBQRFRcIlxuSXRlcmF0aW9uIDEgdG9vayAzLjcyMSBcbkl0ZXJhdGlvbiAyIHRvb2sgMi45MTggXG5JdGVyYXRpb24gMyB0b29rIDIuMzc5IFxuSXRlcmF0aW9uIDQgdG9vayAyLjQ2NyBcbkl0ZXJhdGlvbiA1IHRvb2sgMi41NDYgXG5JdGVyYXRpb24gNiB0b29rIDIuNjA2IFxuSXRlcmF0aW9uIDcgdG9vayAyLjM1NSBcbkl0ZXJhdGlvbiA4IHRvb2sgMi4zNjEgXG5JdGVyYXRpb24gOSB0b29rIDIuNTE0IFxuSXRlcmF0aW9uIDEwIHRvb2sgMi40NTMgXG5JdGVyYXRpb24gMTEgdG9vayAyLjUgXG5JdGVyYXRpb24gMTIgdG9vayAyLjIzNSBcbkl0ZXJhdGlvbiAxMyB0b29rIDIuMjcxIFxuSXRlcmF0aW9uIDE0IHRvb2sgMi4zNjYgXG5JdGVyYXRpb24gMTUgdG9vayAyLjI3NyBcbkl0ZXJhdGlvbiAxNiB0b29rIDIuMTgyIFxuSXRlcmF0aW9uIDE3IHRvb2sgMi4zMTkgXG5JdGVyYXRpb24gMTggdG9vayAyLjI1IFxuSXRlcmF0aW9uIDE5IHRvb2sgMi4zMzkgXG5JdGVyYXRpb24gMjAgdG9vayAyLjIxMyBcbkl0ZXJhdGlvbiAyMSB0b29rIDIuMTYzIFxuSXRlcmF0aW9uIDIyIHRvb2sgMi40MyBcbkl0ZXJhdGlvbiAyMyB0b29rIDIuNDMgXG5JdGVyYXRpb24gMjQgdG9vayAyLjE5NyBcbkl0ZXJhdGlvbiAyNSB0b29rIDIuMTk5IFxuSXRlcmF0aW9uIDI2IHRvb2sgMi43OTIgXG5JdGVyYXRpb24gMjcgdG9vayAyLjIyNCBcbkl0ZXJhdGlvbiAyOCB0b29rIDIuMzQ4IFxuSXRlcmF0aW9uIDI5IHRvb2sgMi4xODkgXG5JdGVyYXRpb24gMzAgdG9vayAyLjEyMiBcbkl0ZXJhdGlvbiAzMSB0b29rIDIuNDU3IFxuSXRlcmF0aW9uIDMyIHRvb2sgMi4yNTEgXG5JdGVyYXRpb24gMzMgdG9vayAyLjUyMiBcbkl0ZXJhdGlvbiAzNCB0b29rIDIuMTIxIFxuSXRlcmF0aW9uIDM1IHRvb2sgMi4xNjEgXG5JdGVyYXRpb24gMzYgdG9vayAyLjQyIFxuSXRlcmF0aW9uIDM3IHRvb2sgMi4yMTIgXG5JdGVyYXRpb24gMzggdG9vayAyLjg3NSBcbkl0ZXJhdGlvbiAzOSB0b29rIDIuMjA2IFxuSXRlcmF0aW9uIDQwIHRvb2sgMi41NjggXG5JdGVyYXRpb24gNDEgdG9vayAyLjI1NiBcbkl0ZXJhdGlvbiA0MiB0b29rIDIuMjQ1IFxuSXRlcmF0aW9uIDQzIHRvb2sgMi4zNDIgXG5JdGVyYXRpb24gNDQgdG9vayAyLjMyOSBcbkl0ZXJhdGlvbiA0NSB0b29rIDIuMjIzIFxuSXRlcmF0aW9uIDQ2IHRvb2sgMi4yNDYgXG5JdGVyYXRpb24gNDcgdG9vayAyLjE2NiBcbkl0ZXJhdGlvbiA0OCB0b29rIDIuMjUxIFxuSXRlcmF0aW9uIDQ5IHRvb2sgMi40NiBcbkl0ZXJhdGlvbiA1MCB0b29rIDIuNDUyIFxuSXRlcmF0aW9uIDUxIHRvb2sgMi4xNDEgXG5JdGVyYXRpb24gNTIgdG9vayAyLjI0OCBcbkl0ZXJhdGlvbiA1MyB0b29rIDIuMzUzIFxuSXRlcmF0aW9uIDU0IHRvb2sgMi4xNDggXG5JdGVyYXRpb24gNTUgdG9vayAyLjMxIFxuSXRlcmF0aW9uIDU2IHRvb2sgMi4yMDEgXG5JdGVyYXRpb24gNTcgdG9vayAyLjQ0MiBcbkl0ZXJhdGlvbiA1OCB0b29rIDIuMzQ3IFxuSXRlcmF0aW9uIDU5IHRvb2sgMi4zODIgXG5JdGVyYXRpb24gNjAgdG9vayAyLjE5NiBcbkl0ZXJhdGlvbiA2MSB0b29rIDIuMjAxIFxuSXRlcmF0aW9uIDYyIHRvb2sgMi40NzUgXG5JdGVyYXRpb24gNjMgdG9vayAyLjEzNiBcbkl0ZXJhdGlvbiA2NCB0b29rIDIuMjA3IFxuSXRlcmF0aW9uIDY1IHRvb2sgMi4yOCBcbkl0ZXJhdGlvbiA2NiB0b29rIDIuMjQzIFxuSXRlcmF0aW9uIDY3IHRvb2sgMi4zNTMgXG5JdGVyYXRpb24gNjggdG9vayAyLjIxIFxuSXRlcmF0aW9uIDY5IHRvb2sgMi4xMzUgXG5JdGVyYXRpb24gNzAgdG9vayAyLjM0IFxuSXRlcmF0aW9uIDcxIHRvb2sgMi42NDggXG5JdGVyYXRpb24gNzIgdG9vayAyLjE5OCBcbkl0ZXJhdGlvbiA3MyB0b29rIDIuMTM0IFxuSXRlcmF0aW9uIDc0IHRvb2sgMi4zNTEgXG5JdGVyYXRpb24gNzUgdG9vayAyLjI0MiBcbkl0ZXJhdGlvbiA3NiB0b29rIDIuMjYxIFxuSXRlcmF0aW9uIDc3IHRvb2sgMi4zMDcgXG5JdGVyYXRpb24gNzggdG9vayAyLjMzOSBcbkl0ZXJhdGlvbiA3OSB0b29rIDIuNDc1IFxuSXRlcmF0aW9uIDgwIHRvb2sgMi4yNTQgXG5JdGVyYXRpb24gODEgdG9vayAyLjEyOSBcbkl0ZXJhdGlvbiA4MiB0b29rIDIuMzM2IFxuSXRlcmF0aW9uIDgzIHRvb2sgMi4xNzMgXG5JdGVyYXRpb24gODQgdG9vayAyLjM4MiBcbkl0ZXJhdGlvbiA4NSB0b29rIDIuMjk1IFxuSXRlcmF0aW9uIDg2IHRvb2sgMi4yMjcgXG5JdGVyYXRpb24gODcgdG9vayAyLjg2NyBcbkl0ZXJhdGlvbiA4OCB0b29rIDIuMjkyIFxuSXRlcmF0aW9uIDg5IHRvb2sgMi4xMjggXG5JdGVyYXRpb24gOTAgdG9vayAyLjM2MyBcbkl0ZXJhdGlvbiA5MSB0b29rIDIuMjEzIFxuSXRlcmF0aW9uIDkyIHRvb2sgMi4yNjcgXG5JdGVyYXRpb24gOTMgdG9vayAyLjM1NCBcbkl0ZXJhdGlvbiA5NCB0b29rIDIuMTM3IFxuSXRlcmF0aW9uIDk1IHRvb2sgMi4yODMgXG5JdGVyYXRpb24gOTYgdG9vayAyLjQ3NyBcbkl0ZXJhdGlvbiA5NyB0b29rIDIuMTkgXG5JdGVyYXRpb24gOTggdG9vayAyLjIgXG5JdGVyYXRpb24gOTkgdG9vayAyLjQyMiBcbiJ9 -->
-<pre><code>[1] &quot;2019-03-20 14:55:45 PDT&quot;
-Iteration 1 took 3.721 
-Iteration 2 took 2.918 
-Iteration 3 took 2.379 
-Iteration 4 took 2.467 
-Iteration 5 took 2.546 
-Iteration 6 took 2.606 
-Iteration 7 took 2.355 
-Iteration 8 took 2.361 
-Iteration 9 took 2.514 
-Iteration 10 took 2.453 
-Iteration 11 took 2.5 
-Iteration 12 took 2.235 
-Iteration 13 took 2.271 
-Iteration 14 took 2.366 
-Iteration 15 took 2.277 
-Iteration 16 took 2.182 
-Iteration 17 took 2.319 
-Iteration 18 took 2.25 
-Iteration 19 took 2.339 
-Iteration 20 took 2.213 
-Iteration 21 took 2.163 
-Iteration 22 took 2.43 
-Iteration 23 took 2.43 
-Iteration 24 took 2.197 
-Iteration 25 took 2.199 
-Iteration 26 took 2.792 
-Iteration 27 took 2.224 
-Iteration 28 took 2.348 
-Iteration 29 took 2.189 
-Iteration 30 took 2.122 
-Iteration 31 took 2.457 
-Iteration 32 took 2.251 
-Iteration 33 took 2.522 
-Iteration 34 took 2.121 
-Iteration 35 took 2.161 
-Iteration 36 took 2.42 
-Iteration 37 took 2.212 
-Iteration 38 took 2.875 
-Iteration 39 took 2.206 
-Iteration 40 took 2.568 
-Iteration 41 took 2.256 
-Iteration 42 took 2.245 
-Iteration 43 took 2.342 
-Iteration 44 took 2.329 
-Iteration 45 took 2.223 
-Iteration 46 took 2.246 
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiMjAxOS0wMy0yMCAxNToyMTo1MyBQRFRcIlxuSXRlcmF0aW9uIDEgdG9vayAyLjkzMyBcbkl0ZXJhdGlvbiAyIHRvb2sgMi42OTIgXG5JdGVyYXRpb24gMyB0b29rIDIuNSBcbkl0ZXJhdGlvbiA0IHRvb2sgMi4zMzcgXG5JdGVyYXRpb24gNSB0b29rIDIuNTMxIFxuSXRlcmF0aW9uIDYgdG9vayAyLjU0NCBcbkl0ZXJhdGlvbiA3IHRvb2sgMi4zMTIgXG5JdGVyYXRpb24gOCB0b29rIDIuNDgxIFxuSXRlcmF0aW9uIDkgdG9vayAyLjM1NyBcbkl0ZXJhdGlvbiAxMCB0b29rIDIuNDQzIFxuSXRlcmF0aW9uIDExIHRvb2sgMi41NDYgXG5JdGVyYXRpb24gMTIgdG9vayAyLjE3NCBcbkl0ZXJhdGlvbiAxMyB0b29rIDIuMTY4IFxuSXRlcmF0aW9uIDE0IHRvb2sgMi4zMiBcbkl0ZXJhdGlvbiAxNSB0b29rIDIuMjQ4IFxuSXRlcmF0aW9uIDE2IHRvb2sgMi4xOCBcbkl0ZXJhdGlvbiAxNyB0b29rIDIuMzA0IFxuSXRlcmF0aW9uIDE4IHRvb2sgMi4yNDggXG5JdGVyYXRpb24gMTkgdG9vayAyLjIwNiBcbkl0ZXJhdGlvbiAyMCB0b29rIDIuMTg4IFxuSXRlcmF0aW9uIDIxIHRvb2sgMi4zODUgXG5JdGVyYXRpb24gMjIgdG9vayAyLjE5NSBcbkl0ZXJhdGlvbiAyMyB0b29rIDIuMyBcbkl0ZXJhdGlvbiAyNCB0b29rIDIuMjAzIFxuSXRlcmF0aW9uIDI1IHRvb2sgMi40NzggXG5JdGVyYXRpb24gMjYgdG9vayAyLjE4NiBcbkl0ZXJhdGlvbiAyNyB0b29rIDIuMjk5IFxuSXRlcmF0aW9uIDI4IHRvb2sgMi43MjYgXG5JdGVyYXRpb24gMjkgdG9vayAyLjUwMSBcbkl0ZXJhdGlvbiAzMCB0b29rIDIuMzk5IFxuSXRlcmF0aW9uIDMxIHRvb2sgMi4xOTQgXG5JdGVyYXRpb24gMzIgdG9vayAyLjE3NiBcbkl0ZXJhdGlvbiAzMyB0b29rIDIuNDA3IFxuSXRlcmF0aW9uIDM0IHRvb2sgMi41MDUgXG5JdGVyYXRpb24gMzUgdG9vayAyLjIzMiBcbkl0ZXJhdGlvbiAzNiB0b29rIDIuMTYzIFxuSXRlcmF0aW9uIDM3IHRvb2sgMi4zODkgXG5JdGVyYXRpb24gMzggdG9vayAyLjIyNSBcbkl0ZXJhdGlvbiAzOSB0b29rIDIuMjI2IFxuSXRlcmF0aW9uIDQwIHRvb2sgMi4zNDcgXG5JdGVyYXRpb24gNDEgdG9vayAyLjI1IFxuSXRlcmF0aW9uIDQyIHRvb2sgMi4zODggXG5JdGVyYXRpb24gNDMgdG9vayAyLjIyNyBcbkl0ZXJhdGlvbiA0NCB0b29rIDIuMTEgXG5JdGVyYXRpb24gNDUgdG9vayAyLjM2OSBcbkl0ZXJhdGlvbiA0NiB0b29rIDIuMjIyIFxuSXRlcmF0aW9uIDQ3IHRvb2sgMi4xNjYgXG5JdGVyYXRpb24gNDggdG9vayAyLjI4MiBcbkl0ZXJhdGlvbiA0OSB0b29rIDIuMzU0IFxuSXRlcmF0aW9uIDUwIHRvb2sgMi43NjYgXG5JdGVyYXRpb24gNTEgdG9vayAyLjIxOCBcbkl0ZXJhdGlvbiA1MiB0b29rIDIuMTI1IFxuSXRlcmF0aW9uIDUzIHRvb2sgMi43NjIgXG5JdGVyYXRpb24gNTQgdG9vayAyLjQxNCBcbkl0ZXJhdGlvbiA1NSB0b29rIDIuMzE1IFxuSXRlcmF0aW9uIDU2IHRvb2sgMi42MzYgXG5JdGVyYXRpb24gNTcgdG9vayAyLjM0NCBcbkl0ZXJhdGlvbiA1OCB0b29rIDIuMjM4IFxuSXRlcmF0aW9uIDU5IHRvb2sgMi40OTMgXG5JdGVyYXRpb24gNjAgdG9vayAyLjIwMyBcbkl0ZXJhdGlvbiA2MSB0b29rIDIuMTU3IFxuSXRlcmF0aW9uIDYyIHRvb2sgMi40MDMgXG5JdGVyYXRpb24gNjMgdG9vayAyLjY3NyBcbkl0ZXJhdGlvbiA2NCB0b29rIDIuMzI0IFxuSXRlcmF0aW9uIDY1IHRvb2sgMi4xNTQgXG5JdGVyYXRpb24gNjYgdG9vayAyLjM3MiBcbkl0ZXJhdGlvbiA2NyB0b29rIDIuMjMgXG5JdGVyYXRpb24gNjggdG9vayAyLjIyNiBcbkl0ZXJhdGlvbiA2OSB0b29rIDIuMjkgXG5JdGVyYXRpb24gNzAgdG9vayAyLjIwNiBcbkl0ZXJhdGlvbiA3MSB0b29rIDIuNzMzIFxuSXRlcmF0aW9uIDcyIHRvb2sgMi43MjkgXG5JdGVyYXRpb24gNzMgdG9vayAyLjE4MyBcbkl0ZXJhdGlvbiA3NCB0b29rIDIuNTA1IFxuSXRlcmF0aW9uIDc1IHRvb2sgMi4xNzIgXG5JdGVyYXRpb24gNzYgdG9vayAyLjI2NyBcbkl0ZXJhdGlvbiA3NyB0b29rIDIuOTc5IFxuSXRlcmF0aW9uIDc4IHRvb2sgMi4yMDIgXG5JdGVyYXRpb24gNzkgdG9vayAyLjQ2OSBcbkl0ZXJhdGlvbiA4MCB0b29rIDIuMjIxIFxuSXRlcmF0aW9uIDgxIHRvb2sgMi4yIFxuSXRlcmF0aW9uIDgyIHRvb2sgMi4zMzYgXG5JdGVyYXRpb24gODMgdG9vayAyLjE2OSBcbkl0ZXJhdGlvbiA4NCB0b29rIDIuMjI4IFxuSXRlcmF0aW9uIDg1IHRvb2sgMi4zNjYgXG5JdGVyYXRpb24gODYgdG9vayAyLjA4OSBcbkl0ZXJhdGlvbiA4NyB0b29rIDIuMjE2IFxuSXRlcmF0aW9uIDg4IHRvb2sgMi4zODkgXG5JdGVyYXRpb24gODkgdG9vayAyLjE2NSBcbkl0ZXJhdGlvbiA5MCB0b29rIDIuMjEzIFxuSXRlcmF0aW9uIDkxIHRvb2sgMi4zODEgXG5JdGVyYXRpb24gOTIgdG9vayAyLjM2NCBcbkl0ZXJhdGlvbiA5MyB0b29rIDIuMTY1IFxuSXRlcmF0aW9uIDk0IHRvb2sgMi4xNDEgXG5JdGVyYXRpb24gOTUgdG9vayAyLjQ0NyBcbkl0ZXJhdGlvbiA5NiB0b29rIDIuMjMzIFxuSXRlcmF0aW9uIDk3IHRvb2sgMi4xNzIgXG5JdGVyYXRpb24gOTggdG9vayAyLjI4MSBcbkl0ZXJhdGlvbiA5OSB0b29rIDIuMjE1IFxuSXRlcmF0aW9uIDEwMCB0b29rIDIuMzU4IFxuSXRlcmF0aW9uIDEwMSB0b29rIDIuMTM4IFxuSXRlcmF0aW9uIDEwMiB0b29rIDIuMTc0IFxuSXRlcmF0aW9uIDEwMyB0b29rIDIuMzY2IFxuSXRlcmF0aW9uIDEwNCB0b29rIDIuMTYyIFxuSXRlcmF0aW9uIDEwNSB0b29rIDIuMTkzIFxuSXRlcmF0aW9uIDEwNiB0b29rIDIuMzUzIFxuSXRlcmF0aW9uIDEwNyB0b29rIDIuMjM1IFxuSXRlcmF0aW9uIDEwOCB0b29rIDIuNDQ4IFxuSXRlcmF0aW9uIDEwOSB0b29rIDIuMTYxIFxuSXRlcmF0aW9uIDExMCB0b29rIDIuMTkxIFxuSXRlcmF0aW9uIDExMSB0b29rIDIuNTQzIFxuSXRlcmF0aW9uIDExMiB0b29rIDIuMzIzIFxuSXRlcmF0aW9uIDExMyB0b29rIDIuMzM5IFxuSXRlcmF0aW9uIDExNCB0b29rIDMuMjY2IFxuSXRlcmF0aW9uIDExNSB0b29rIDIuMjk0IFxuSXRlcmF0aW9uIDExNiB0b29rIDIuMzEyIFxuSXRlcmF0aW9uIDExNyB0b29rIDIuMzIgXG5JdGVyYXRpb24gMTE4IHRvb2sgMi40NjQgXG5JdGVyYXRpb24gMTE5IHRvb2sgMi4xODEgXG5JdGVyYXRpb24gMTIwIHRvb2sgMi40NDkgXG5JdGVyYXRpb24gMTIxIHRvb2sgMi40NTEgXG5JdGVyYXRpb24gMTIyIHRvb2sgMi4xMzEgXG5JdGVyYXRpb24gMTIzIHRvb2sgMi4xODEgXG5JdGVyYXRpb24gMTI0IHRvb2sgMi41NSBcbkl0ZXJhdGlvbiAxMjUgdG9vayAyLjE2NSBcbkl0ZXJhdGlvbiAxMjYgdG9vayAyLjE2OSBcbkl0ZXJhdGlvbiAxMjcgdG9vayAyLjM4MyBcbkl0ZXJhdGlvbiAxMjggdG9vayAyLjI0MSBcbkl0ZXJhdGlvbiAxMjkgdG9vayAyLjM1NCBcbkl0ZXJhdGlvbiAxMzAgdG9vayAyLjE2MyBcbkl0ZXJhdGlvbiAxMzEgdG9vayAyLjE5MiBcbkl0ZXJhdGlvbiAxMzIgdG9vayAyLjQxNiBcbkl0ZXJhdGlvbiAxMzMgdG9vayAyLjE0IFxuSXRlcmF0aW9uIDEzNCB0b29rIDIuMTc0IFxuSXRlcmF0aW9uIDEzNSB0b29rIDIuMzA2IFxuSXRlcmF0aW9uIDEzNiB0b29rIDIuMTkxIFxuSXRlcmF0aW9uIDEzNyB0b29rIDIuNjQ0IFxuSXRlcmF0aW9uIDEzOCB0b29rIDIuMTkgXG5JdGVyYXRpb24gMTM5IHRvb2sgMi4yMTQgXG5JdGVyYXRpb24gMTQwIHRvb2sgMi44NTUgXG5JdGVyYXRpb24gMTQxIHRvb2sgMi4xODQgXG5bMV0gXCIyMDE5LTAzLTIwIDE1OjI3OjI1IFBEVFwiXG5UaW1lIGRpZmZlcmVuY2Ugb2YgNS41MjMwNjEgbWluc1xuIn0= -->
+<pre><code>[1] &quot;2019-03-20 15:21:53 PDT&quot;
+Iteration 1 took 2.933 
+Iteration 2 took 2.692 
+Iteration 3 took 2.5 
+Iteration 4 took 2.337 
+Iteration 5 took 2.531 
+Iteration 6 took 2.544 
+Iteration 7 took 2.312 
+Iteration 8 took 2.481 
+Iteration 9 took 2.357 
+Iteration 10 took 2.443 
+Iteration 11 took 2.546 
+Iteration 12 took 2.174 
+Iteration 13 took 2.168 
+Iteration 14 took 2.32 
+Iteration 15 took 2.248 
+Iteration 16 took 2.18 
+Iteration 17 took 2.304 
+Iteration 18 took 2.248 
+Iteration 19 took 2.206 
+Iteration 20 took 2.188 
+Iteration 21 took 2.385 
+Iteration 22 took 2.195 
+Iteration 23 took 2.3 
+Iteration 24 took 2.203 
+Iteration 25 took 2.478 
+Iteration 26 took 2.186 
+Iteration 27 took 2.299 
+Iteration 28 took 2.726 
+Iteration 29 took 2.501 
+Iteration 30 took 2.399 
+Iteration 31 took 2.194 
+Iteration 32 took 2.176 
+Iteration 33 took 2.407 
+Iteration 34 took 2.505 
+Iteration 35 took 2.232 
+Iteration 36 took 2.163 
+Iteration 37 took 2.389 
+Iteration 38 took 2.225 
+Iteration 39 took 2.226 
+Iteration 40 took 2.347 
+Iteration 41 took 2.25 
+Iteration 42 took 2.388 
+Iteration 43 took 2.227 
+Iteration 44 took 2.11 
+Iteration 45 took 2.369 
+Iteration 46 took 2.222 
 Iteration 47 took 2.166 
-Iteration 48 took 2.251 
-Iteration 49 took 2.46 
-Iteration 50 took 2.452 
-Iteration 51 took 2.141 
-Iteration 52 took 2.248 
-Iteration 53 took 2.353 
-Iteration 54 took 2.148 
-Iteration 55 took 2.31 
-Iteration 56 took 2.201 
-Iteration 57 took 2.442 
-Iteration 58 took 2.347 
-Iteration 59 took 2.382 
-Iteration 60 took 2.196 
-Iteration 61 took 2.201 
-Iteration 62 took 2.475 
-Iteration 63 took 2.136 
-Iteration 64 took 2.207 
-Iteration 65 took 2.28 
-Iteration 66 took 2.243 
-Iteration 67 took 2.353 
-Iteration 68 took 2.21 
-Iteration 69 took 2.135 
-Iteration 70 took 2.34 
-Iteration 71 took 2.648 
-Iteration 72 took 2.198 
-Iteration 73 took 2.134 
-Iteration 74 took 2.351 
-Iteration 75 took 2.242 
-Iteration 76 took 2.261 
-Iteration 77 took 2.307 
-Iteration 78 took 2.339 
-Iteration 79 took 2.475 
-Iteration 80 took 2.254 
-Iteration 81 took 2.129 
+Iteration 48 took 2.282 
+Iteration 49 took 2.354 
+Iteration 50 took 2.766 
+Iteration 51 took 2.218 
+Iteration 52 took 2.125 
+Iteration 53 took 2.762 
+Iteration 54 took 2.414 
+Iteration 55 took 2.315 
+Iteration 56 took 2.636 
+Iteration 57 took 2.344 
+Iteration 58 took 2.238 
+Iteration 59 took 2.493 
+Iteration 60 took 2.203 
+Iteration 61 took 2.157 
+Iteration 62 took 2.403 
+Iteration 63 took 2.677 
+Iteration 64 took 2.324 
+Iteration 65 took 2.154 
+Iteration 66 took 2.372 
+Iteration 67 took 2.23 
+Iteration 68 took 2.226 
+Iteration 69 took 2.29 
+Iteration 70 took 2.206 
+Iteration 71 took 2.733 
+Iteration 72 took 2.729 
+Iteration 73 took 2.183 
+Iteration 74 took 2.505 
+Iteration 75 took 2.172 
+Iteration 76 took 2.267 
+Iteration 77 took 2.979 
+Iteration 78 took 2.202 
+Iteration 79 took 2.469 
+Iteration 80 took 2.221 
+Iteration 81 took 2.2 
 Iteration 82 took 2.336 
-Iteration 83 took 2.173 
-Iteration 84 took 2.382 
-Iteration 85 took 2.295 
-Iteration 86 took 2.227 
-Iteration 87 took 2.867 
-Iteration 88 took 2.292 
-Iteration 89 took 2.128 
-Iteration 90 took 2.363 
-Iteration 91 took 2.213 
-Iteration 92 took 2.267 
-Iteration 93 took 2.354 
-Iteration 94 took 2.137 
-Iteration 95 took 2.283 
-Iteration 96 took 2.477 
-Iteration 97 took 2.19 
-Iteration 98 took 2.2 
-Iteration 99 took 2.422 </code></pre>
+Iteration 83 took 2.169 
+Iteration 84 took 2.228 
+Iteration 85 took 2.366 
+Iteration 86 took 2.089 
+Iteration 87 took 2.216 
+Iteration 88 took 2.389 
+Iteration 89 took 2.165 
+Iteration 90 took 2.213 
+Iteration 91 took 2.381 
+Iteration 92 took 2.364 
+Iteration 93 took 2.165 
+Iteration 94 took 2.141 
+Iteration 95 took 2.447 
+Iteration 96 took 2.233 
+Iteration 97 took 2.172 
+Iteration 98 took 2.281 
+Iteration 99 took 2.215 
+Iteration 100 took 2.358 
+Iteration 101 took 2.138 
+Iteration 102 took 2.174 
+Iteration 103 took 2.366 
+Iteration 104 took 2.162 
+Iteration 105 took 2.193 
+Iteration 106 took 2.353 
+Iteration 107 took 2.235 
+Iteration 108 took 2.448 
+Iteration 109 took 2.161 
+Iteration 110 took 2.191 
+Iteration 111 took 2.543 
+Iteration 112 took 2.323 
+Iteration 113 took 2.339 
+Iteration 114 took 3.266 
+Iteration 115 took 2.294 
+Iteration 116 took 2.312 
+Iteration 117 took 2.32 
+Iteration 118 took 2.464 
+Iteration 119 took 2.181 
+Iteration 120 took 2.449 
+Iteration 121 took 2.451 
+Iteration 122 took 2.131 
+Iteration 123 took 2.181 
+Iteration 124 took 2.55 
+Iteration 125 took 2.165 
+Iteration 126 took 2.169 
+Iteration 127 took 2.383 
+Iteration 128 took 2.241 
+Iteration 129 took 2.354 
+Iteration 130 took 2.163 
+Iteration 131 took 2.192 
+Iteration 132 took 2.416 
+Iteration 133 took 2.14 
+Iteration 134 took 2.174 
+Iteration 135 took 2.306 
+Iteration 136 took 2.191 
+Iteration 137 took 2.644 
+Iteration 138 took 2.19 
+Iteration 139 took 2.214 
+Iteration 140 took 2.855 
+Iteration 141 took 2.184 
+[1] &quot;2019-03-20 15:27:25 PDT&quot;
+Time difference of 5.523061 mins</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1929,11 +1973,12 @@ Iteration 99 took 2.422 </code></pre>
 <h2>Compute fast rating tibble</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmJfbW92X3JhdGluZ3MgPC0ga2FnZ2xlX3JhdGluZ3MobmJfbW92X21vZGVsLCBUZWFtcylcbm5iX21vdl9yYXRpbmdzJFRlYW1JRCA8LSBhcy5jaGFyYWN0ZXIobmJfbW92X3JhdGluZ3MkVGVhbUlEKVxubmJfbW92X3JhdGluZ3MgJT4lIHRvcF9uKDE2KSAlPiUgc2VsZWN0KC1UZWFtSUQpICU+JSBcbiAga2FibGUocm93Lm5hbWVzID0gVFJVRSwgZGlnaXRzID0gMiwgY2FwdGlvbiA9IFwiV29tZW4ncyBOQ0FBwq4gUmF0aW5nc1wiKVxuYGBgIn0= -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmJfbW92X3JhdGluZ3MgPC0ga2FnZ2xlX3JhdGluZ3MobmJfbW92X21vZGVsLCBUZWFtcylcbm5iX21vdl9yYXRpbmdzJFRlYW1JRCA8LSBhcy5jaGFyYWN0ZXIobmJfbW92X3JhdGluZ3MkVGVhbUlEKVxubmJfbW92X3JhdGluZ3MgJT4lIHRvcF9uKDE2KSAlPiUgc2VsZWN0KC1UZWFtSUQpICU+JSBrYWJsZShcbiAgcm93Lm5hbWVzID0gVFJVRSwgZGlnaXRzID0gMiwgZm9ybWF0ID0gXCJwYW5kb2NcIixcbiAgY2FwdGlvbiA9IFwiV29tZW4ncyBOQ0FBwq4gUmF0aW5nc1wiKVxuYGBgIn0= -->
 <pre class="r"><code>nb_mov_ratings &lt;- kaggle_ratings(nb_mov_model, Teams)
 nb_mov_ratings$TeamID &lt;- as.character(nb_mov_ratings$TeamID)
-nb_mov_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% 
-  kable(row.names = TRUE, digits = 2, caption = &quot;Women&#39;s NCAA® Ratings&quot;)</code></pre>
+nb_mov_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
+  row.names = TRUE, digits = 2, format = &quot;pandoc&quot;,
+  caption = &quot;Women&#39;s NCAA® Ratings&quot;)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-output-begin eyJkYXRhIjoiU2VsZWN0aW5nIGJ5IFJhdGluZ1xuIn0= -->
 <pre><code>Selecting by Rating</code></pre>
@@ -1942,93 +1987,94 @@ nb_mov_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;%
 <!-- rnb-html-begin eyJtZXRhZGF0YSI6eyJjbGFzc2VzIjpbImtuaXRfYXNpcyJdLCJzaXppbmdQb2xpY3kiOltdfX0= -->
 
 <table>
+<caption>Women’s NCAA® Ratings</caption>
 <thead>
 <tr class="header">
-<th align="left"></th>
+<th></th>
 <th align="left">Team Name</th>
 <th align="right">Rating</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">1</td>
-<td align="left">Gonzaga</td>
-<td align="right">2.61</td>
+<td>1</td>
+<td align="left">Baylor</td>
+<td align="right">3.60</td>
 </tr>
 <tr class="even">
-<td align="left">2</td>
-<td align="left">Duke</td>
-<td align="right">2.59</td>
+<td>2</td>
+<td align="left">Notre Dame</td>
+<td align="right">3.60</td>
 </tr>
 <tr class="odd">
-<td align="left">3</td>
-<td align="left">Virginia</td>
-<td align="right">2.54</td>
+<td>3</td>
+<td align="left">Connecticut</td>
+<td align="right">3.48</td>
 </tr>
 <tr class="even">
-<td align="left">4</td>
-<td align="left">North Carolina</td>
-<td align="right">2.31</td>
+<td>4</td>
+<td align="left">Mississippi St</td>
+<td align="right">3.40</td>
 </tr>
 <tr class="odd">
-<td align="left">5</td>
-<td align="left">Michigan St</td>
-<td align="right">2.23</td>
+<td>5</td>
+<td align="left">Oregon</td>
+<td align="right">3.20</td>
 </tr>
 <tr class="even">
-<td align="left">6</td>
-<td align="left">Tennessee</td>
+<td>6</td>
+<td align="left">Louisville</td>
+<td align="right">2.94</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td align="left">Marquette</td>
+<td align="right">2.71</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td align="left">Stanford</td>
+<td align="right">2.70</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td align="left">Iowa St</td>
+<td align="right">2.49</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td align="left">Oregon St</td>
+<td align="right">2.40</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td align="left">Iowa</td>
+<td align="right">2.28</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td align="left">Maryland</td>
+<td align="right">2.15</td>
+</tr>
+<tr class="odd">
+<td>13</td>
+<td align="left">Syracuse</td>
+<td align="right">2.14</td>
+</tr>
+<tr class="even">
+<td>14</td>
+<td align="left">NC State</td>
 <td align="right">2.10</td>
 </tr>
 <tr class="odd">
-<td align="left">7</td>
-<td align="left">Michigan</td>
-<td align="right">2.07</td>
+<td>15</td>
+<td align="left">Arizona St</td>
+<td align="right">2.03</td>
 </tr>
 <tr class="even">
-<td align="left">8</td>
-<td align="left">Kentucky</td>
-<td align="right">1.99</td>
-</tr>
-<tr class="odd">
-<td align="left">9</td>
-<td align="left">Texas Tech</td>
-<td align="right">1.92</td>
-</tr>
-<tr class="even">
-<td align="left">10</td>
-<td align="left">Purdue</td>
-<td align="right">1.83</td>
-</tr>
-<tr class="odd">
-<td align="left">11</td>
-<td align="left">Houston</td>
-<td align="right">1.81</td>
-</tr>
-<tr class="even">
-<td align="left">12</td>
-<td align="left">Virginia Tech</td>
-<td align="right">1.78</td>
-</tr>
-<tr class="odd">
-<td align="left">13</td>
-<td align="left">Florida St</td>
-<td align="right">1.75</td>
-</tr>
-<tr class="even">
-<td align="left">14</td>
-<td align="left">Auburn</td>
-<td align="right">1.74</td>
-</tr>
-<tr class="odd">
-<td align="left">15</td>
-<td align="left">Buffalo</td>
-<td align="right">1.70</td>
-</tr>
-<tr class="even">
-<td align="left">16</td>
-<td align="left">Wisconsin</td>
-<td align="right">1.70</td>
+<td>16</td>
+<td align="left">South Carolina</td>
+<td align="right">2.03</td>
 </tr>
 </tbody>
 </table>
@@ -2043,6 +2089,16 @@ nb_mov_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;%
 <h2>Fill out the submission</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmJfbW92X3N1Ym1pc3Npb24gPC0gU2FtcGxlU3VibWlzc2lvblN0YWdlMlxuZm9yIChpIGluIDE6bnJvdyhuYl9tb3Zfc3VibWlzc2lvbikpIHtcbiAgbmJfbW92X3N1Ym1pc3Npb24kUHJlZFtpXSA8LSBrYWdnbGVfcHJvYmFiaWxpdHkoXG4gICAgbmJfbW92X21vZGVsLCBuYl9tb3Zfc3VibWlzc2lvbiRJRFtpXSlcbn1cbndyaXRlX2NzdihcbiAgbmJfbW92X3N1Ym1pc3Npb24sIHBhdGggPSBcIn4vREZTL2thZ2dsZS93b21lbnNfMjAxOV9uYl9tb3Zfc3VibWlzc2lvbi5jc3ZcIilcblxuYGBgIn0= -->
+<pre class="r"><code>nb_mov_submission &lt;- SampleSubmissionStage2
+for (i in 1:nrow(nb_mov_submission)) {
+  nb_mov_submission$Pred[i] &lt;- kaggle_probability(
+    nb_mov_model, nb_mov_submission$ID[i])
+}
+write_csv(
+  nb_mov_submission, path = &quot;~/DFS/kaggle/womens_2019_nb_mov_submission.csv&quot;)
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
@@ -2050,6 +2106,47 @@ nb_mov_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;%
 <h2>Session info</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2Vzc2lvbkluZm8oKVxuYGBgIn0= -->
+<pre class="r"><code>sessionInfo()</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4zICgyMDE5LTAzLTExKVxuUGxhdGZvcm06IHg4Nl82NC1wYy1saW51eC1nbnUgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IEFyY29MaW51eERcblxuTWF0cml4IHByb2R1Y3RzOiBkZWZhdWx0XG5CTEFTOiAvdXNyL2xpYi9saWJvcGVuYmxhc3AtcjAuMy41LnNvXG5MQVBBQ0s6IC91c3IvbGliL2xpYmxhcGFjay5zby4zLjguMFxuXG5sb2NhbGU6XG4gWzFdIExDX0NUWVBFPWVuX1VTLlVURi04ICAgICAgIExDX05VTUVSSUM9QyAgICAgICAgICAgICAgXG4gWzNdIExDX1RJTUU9ZW5fVVMuVVRGLTggICAgICAgIExDX0NPTExBVEU9ZW5fVVMuVVRGLTggICAgXG4gWzVdIExDX01PTkVUQVJZPWVuX1VTLlVURi04ICAgIExDX01FU1NBR0VTPWVuX1VTLlVURi04ICAgXG4gWzddIExDX1BBUEVSPWVuX1VTLlVURi04ICAgICAgIExDX05BTUU9QyAgICAgICAgICAgICAgICAgXG4gWzldIExDX0FERFJFU1M9QyAgICAgICAgICAgICAgIExDX1RFTEVQSE9ORT1DICAgICAgICAgICAgXG5bMTFdIExDX01FQVNVUkVNRU5UPWVuX1VTLlVURi04IExDX0lERU5USUZJQ0FUSU9OPUMgICAgICAgXG5cbmF0dGFjaGVkIGJhc2UgcGFja2FnZXM6XG5bMV0gc3RhdHMgICAgIGdyYXBoaWNzICBnckRldmljZXMgdXRpbHMgICAgIGRhdGFzZXRzICBtZXRob2RzICAgYmFzZSAgICAgXG5cbm90aGVyIGF0dGFjaGVkIHBhY2thZ2VzOlxuWzFdIGtuaXRyXzEuMjIgICAgICAgICAgZGZzdG9vbHNfMS4wLjAuOTk5OSB0aWJibGVfMi4xLjEgICAgICAgXG5bNF0gZHBseXJfMC44LjAuMSAgICAgICByZWFkcl8xLjMuMSAgICAgICAgXG5cbmxvYWRlZCB2aWEgYSBuYW1lc3BhY2UgKGFuZCBub3QgYXR0YWNoZWQpOlxuIFsxXSBSY3BwXzEuMC4xICAgICAgICBoaWdocl8wLjcgICAgICAgICBwaWxsYXJfMS4zLjEgICAgICBjb21waWxlcl8zLjUuMyAgIFxuIFs1XSB0b29sc18zLjUuMyAgICAgICBkaWdlc3RfMC42LjE4ICAgICBwYWNrcmF0XzAuNS4wICAgICBiaXRfMS4xLTE0ICAgICAgIFxuIFs5XSBldmFsdWF0ZV8wLjEzICAgICBsYXR0aWNlXzAuMjAtMzggICBqc29ubGl0ZV8xLjYgICAgICBsdWJyaWRhdGVfMS43LjQgIFxuWzEzXSBSU1FMaXRlXzIuMS4xICAgICBtZW1vaXNlXzEuMS4wICAgICBwa2djb25maWdfMi4wLjIgICBybGFuZ18wLjMuMSAgICAgIFxuWzE3XSBNYXRyaXhfMS4yLTE2ICAgICBEQklfMS4wLjAgICAgICAgICByc3R1ZGlvYXBpXzAuMTAgICB4ZnVuXzAuNSAgICAgICAgIFxuWzIxXSB4bWwyXzEuMi4wICAgICAgICBodHRyXzEuNC4wICAgICAgICBzdHJpbmdyXzEuNC4wICAgICBhcmNoZXR5cGVzXzIuMi0wIFxuWzI1XSBobXNfMC40LjIgICAgICAgICBzdGF0czRfMy41LjMgICAgICBiaXQ2NF8wLjktNyAgICAgICBncmlkXzMuNS4zICAgICAgIFxuWzI5XSB0aWR5c2VsZWN0XzAuMi41ICBzbmFrZWNhc2VfMC45LjIgICBnbHVlXzEuMy4xICAgICAgICBSNl8yLjQuMCAgICAgICAgIFxuWzMzXSBtdmdsbW1SYW5rXzEuMi0yICBybWFya2Rvd25fMS4xMiAgICB0aWR5cl8wLjguMyAgICAgICBwdXJycl8wLjMuMiAgICAgIFxuWzM3XSBibG9iXzEuMS4xICAgICAgICBtYWdyaXR0cl8xLjUgICAgICBodG1sdG9vbHNfMC4zLjYgICBNQVNTXzcuMy01MS4xICAgIFxuWzQxXSBtb2RlbHRvb2xzXzAuMi0yMiBubmxzXzEuNCAgICAgICAgICBydmVzdF8wLjMuMiAgICAgICBhc3NlcnR0aGF0XzAuMi4wIFxuWzQ1XSBudW1EZXJpdl8yMDE2LjgtMSBrZXlyaW5nXzEuMS4wICAgICBzdHJpbmdpXzEuNC4zICAgICBjcmF5b25fMS4zLjQgICAgIFxuIn0= -->
+<pre><code>R version 3.5.3 (2019-03-11)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: ArcoLinuxD
+
+Matrix products: default
+BLAS: /usr/lib/libopenblasp-r0.3.5.so
+LAPACK: /usr/lib/liblapack.so.3.8.0
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C              
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8    
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8   
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C                 
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C            
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C       
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] knitr_1.22          dfstools_1.0.0.9999 tibble_2.1.1       
+[4] dplyr_0.8.0.1       readr_1.3.1        
+
+loaded via a namespace (and not attached):
+ [1] Rcpp_1.0.1        highr_0.7         pillar_1.3.1      compiler_3.5.3   
+ [5] tools_3.5.3       digest_0.6.18     packrat_0.5.0     bit_1.1-14       
+ [9] evaluate_0.13     lattice_0.20-38   jsonlite_1.6      lubridate_1.7.4  
+[13] RSQLite_2.1.1     memoise_1.1.0     pkgconfig_2.0.2   rlang_0.3.1      
+[17] Matrix_1.2-16     DBI_1.0.0         rstudioapi_0.10   xfun_0.5         
+[21] xml2_1.2.0        httr_1.4.0        stringr_1.4.0     archetypes_2.2-0 
+[25] hms_0.4.2         stats4_3.5.3      bit64_0.9-7       grid_3.5.3       
+[29] tidyselect_0.2.5  snakecase_0.9.2   glue_1.3.1        R6_2.4.0         
+[33] mvglmmRank_1.2-2  rmarkdown_1.12    tidyr_0.8.3       purrr_0.3.2      
+[37] blob_1.1.1        magrittr_1.5      htmltools_0.3.6   MASS_7.3-51.1    
+[41] modeltools_0.2-22 nnls_1.4          rvest_0.3.2       assertthat_0.2.0 
+[45] numDeriv_2016.8-1 keyring_1.1.0     stringi_1.4.3     crayon_1.3.4     </code></pre>
+<!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
 
