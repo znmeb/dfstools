@@ -1820,150 +1820,152 @@ Teams &lt;- read_csv(
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubmJfbW9kZWwgPC0gbXZnbG1tUmFua19tb2RlbChnYW1lX2RhdGEsIG1ldGhvZCA9IFwiTkJcIilcbmBgYCJ9 -->
 <pre class="r"><code>nb_model &lt;- mvglmmRank_model(game_data, method = &quot;NB&quot;)</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiMjAxOS0wMy0yMCAyMTo1NDowNCBQRFRcIlxuSXRlcmF0aW9uIDEgdG9vayA2MC41NDMgXG5JdGVyYXRpb24gMiB0b29rIDg0Ljk4NSBcbkl0ZXJhdGlvbiAzIHRvb2sgNTcuNDczIFxuSXRlcmF0aW9uIDQgdG9vayA1OC4wNiBcbkl0ZXJhdGlvbiA1IHRvb2sgNTcuMjg5IFxuSXRlcmF0aW9uIDYgdG9vayA4MC4wNzggXG5JdGVyYXRpb24gNyB0b29rIDU3LjExOSBcbkl0ZXJhdGlvbiA4IHRvb2sgNTYuOTQzIFxuSXRlcmF0aW9uIDkgdG9vayA1Ny4xNTIgXG5JdGVyYXRpb24gMTAgdG9vayA1Ny4wNjEgXG5JdGVyYXRpb24gMTEgdG9vayA1Ny43OSBcbkl0ZXJhdGlvbiAxMiB0b29rIDU2Ljg0MSBcbkl0ZXJhdGlvbiAxMyB0b29rIDU4LjAxOSBcbkl0ZXJhdGlvbiAxNCB0b29rIDU2LjAyNSBcbkl0ZXJhdGlvbiAxNSB0b29rIDgyLjY2OSBcbkl0ZXJhdGlvbiAxNiB0b29rIDU2LjA2IFxuSXRlcmF0aW9uIDE3IHRvb2sgNTYuMDcyIFxuSXRlcmF0aW9uIDE4IHRvb2sgNTUuNDAxIFxuSXRlcmF0aW9uIDE5IHRvb2sgNTUuNjkyIFxuSXRlcmF0aW9uIDIwIHRvb2sgNzUuODIyIFxuSXRlcmF0aW9uIDIxIHRvb2sgNzkuOTM2IFxuSXRlcmF0aW9uIDIyIHRvb2sgNTYuMTIxIFxuSXRlcmF0aW9uIDIzIHRvb2sgNjcuNDc5IFxuSXRlcmF0aW9uIDI0IHRvb2sgNTYuOTAxIFxuSXRlcmF0aW9uIDI1IHRvb2sgODEuMzk4IFxuSXRlcmF0aW9uIDI2IHRvb2sgNjcuODQ5IFxuSXRlcmF0aW9uIDI3IHRvb2sgNTUuOTg3IFxuSXRlcmF0aW9uIDI4IHRvb2sgNjYuODQ5IFxuSXRlcmF0aW9uIDI5IHRvb2sgNTguMTk1IFxuSXRlcmF0aW9uIDMwIHRvb2sgNjcuMzA2IFxuSXRlcmF0aW9uIDMxIHRvb2sgODAuMTA2IFxuSXRlcmF0aW9uIDMyIHRvb2sgNTcuMDMyIFxuSXRlcmF0aW9uIDMzIHRvb2sgNTYuNjY2IFxuSXRlcmF0aW9uIDM0IHRvb2sgNTguNzEzIFxuSXRlcmF0aW9uIDM1IHRvb2sgNTkuMTI3IFxuSXRlcmF0aW9uIDM2IHRvb2sgODAuNTE1IFxuSXRlcmF0aW9uIDM3IHRvb2sgODQuNDIxIFxuSXRlcmF0aW9uIDM4IHRvb2sgNTcuNzA5IFxuSXRlcmF0aW9uIDM5IHRvb2sgNTYuNjA2IFxuSXRlcmF0aW9uIDQwIHRvb2sgNjguMTU3IFxuSXRlcmF0aW9uIDQxIHRvb2sgNTYuOTE2IFxuSXRlcmF0aW9uIDQyIHRvb2sgNzkuNDA3IFxuSXRlcmF0aW9uIDQzIHRvb2sgNzguNjY5IFxuSXRlcmF0aW9uIDQ0IHRvb2sgNzUuNDA2IFxuSXRlcmF0aW9uIDQ1IHRvb2sgNTguMTkxIFxuSXRlcmF0aW9uIDQ2IHRvb2sgODYuNjc3IFxuSXRlcmF0aW9uIDQ3IHRvb2sgNjAuODczIFxuSXRlcmF0aW9uIDQ4IHRvb2sgNTkuNzgyIFxuSXRlcmF0aW9uIDQ5IHRvb2sgODYuNzA5IFxuSXRlcmF0aW9uIDUwIHRvb2sgODIuMTg5IFxuSXRlcmF0aW9uIDUxIHRvb2sgODUuMTg1IFxuSXRlcmF0aW9uIDUyIHRvb2sgNzkuMTM2IFxuSXRlcmF0aW9uIDUzIHRvb2sgNTcuODQ4IFxuSXRlcmF0aW9uIDU0IHRvb2sgNzMuMjg1IFxuSXRlcmF0aW9uIDU1IHRvb2sgNzAuMjcgXG5JdGVyYXRpb24gNTYgdG9vayA1Ny43NzYgXG5JdGVyYXRpb24gNTcgdG9vayA4NC43MiBcbkl0ZXJhdGlvbiA1OCB0b29rIDc0LjQxOCBcbkl0ZXJhdGlvbiA1OSB0b29rIDU2LjA5IFxuSXRlcmF0aW9uIDYwIHRvb2sgODUuMzAyIFxuSXRlcmF0aW9uIDYxIHRvb2sgNTcuOTc2IFxuSXRlcmF0aW9uIDYyIHRvb2sgNTcuOTkzIFxuSXRlcmF0aW9uIDYzIHRvb2sgNzAuMjc4IFxuSXRlcmF0aW9uIDY0IHRvb2sgNTYuMzk0IFxuSXRlcmF0aW9uIDY1IHRvb2sgNzQuMDkzIFxuSXRlcmF0aW9uIDY2IHRvb2sgNTcuNjI4IFxuSXRlcmF0aW9uIDY3IHRvb2sgNTYuNjQ5IFxuSXRlcmF0aW9uIDY4IHRvb2sgNTYuNDc1IFxuSXRlcmF0aW9uIDY5IHRvb2sgNTYuMzQ4IFxuSXRlcmF0aW9uIDcwIHRvb2sgNTYuOTI1IFxuSXRlcmF0aW9uIDcxIHRvb2sgNzQuOTAzIFxuSXRlcmF0aW9uIDcyIHRvb2sgNzIuNTkyIFxuSXRlcmF0aW9uIDczIHRvb2sgNzYuOTM2IFxuSXRlcmF0aW9uIDc0IHRvb2sgNTcuMDggXG5JdGVyYXRpb24gNzUgdG9vayA3Mi4xMTEgXG5JdGVyYXRpb24gNzYgdG9vayA1Ni40MjQgXG5JdGVyYXRpb24gNzcgdG9vayA3MC43NiBcbkl0ZXJhdGlvbiA3OCB0b29rIDc1Ljg0NSBcbkl0ZXJhdGlvbiA3OSB0b29rIDcxLjI3MyBcbkl0ZXJhdGlvbiA4MCB0b29rIDU2LjA1MSBcbkl0ZXJhdGlvbiA4MSB0b29rIDU2LjMzOCBcbkl0ZXJhdGlvbiA4MiB0b29rIDU2LjM3MyBcbkl0ZXJhdGlvbiA4MyB0b29rIDcyLjU0MyBcbkl0ZXJhdGlvbiA4NCB0b29rIDU1Ljk1NCBcbkl0ZXJhdGlvbiA4NSB0b29rIDgxLjgxNyBcbkl0ZXJhdGlvbiA4NiB0b29rIDc3Ljc3NyBcbkl0ZXJhdGlvbiA4NyB0b29rIDU1LjcyNyBcbkl0ZXJhdGlvbiA4OCB0b29rIDcxLjY1NyBcbkl0ZXJhdGlvbiA4OSB0b29rIDU4LjAwNiBcbkl0ZXJhdGlvbiA5MCB0b29rIDU2LjQ5NCBcbkl0ZXJhdGlvbiA5MSB0b29rIDc1LjQ2NCBcbkl0ZXJhdGlvbiA5MiB0b29rIDY4LjE3MSBcbkl0ZXJhdGlvbiA5MyB0b29rIDgwLjM3MyBcbkl0ZXJhdGlvbiA5NCB0b29rIDgzLjU1OCBcbkl0ZXJhdGlvbiA5NSB0b29rIDU4LjM3MSBcbkl0ZXJhdGlvbiA5NiB0b29rIDc5LjE0IFxuSXRlcmF0aW9uIDk3IHRvb2sgODguODcgXG5JdGVyYXRpb24gOTggdG9vayA4Mi4yODMgXG5JdGVyYXRpb24gOTkgdG9vayA4OC41MDkgXG5JdGVyYXRpb24gMTAwIHRvb2sgNzguMTkgXG5JdGVyYXRpb24gMTAxIHRvb2sgNTkuMzQ4IFxuSXRlcmF0aW9uIDEwMiB0b29rIDY4LjQ1MiBcbkl0ZXJhdGlvbiAxMDMgdG9vayA1NS42NDggXG5JdGVyYXRpb24gMTA0IHRvb2sgNTcuMzkgXG5JdGVyYXRpb24gMTA1IHRvb2sgNTcuMjQ5IFxuSXRlcmF0aW9uIDEwNiB0b29rIDg0LjUyNyBcbkl0ZXJhdGlvbiAxMDcgdG9vayA1OC4yMjEgXG5JdGVyYXRpb24gMTA4IHRvb2sgNTcuOTcxIFxuSXRlcmF0aW9uIDEwOSB0b29rIDU2LjYwNyBcbkl0ZXJhdGlvbiAxMTAgdG9vayA1NS44MzUgXG5JdGVyYXRpb24gMTExIHRvb2sgNTcuMDMgXG5JdGVyYXRpb24gMTEyIHRvb2sgNTcuMDYzIFxuSXRlcmF0aW9uIDExMyB0b29rIDcyLjUzOSBcbkl0ZXJhdGlvbiAxMTQgdG9vayA3NC4zOTQgXG5JdGVyYXRpb24gMTE1IHRvb2sgNjguMjA1IFxuSXRlcmF0aW9uIDExNiB0b29rIDU2Ljg4MiBcbkl0ZXJhdGlvbiAxMTcgdG9vayA3NS4yOTIgXG5JdGVyYXRpb24gMTE4IHRvb2sgNTcuNTAyIFxuSXRlcmF0aW9uIDExOSB0b29rIDgwLjU3MiBcbkl0ZXJhdGlvbiAxMjAgdG9vayA3OS4wMjkgXG5JdGVyYXRpb24gMTIxIHRvb2sgNzMuMDc5IFxuSXRlcmF0aW9uIDEyMiB0b29rIDU1Ljg1NCBcbkl0ZXJhdGlvbiAxMjMgdG9vayA1NS40MDggXG5JdGVyYXRpb24gMTI0IHRvb2sgNjkuNjQ1IFxuSXRlcmF0aW9uIDEyNSB0b29rIDU1LjQ5MSBcbkl0ZXJhdGlvbiAxMjYgdG9vayA1NS41MjkgXG5JdGVyYXRpb24gMTI3IHRvb2sgNTUuNzgyIFxuSXRlcmF0aW9uIDEyOCB0b29rIDc1LjAzMiBcbkl0ZXJhdGlvbiAxMjkgdG9vayA1OC45MTEgXG5JdGVyYXRpb24gMTMwIHRvb2sgNjcuOTM4IFxuSXRlcmF0aW9uIDEzMSB0b29rIDU3Ljc3OCBcbkl0ZXJhdGlvbiAxMzIgdG9vayA1Ni40MyBcbkl0ZXJhdGlvbiAxMzMgdG9vayA1Ny4zODMgXG5JdGVyYXRpb24gMTM0IHRvb2sgODAuMjE5IFxuSXRlcmF0aW9uIDEzNSB0b29rIDc0LjU1OCBcbkl0ZXJhdGlvbiAxMzYgdG9vayA3Ny42MzcgXG5JdGVyYXRpb24gMTM3IHRvb2sgNTYuNTYyIFxuSXRlcmF0aW9uIDEzOCB0b29rIDgwLjcyNSBcbkl0ZXJhdGlvbiAxMzkgdG9vayA3Ny4xMzkgXG5JdGVyYXRpb24gMTQwIHRvb2sgNTcuMTQzIFxuWzFdIFwiMjAxOS0wMy0yMSAwMDoyOToxMCBQRFRcIlxuVGltZSBkaWZmZXJlbmNlIG9mIDIuNTg0ODQ1IGhvdXJzXG4ifQ== -->
-<pre><code>[1] &quot;2019-03-20 21:54:04 PDT&quot;
-Iteration 1 took 60.543 
-Iteration 2 took 84.985 
-Iteration 3 took 57.473 
-Iteration 4 took 58.06 
-Iteration 5 took 57.289 
-Iteration 6 took 80.078 
-Iteration 7 took 57.119 
-Iteration 8 took 56.943 
-Iteration 9 took 57.152 
-Iteration 10 took 57.061 
-Iteration 11 took 57.79 
-Iteration 12 took 56.841 
-Iteration 13 took 58.019 
-Iteration 14 took 56.025 
-Iteration 15 took 82.669 
-Iteration 16 took 56.06 
-Iteration 17 took 56.072 
-Iteration 18 took 55.401 
-Iteration 19 took 55.692 
-Iteration 20 took 75.822 
-Iteration 21 took 79.936 
-Iteration 22 took 56.121 
-Iteration 23 took 67.479 
-Iteration 24 took 56.901 
-Iteration 25 took 81.398 
-Iteration 26 took 67.849 
-Iteration 27 took 55.987 
-Iteration 28 took 66.849 
-Iteration 29 took 58.195 
-Iteration 30 took 67.306 
-Iteration 31 took 80.106 
-Iteration 32 took 57.032 
-Iteration 33 took 56.666 
-Iteration 34 took 58.713 
-Iteration 35 took 59.127 
-Iteration 36 took 80.515 
-Iteration 37 took 84.421 
-Iteration 38 took 57.709 
-Iteration 39 took 56.606 
-Iteration 40 took 68.157 
-Iteration 41 took 56.916 
-Iteration 42 took 79.407 
-Iteration 43 took 78.669 
-Iteration 44 took 75.406 
-Iteration 45 took 58.191 
-Iteration 46 took 86.677 
-Iteration 47 took 60.873 
-Iteration 48 took 59.782 
-Iteration 49 took 86.709 
-Iteration 50 took 82.189 
-Iteration 51 took 85.185 
-Iteration 52 took 79.136 
-Iteration 53 took 57.848 
-Iteration 54 took 73.285 
-Iteration 55 took 70.27 
-Iteration 56 took 57.776 
-Iteration 57 took 84.72 
-Iteration 58 took 74.418 
-Iteration 59 took 56.09 
-Iteration 60 took 85.302 
-Iteration 61 took 57.976 
-Iteration 62 took 57.993 
-Iteration 63 took 70.278 
-Iteration 64 took 56.394 
-Iteration 65 took 74.093 
-Iteration 66 took 57.628 
-Iteration 67 took 56.649 
-Iteration 68 took 56.475 
-Iteration 69 took 56.348 
-Iteration 70 took 56.925 
-Iteration 71 took 74.903 
-Iteration 72 took 72.592 
-Iteration 73 took 76.936 
-Iteration 74 took 57.08 
-Iteration 75 took 72.111 
-Iteration 76 took 56.424 
-Iteration 77 took 70.76 
-Iteration 78 took 75.845 
-Iteration 79 took 71.273 
-Iteration 80 took 56.051 
-Iteration 81 took 56.338 
-Iteration 82 took 56.373 
-Iteration 83 took 72.543 
-Iteration 84 took 55.954 
-Iteration 85 took 81.817 
-Iteration 86 took 77.777 
-Iteration 87 took 55.727 
-Iteration 88 took 71.657 
-Iteration 89 took 58.006 
-Iteration 90 took 56.494 
-Iteration 91 took 75.464 
-Iteration 92 took 68.171 
-Iteration 93 took 80.373 
-Iteration 94 took 83.558 
-Iteration 95 took 58.371 
-Iteration 96 took 79.14 
-Iteration 97 took 88.87 
-Iteration 98 took 82.283 
-Iteration 99 took 88.509 
-Iteration 100 took 78.19 
-Iteration 101 took 59.348 
-Iteration 102 took 68.452 
-Iteration 103 took 55.648 
-Iteration 104 took 57.39 
-Iteration 105 took 57.249 
-Iteration 106 took 84.527 
-Iteration 107 took 58.221 
-Iteration 108 took 57.971 
-Iteration 109 took 56.607 
-Iteration 110 took 55.835 
-Iteration 111 took 57.03 
-Iteration 112 took 57.063 
-Iteration 113 took 72.539 
-Iteration 114 took 74.394 
-Iteration 115 took 68.205 
-Iteration 116 took 56.882 
-Iteration 117 took 75.292 
-Iteration 118 took 57.502 
-Iteration 119 took 80.572 
-Iteration 120 took 79.029 
-Iteration 121 took 73.079 
-Iteration 122 took 55.854 
-Iteration 123 took 55.408 
-Iteration 124 took 69.645 
-Iteration 125 took 55.491 
-Iteration 126 took 55.529 
-Iteration 127 took 55.782 
-Iteration 128 took 75.032 
-Iteration 129 took 58.911 
-Iteration 130 took 67.938 
-Iteration 131 took 57.778 
-Iteration 132 took 56.43 
-Iteration 133 took 57.383 
-Iteration 134 took 80.219 
-Iteration 135 took 74.558 
-Iteration 136 took 77.637 
-Iteration 137 took 56.562 
-Iteration 138 took 80.725 
-Iteration 139 took 77.139 
-Iteration 140 took 57.143 
-[1] &quot;2019-03-21 00:29:10 PDT&quot;
-Time difference of 2.584845 hours</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiWzFdIFwiMjAxOS0wNC0wMSAyMjo0MToyOCBQRFRcIlxuSXRlcmF0aW9uIDEgdG9vayA2NS4yNDUgXG5JdGVyYXRpb24gMiB0b29rIDc3LjU5OCBcbkl0ZXJhdGlvbiAzIHRvb2sgNjQuMDcgXG5JdGVyYXRpb24gNCB0b29rIDc3Ljg0MSBcbkl0ZXJhdGlvbiA1IHRvb2sgNjMuMzY2IFxuSXRlcmF0aW9uIDYgdG9vayA4NC42MjkgXG5JdGVyYXRpb24gNyB0b29rIDc3LjkgXG5JdGVyYXRpb24gOCB0b29rIDYyLjk1MSBcbkl0ZXJhdGlvbiA5IHRvb2sgODcuODE1IFxuSXRlcmF0aW9uIDEwIHRvb2sgODQuODE4IFxuSXRlcmF0aW9uIDExIHRvb2sgNjQuNTczIFxuSXRlcmF0aW9uIDEyIHRvb2sgNzQuNzE3IFxuSXRlcmF0aW9uIDEzIHRvb2sgNzQuMzgxIFxuSXRlcmF0aW9uIDE0IHRvb2sgODEuMzc4IFxuSXRlcmF0aW9uIDE1IHRvb2sgODUuOTQ1IFxuSXRlcmF0aW9uIDE2IHRvb2sgNjMuNDI4IFxuSXRlcmF0aW9uIDE3IHRvb2sgNjMuMzE3IFxuSXRlcmF0aW9uIDE4IHRvb2sgNzcuNzgzIFxuSXRlcmF0aW9uIDE5IHRvb2sgNjIuNjI2IFxuSXRlcmF0aW9uIDIwIHRvb2sgNzIuMTc5IFxuSXRlcmF0aW9uIDIxIHRvb2sgNjIuNDM0IFxuSXRlcmF0aW9uIDIyIHRvb2sgNzUuMTk0IFxuSXRlcmF0aW9uIDIzIHRvb2sgNjQuMzExIFxuSXRlcmF0aW9uIDI0IHRvb2sgNjMuNzY2IFxuSXRlcmF0aW9uIDI1IHRvb2sgNzQuMzYzIFxuSXRlcmF0aW9uIDI2IHRvb2sgNjQuNDE4IFxuSXRlcmF0aW9uIDI3IHRvb2sgNjQuMTQ3IFxuSXRlcmF0aW9uIDI4IHRvb2sgOTAuOTkzIFxuSXRlcmF0aW9uIDI5IHRvb2sgNjQuMzA5IFxuSXRlcmF0aW9uIDMwIHRvb2sgNjUuMDY0IFxuSXRlcmF0aW9uIDMxIHRvb2sgNjUuODA4IFxuSXRlcmF0aW9uIDMyIHRvb2sgNjQuNDMyIFxuSXRlcmF0aW9uIDMzIHRvb2sgNjUuNDE5IFxuSXRlcmF0aW9uIDM0IHRvb2sgNjUuODczIFxuSXRlcmF0aW9uIDM1IHRvb2sgOTIuMDgzIFxuSXRlcmF0aW9uIDM2IHRvb2sgOTAuMzMzIFxuSXRlcmF0aW9uIDM3IHRvb2sgODAuNjc1IFxuSXRlcmF0aW9uIDM4IHRvb2sgNjMuMjEgXG5JdGVyYXRpb24gMzkgdG9vayA2My4yNTYgXG5JdGVyYXRpb24gNDAgdG9vayA3Ni4zMzggXG5JdGVyYXRpb24gNDEgdG9vayA2Ni4wOTcgXG5JdGVyYXRpb24gNDIgdG9vayA2NC4xODQgXG5JdGVyYXRpb24gNDMgdG9vayA2My45OTEgXG5JdGVyYXRpb24gNDQgdG9vayA2NS40NTggXG5JdGVyYXRpb24gNDUgdG9vayA2NS4yMzIgXG5JdGVyYXRpb24gNDYgdG9vayA3OS41ODkgXG5JdGVyYXRpb24gNDcgdG9vayA5MC4wMTEgXG5JdGVyYXRpb24gNDggdG9vayA2NS4wNjMgXG5JdGVyYXRpb24gNDkgdG9vayA2NC45MDMgXG5JdGVyYXRpb24gNTAgdG9vayA4My41NzEgXG5JdGVyYXRpb24gNTEgdG9vayA4Mi4zNiBcbkl0ZXJhdGlvbiA1MiB0b29rIDkyLjE0NyBcbkl0ZXJhdGlvbiA1MyB0b29rIDY1LjM0NiBcbkl0ZXJhdGlvbiA1NCB0b29rIDg1LjIyMSBcbkl0ZXJhdGlvbiA1NSB0b29rIDgxLjQzMiBcbkl0ZXJhdGlvbiA1NiB0b29rIDY0LjgzMSBcbkl0ZXJhdGlvbiA1NyB0b29rIDY0Ljc4OSBcbkl0ZXJhdGlvbiA1OCB0b29rIDkwLjcyIFxuSXRlcmF0aW9uIDU5IHRvb2sgNjQuODExIFxuSXRlcmF0aW9uIDYwIHRvb2sgNjQuNzAzIFxuSXRlcmF0aW9uIDYxIHRvb2sgODUuMzcgXG5JdGVyYXRpb24gNjIgdG9vayA2NC43MzYgXG5JdGVyYXRpb24gNjMgdG9vayA2NS40NDIgXG5JdGVyYXRpb24gNjQgdG9vayA4Ny44MjggXG5JdGVyYXRpb24gNjUgdG9vayA2NC43MzIgXG5JdGVyYXRpb24gNjYgdG9vayA2Ny40MjQgXG5JdGVyYXRpb24gNjcgdG9vayA4NC4xOTYgXG5JdGVyYXRpb24gNjggdG9vayA2Ny4wNDMgXG5JdGVyYXRpb24gNjkgdG9vayA2NS44MjcgXG5JdGVyYXRpb24gNzAgdG9vayA2NS45NTkgXG5JdGVyYXRpb24gNzEgdG9vayA2Ny4xODMgXG5JdGVyYXRpb24gNzIgdG9vayA4Ni4wNjYgXG5JdGVyYXRpb24gNzMgdG9vayA4OC43OCBcbkl0ZXJhdGlvbiA3NCB0b29rIDY1LjA0MiBcbkl0ZXJhdGlvbiA3NSB0b29rIDY0LjY0OCBcbkl0ZXJhdGlvbiA3NiB0b29rIDc3LjUxNSBcbkl0ZXJhdGlvbiA3NyB0b29rIDg2LjEyMiBcbkl0ZXJhdGlvbiA3OCB0b29rIDkxLjU1OCBcbkl0ZXJhdGlvbiA3OSB0b29rIDc4Ljc3NyBcbkl0ZXJhdGlvbiA4MCB0b29rIDY0LjMzNiBcbkl0ZXJhdGlvbiA4MSB0b29rIDYzLjY1MyBcbkl0ZXJhdGlvbiA4MiB0b29rIDYyLjU2MSBcbkl0ZXJhdGlvbiA4MyB0b29rIDYzLjc0IFxuSXRlcmF0aW9uIDg0IHRvb2sgNjMuNjE0IFxuSXRlcmF0aW9uIDg1IHRvb2sgOTAuODI2IFxuSXRlcmF0aW9uIDg2IHRvb2sgNjMuMzg1IFxuSXRlcmF0aW9uIDg3IHRvb2sgNjQuNDA1IFxuSXRlcmF0aW9uIDg4IHRvb2sgNzkuMzYzIFxuSXRlcmF0aW9uIDg5IHRvb2sgNjQuNjQgXG5JdGVyYXRpb24gOTAgdG9vayA2Mi4yMTkgXG5JdGVyYXRpb24gOTEgdG9vayA2Mi43OTggXG5JdGVyYXRpb24gOTIgdG9vayA4Ny4yMTYgXG5JdGVyYXRpb24gOTMgdG9vayA5MS42OTggXG5JdGVyYXRpb24gOTQgdG9vayA3Ni42NjIgXG5JdGVyYXRpb24gOTUgdG9vayA3NS44MjEgXG5JdGVyYXRpb24gOTYgdG9vayA4Ny4zMTQgXG5JdGVyYXRpb24gOTcgdG9vayA4Ny4zNzcgXG5JdGVyYXRpb24gOTggdG9vayA2My40MzMgXG5JdGVyYXRpb24gOTkgdG9vayA2My42NDUgXG5JdGVyYXRpb24gMTAwIHRvb2sgNjIuMjU5IFxuSXRlcmF0aW9uIDEwMSB0b29rIDYyLjUyMSBcbkl0ZXJhdGlvbiAxMDIgdG9vayA2My4zNDQgXG5JdGVyYXRpb24gMTAzIHRvb2sgODkuNDc3IFxuSXRlcmF0aW9uIDEwNCB0b29rIDYzLjUwOSBcbkl0ZXJhdGlvbiAxMDUgdG9vayA2My43OTIgXG5JdGVyYXRpb24gMTA2IHRvb2sgODYuNzY5IFxuSXRlcmF0aW9uIDEwNyB0b29rIDgxLjM4NCBcbkl0ZXJhdGlvbiAxMDggdG9vayA3OC4wODUgXG5JdGVyYXRpb24gMTA5IHRvb2sgNjMuNjU1IFxuSXRlcmF0aW9uIDExMCB0b29rIDgzLjIyNSBcbkl0ZXJhdGlvbiAxMTEgdG9vayA2Mi41MzYgXG5JdGVyYXRpb24gMTEyIHRvb2sgNjMuNDY4IFxuSXRlcmF0aW9uIDExMyB0b29rIDkwLjI3MiBcbkl0ZXJhdGlvbiAxMTQgdG9vayA4MC4yOTMgXG5JdGVyYXRpb24gMTE1IHRvb2sgNzMuOTM3IFxuSXRlcmF0aW9uIDExNiB0b29rIDYzLjI1OSBcbkl0ZXJhdGlvbiAxMTcgdG9vayA3NS4yNDEgXG5JdGVyYXRpb24gMTE4IHRvb2sgNjMuNyBcbkl0ZXJhdGlvbiAxMTkgdG9vayA2My41NjYgXG5JdGVyYXRpb24gMTIwIHRvb2sgNjMuNzYzIFxuSXRlcmF0aW9uIDEyMSB0b29rIDg5LjM1NiBcbkl0ZXJhdGlvbiAxMjIgdG9vayA2My4xNSBcbkl0ZXJhdGlvbiAxMjMgdG9vayA4Ny44NDggXG5JdGVyYXRpb24gMTI0IHRvb2sgNjMuNDY3IFxuSXRlcmF0aW9uIDEyNSB0b29rIDYzLjgxNiBcbkl0ZXJhdGlvbiAxMjYgdG9vayA2My4yODMgXG5JdGVyYXRpb24gMTI3IHRvb2sgOTEuODc1IFxuSXRlcmF0aW9uIDEyOCB0b29rIDYyLjQ1MyBcbkl0ZXJhdGlvbiAxMjkgdG9vayA2MS4xNjUgXG5JdGVyYXRpb24gMTMwIHRvb2sgODAuMzg5IFxuSXRlcmF0aW9uIDEzMSB0b29rIDcyLjk5MiBcbkl0ZXJhdGlvbiAxMzIgdG9vayA2MS40NzMgXG5JdGVyYXRpb24gMTMzIHRvb2sgNjEuNjgyIFxuSXRlcmF0aW9uIDEzNCB0b29rIDgyLjI0MiBcbkl0ZXJhdGlvbiAxMzUgdG9vayA4NS40OCBcbkl0ZXJhdGlvbiAxMzYgdG9vayA5MC40MiBcbkl0ZXJhdGlvbiAxMzcgdG9vayA2NC42NTggXG5JdGVyYXRpb24gMTM4IHRvb2sgODcuOTUxIFxuSXRlcmF0aW9uIDEzOSB0b29rIDc2LjQ1NyBcbkl0ZXJhdGlvbiAxNDAgdG9vayA2NS4xNTQgXG5JdGVyYXRpb24gMTQxIHRvb2sgOTUuMDAxIFxuSXRlcmF0aW9uIDE0MiB0b29rIDg5Ljk1NCBcblsxXSBcIjIwMTktMDQtMDIgMDE6MzQ6MjEgUERUXCJcblRpbWUgZGlmZmVyZW5jZSBvZiAyLjg4MTQ2MyBob3Vyc1xuIn0= -->
+<pre><code>[1] &quot;2019-04-01 22:41:28 PDT&quot;
+Iteration 1 took 65.245 
+Iteration 2 took 77.598 
+Iteration 3 took 64.07 
+Iteration 4 took 77.841 
+Iteration 5 took 63.366 
+Iteration 6 took 84.629 
+Iteration 7 took 77.9 
+Iteration 8 took 62.951 
+Iteration 9 took 87.815 
+Iteration 10 took 84.818 
+Iteration 11 took 64.573 
+Iteration 12 took 74.717 
+Iteration 13 took 74.381 
+Iteration 14 took 81.378 
+Iteration 15 took 85.945 
+Iteration 16 took 63.428 
+Iteration 17 took 63.317 
+Iteration 18 took 77.783 
+Iteration 19 took 62.626 
+Iteration 20 took 72.179 
+Iteration 21 took 62.434 
+Iteration 22 took 75.194 
+Iteration 23 took 64.311 
+Iteration 24 took 63.766 
+Iteration 25 took 74.363 
+Iteration 26 took 64.418 
+Iteration 27 took 64.147 
+Iteration 28 took 90.993 
+Iteration 29 took 64.309 
+Iteration 30 took 65.064 
+Iteration 31 took 65.808 
+Iteration 32 took 64.432 
+Iteration 33 took 65.419 
+Iteration 34 took 65.873 
+Iteration 35 took 92.083 
+Iteration 36 took 90.333 
+Iteration 37 took 80.675 
+Iteration 38 took 63.21 
+Iteration 39 took 63.256 
+Iteration 40 took 76.338 
+Iteration 41 took 66.097 
+Iteration 42 took 64.184 
+Iteration 43 took 63.991 
+Iteration 44 took 65.458 
+Iteration 45 took 65.232 
+Iteration 46 took 79.589 
+Iteration 47 took 90.011 
+Iteration 48 took 65.063 
+Iteration 49 took 64.903 
+Iteration 50 took 83.571 
+Iteration 51 took 82.36 
+Iteration 52 took 92.147 
+Iteration 53 took 65.346 
+Iteration 54 took 85.221 
+Iteration 55 took 81.432 
+Iteration 56 took 64.831 
+Iteration 57 took 64.789 
+Iteration 58 took 90.72 
+Iteration 59 took 64.811 
+Iteration 60 took 64.703 
+Iteration 61 took 85.37 
+Iteration 62 took 64.736 
+Iteration 63 took 65.442 
+Iteration 64 took 87.828 
+Iteration 65 took 64.732 
+Iteration 66 took 67.424 
+Iteration 67 took 84.196 
+Iteration 68 took 67.043 
+Iteration 69 took 65.827 
+Iteration 70 took 65.959 
+Iteration 71 took 67.183 
+Iteration 72 took 86.066 
+Iteration 73 took 88.78 
+Iteration 74 took 65.042 
+Iteration 75 took 64.648 
+Iteration 76 took 77.515 
+Iteration 77 took 86.122 
+Iteration 78 took 91.558 
+Iteration 79 took 78.777 
+Iteration 80 took 64.336 
+Iteration 81 took 63.653 
+Iteration 82 took 62.561 
+Iteration 83 took 63.74 
+Iteration 84 took 63.614 
+Iteration 85 took 90.826 
+Iteration 86 took 63.385 
+Iteration 87 took 64.405 
+Iteration 88 took 79.363 
+Iteration 89 took 64.64 
+Iteration 90 took 62.219 
+Iteration 91 took 62.798 
+Iteration 92 took 87.216 
+Iteration 93 took 91.698 
+Iteration 94 took 76.662 
+Iteration 95 took 75.821 
+Iteration 96 took 87.314 
+Iteration 97 took 87.377 
+Iteration 98 took 63.433 
+Iteration 99 took 63.645 
+Iteration 100 took 62.259 
+Iteration 101 took 62.521 
+Iteration 102 took 63.344 
+Iteration 103 took 89.477 
+Iteration 104 took 63.509 
+Iteration 105 took 63.792 
+Iteration 106 took 86.769 
+Iteration 107 took 81.384 
+Iteration 108 took 78.085 
+Iteration 109 took 63.655 
+Iteration 110 took 83.225 
+Iteration 111 took 62.536 
+Iteration 112 took 63.468 
+Iteration 113 took 90.272 
+Iteration 114 took 80.293 
+Iteration 115 took 73.937 
+Iteration 116 took 63.259 
+Iteration 117 took 75.241 
+Iteration 118 took 63.7 
+Iteration 119 took 63.566 
+Iteration 120 took 63.763 
+Iteration 121 took 89.356 
+Iteration 122 took 63.15 
+Iteration 123 took 87.848 
+Iteration 124 took 63.467 
+Iteration 125 took 63.816 
+Iteration 126 took 63.283 
+Iteration 127 took 91.875 
+Iteration 128 took 62.453 
+Iteration 129 took 61.165 
+Iteration 130 took 80.389 
+Iteration 131 took 72.992 
+Iteration 132 took 61.473 
+Iteration 133 took 61.682 
+Iteration 134 took 82.242 
+Iteration 135 took 85.48 
+Iteration 136 took 90.42 
+Iteration 137 took 64.658 
+Iteration 138 took 87.951 
+Iteration 139 took 76.457 
+Iteration 140 took 65.154 
+Iteration 141 took 95.001 
+Iteration 142 took 89.954 
+[1] &quot;2019-04-02 01:34:21 PDT&quot;
+Time difference of 2.881463 hours</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
@@ -1998,12 +2000,12 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="odd">
 <td>1</td>
 <td align="left">Baylor</td>
-<td align="right">3.60</td>
+<td align="right">3.61</td>
 </tr>
 <tr class="even">
 <td>2</td>
 <td align="left">Notre Dame</td>
-<td align="right">3.58</td>
+<td align="right">3.59</td>
 </tr>
 <tr class="odd">
 <td>3</td>
@@ -2013,7 +2015,7 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="even">
 <td>4</td>
 <td align="left">Mississippi St</td>
-<td align="right">3.39</td>
+<td align="right">3.40</td>
 </tr>
 <tr class="odd">
 <td>5</td>
@@ -2028,12 +2030,12 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="odd">
 <td>7</td>
 <td align="left">Marquette</td>
-<td align="right">2.71</td>
+<td align="right">2.72</td>
 </tr>
 <tr class="even">
 <td>8</td>
 <td align="left">Stanford</td>
-<td align="right">2.70</td>
+<td align="right">2.71</td>
 </tr>
 <tr class="odd">
 <td>9</td>
@@ -2043,12 +2045,12 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="even">
 <td>10</td>
 <td align="left">Oregon St</td>
-<td align="right">2.37</td>
+<td align="right">2.38</td>
 </tr>
 <tr class="odd">
 <td>11</td>
 <td align="left">Iowa</td>
-<td align="right">2.27</td>
+<td align="right">2.28</td>
 </tr>
 <tr class="even">
 <td>12</td>
@@ -2058,7 +2060,7 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="odd">
 <td>13</td>
 <td align="left">Syracuse</td>
-<td align="right">2.13</td>
+<td align="right">2.14</td>
 </tr>
 <tr class="even">
 <td>14</td>
@@ -2068,12 +2070,12 @@ nb_ratings %&gt;% top_n(16) %&gt;% select(-TeamID) %&gt;% kable(
 <tr class="odd">
 <td>15</td>
 <td align="left">South Carolina</td>
-<td align="right">2.05</td>
+<td align="right">2.07</td>
 </tr>
 <tr class="even">
 <td>16</td>
 <td align="left">Arizona St</td>
-<td align="right">2.03</td>
+<td align="right">2.05</td>
 </tr>
 </tbody>
 </table>
@@ -2108,7 +2110,7 @@ write_csv(
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2Vzc2lvbkluZm8oKVxuYGBgIn0= -->
 <pre class="r"><code>sessionInfo()</code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4zICgyMDE5LTAzLTExKVxuUGxhdGZvcm06IHg4Nl82NC1wYy1saW51eC1nbnUgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IEFyY29MaW51eERcblxuTWF0cml4IHByb2R1Y3RzOiBkZWZhdWx0XG5CTEFTOiAvdXNyL2xpYi9saWJvcGVuYmxhc3AtcjAuMy41LnNvXG5MQVBBQ0s6IC91c3IvbGliL2xpYmxhcGFjay5zby4zLjguMFxuXG5sb2NhbGU6XG4gWzFdIExDX0NUWVBFPWVuX1VTLlVURi04ICAgICAgIExDX05VTUVSSUM9QyAgICAgICAgICAgICAgXG4gWzNdIExDX1RJTUU9ZW5fVVMuVVRGLTggICAgICAgIExDX0NPTExBVEU9ZW5fVVMuVVRGLTggICAgXG4gWzVdIExDX01PTkVUQVJZPWVuX1VTLlVURi04ICAgIExDX01FU1NBR0VTPWVuX1VTLlVURi04ICAgXG4gWzddIExDX1BBUEVSPWVuX1VTLlVURi04ICAgICAgIExDX05BTUU9QyAgICAgICAgICAgICAgICAgXG4gWzldIExDX0FERFJFU1M9QyAgICAgICAgICAgICAgIExDX1RFTEVQSE9ORT1DICAgICAgICAgICAgXG5bMTFdIExDX01FQVNVUkVNRU5UPWVuX1VTLlVURi04IExDX0lERU5USUZJQ0FUSU9OPUMgICAgICAgXG5cbmF0dGFjaGVkIGJhc2UgcGFja2FnZXM6XG5bMV0gc3RhdHMgICAgIGdyYXBoaWNzICBnckRldmljZXMgdXRpbHMgICAgIGRhdGFzZXRzICBtZXRob2RzICAgYmFzZSAgICAgXG5cbm90aGVyIGF0dGFjaGVkIHBhY2thZ2VzOlxuWzFdIGtuaXRyXzEuMjIgICAgICAgICAgZGZzdG9vbHNfMS4wLjAuOTk5OSB0aWJibGVfMi4xLjEgICAgICAgXG5bNF0gZHBseXJfMC44LjAuMSAgICAgICByZWFkcl8xLjMuMSAgICAgICAgXG5cbmxvYWRlZCB2aWEgYSBuYW1lc3BhY2UgKGFuZCBub3QgYXR0YWNoZWQpOlxuIFsxXSBSY3BwXzEuMC4xICAgICAgICBoaWdocl8wLjcgICAgICAgICBwaWxsYXJfMS4zLjEgICAgICBjb21waWxlcl8zLjUuMyAgIFxuIFs1XSB0b29sc18zLjUuMyAgICAgICBkaWdlc3RfMC42LjE4ICAgICBwYWNrcmF0XzAuNS4wICAgICBiaXRfMS4xLTE0ICAgICAgIFxuIFs5XSBldmFsdWF0ZV8wLjEzICAgICBsYXR0aWNlXzAuMjAtMzggICBqc29ubGl0ZV8xLjYgICAgICBsdWJyaWRhdGVfMS43LjQgIFxuWzEzXSBSU1FMaXRlXzIuMS4xICAgICBtZW1vaXNlXzEuMS4wICAgICBwa2djb25maWdfMi4wLjIgICBybGFuZ18wLjMuMSAgICAgIFxuWzE3XSBNYXRyaXhfMS4yLTE2ICAgICBEQklfMS4wLjAgICAgICAgICByc3R1ZGlvYXBpXzAuMTAgICB4ZnVuXzAuNSAgICAgICAgIFxuWzIxXSB4bWwyXzEuMi4wICAgICAgICBodHRyXzEuNC4wICAgICAgICBzdHJpbmdyXzEuNC4wICAgICBhcmNoZXR5cGVzXzIuMi0wIFxuWzI1XSBobXNfMC40LjIgICAgICAgICBzdGF0czRfMy41LjMgICAgICBiaXQ2NF8wLjktNyAgICAgICBncmlkXzMuNS4zICAgICAgIFxuWzI5XSB0aWR5c2VsZWN0XzAuMi41ICBzbmFrZWNhc2VfMC45LjIgICBnbHVlXzEuMy4xICAgICAgICBSNl8yLjQuMCAgICAgICAgIFxuWzMzXSBtdmdsbW1SYW5rXzEuMi0yICBybWFya2Rvd25fMS4xMiAgICB0aWR5cl8wLjguMyAgICAgICBwdXJycl8wLjMuMiAgICAgIFxuWzM3XSBibG9iXzEuMS4xICAgICAgICBtYWdyaXR0cl8xLjUgICAgICBodG1sdG9vbHNfMC4zLjYgICBNQVNTXzcuMy01MS4xICAgIFxuWzQxXSBtb2RlbHRvb2xzXzAuMi0yMiBubmxzXzEuNCAgICAgICAgICBydmVzdF8wLjMuMiAgICAgICBhc3NlcnR0aGF0XzAuMi4wIFxuWzQ1XSBudW1EZXJpdl8yMDE2LjgtMSBrZXlyaW5nXzEuMS4wICAgICBzdHJpbmdpXzEuNC4zICAgICBjcmF5b25fMS4zLjQgICAgIFxuIn0= -->
+<!-- rnb-output-begin eyJkYXRhIjoiUiB2ZXJzaW9uIDMuNS4zICgyMDE5LTAzLTExKVxuUGxhdGZvcm06IHg4Nl82NC1wYy1saW51eC1nbnUgKDY0LWJpdClcblJ1bm5pbmcgdW5kZXI6IEFyY29MaW51eERcblxuTWF0cml4IHByb2R1Y3RzOiBkZWZhdWx0XG5CTEFTOiAvdXNyL2xpYi9saWJvcGVuYmxhc3AtcjAuMy41LnNvXG5MQVBBQ0s6IC91c3IvbGliL2xpYmxhcGFjay5zby4zLjguMFxuXG5sb2NhbGU6XG4gWzFdIExDX0NUWVBFPWVuX1VTLlVURi04ICAgICAgIExDX05VTUVSSUM9QyAgICAgICAgICAgICAgXG4gWzNdIExDX1RJTUU9ZW5fVVMuVVRGLTggICAgICAgIExDX0NPTExBVEU9ZW5fVVMuVVRGLTggICAgXG4gWzVdIExDX01PTkVUQVJZPWVuX1VTLlVURi04ICAgIExDX01FU1NBR0VTPWVuX1VTLlVURi04ICAgXG4gWzddIExDX1BBUEVSPWVuX1VTLlVURi04ICAgICAgIExDX05BTUU9QyAgICAgICAgICAgICAgICAgXG4gWzldIExDX0FERFJFU1M9QyAgICAgICAgICAgICAgIExDX1RFTEVQSE9ORT1DICAgICAgICAgICAgXG5bMTFdIExDX01FQVNVUkVNRU5UPWVuX1VTLlVURi04IExDX0lERU5USUZJQ0FUSU9OPUMgICAgICAgXG5cbmF0dGFjaGVkIGJhc2UgcGFja2FnZXM6XG5bMV0gc3RhdHMgICAgIGdyYXBoaWNzICBnckRldmljZXMgdXRpbHMgICAgIGRhdGFzZXRzICBtZXRob2RzICAgYmFzZSAgICAgXG5cbm90aGVyIGF0dGFjaGVkIHBhY2thZ2VzOlxuWzFdIGtuaXRyXzEuMjIgICAgICAgICAgZGZzdG9vbHNfMS4wLjAuOTk5OSB0aWJibGVfMi4xLjEgICAgICAgXG5bNF0gZHBseXJfMC44LjAuMSAgICAgICByZWFkcl8xLjMuMSAgICAgICAgXG5cbmxvYWRlZCB2aWEgYSBuYW1lc3BhY2UgKGFuZCBub3QgYXR0YWNoZWQpOlxuIFsxXSBSY3BwXzEuMC4xICAgICAgICBoaWdocl8wLjggICAgICAgICBwaWxsYXJfMS4zLjEgICAgICBjb21waWxlcl8zLjUuMyAgIFxuIFs1XSB0b29sc18zLjUuMyAgICAgICBkaWdlc3RfMC42LjE4ICAgICBwYWNrcmF0XzAuNS4wICAgICBiaXRfMS4xLTE0ICAgICAgIFxuIFs5XSBldmFsdWF0ZV8wLjEzICAgICBsYXR0aWNlXzAuMjAtMzggICBqc29ubGl0ZV8xLjYgICAgICBsdWJyaWRhdGVfMS43LjQgIFxuWzEzXSBSU1FMaXRlXzIuMS4xICAgICBtZW1vaXNlXzEuMS4wICAgICBwa2djb25maWdfMi4wLjIgICBybGFuZ18wLjMuMyAgICAgIFxuWzE3XSBNYXRyaXhfMS4yLTE3ICAgICBEQklfMS4wLjAgICAgICAgICByc3R1ZGlvYXBpXzAuMTAgICB4ZnVuXzAuNSAgICAgICAgIFxuWzIxXSB4bWwyXzEuMi4wICAgICAgICBodHRyXzEuNC4wICAgICAgICBzdHJpbmdyXzEuNC4wICAgICBhcmNoZXR5cGVzXzIuMi0wIFxuWzI1XSBobXNfMC40LjIgICAgICAgICBzdGF0czRfMy41LjMgICAgICBiaXQ2NF8wLjktNyAgICAgICBncmlkXzMuNS4zICAgICAgIFxuWzI5XSB0aWR5c2VsZWN0XzAuMi41ICBzbmFrZWNhc2VfMC45LjIgICBnbHVlXzEuMy4xICAgICAgICBSNl8yLjQuMCAgICAgICAgIFxuWzMzXSBtdmdsbW1SYW5rXzEuMi0yICBybWFya2Rvd25fMS4xMiAgICB0aWR5cl8wLjguMyAgICAgICBwdXJycl8wLjMuMiAgICAgIFxuWzM3XSBibG9iXzEuMS4xICAgICAgICBtYWdyaXR0cl8xLjUgICAgICBodG1sdG9vbHNfMC4zLjYgICBNQVNTXzcuMy01MS4xICAgIFxuWzQxXSBtb2RlbHRvb2xzXzAuMi0yMiBubmxzXzEuNCAgICAgICAgICBydmVzdF8wLjMuMiAgICAgICBhc3NlcnR0aGF0XzAuMi4xIFxuWzQ1XSBudW1EZXJpdl8yMDE2LjgtMSBrZXlyaW5nXzEuMS4wICAgICBzdHJpbmdpXzEuNC4zICAgICBjcmF5b25fMS4zLjQgICAgIFxuIn0= -->
 <pre><code>R version 3.5.3 (2019-03-11)
 Platform: x86_64-pc-linux-gnu (64-bit)
 Running under: ArcoLinuxD
@@ -2133,17 +2135,17 @@ other attached packages:
 [4] dplyr_0.8.0.1       readr_1.3.1        
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.1        highr_0.7         pillar_1.3.1      compiler_3.5.3   
+ [1] Rcpp_1.0.1        highr_0.8         pillar_1.3.1      compiler_3.5.3   
  [5] tools_3.5.3       digest_0.6.18     packrat_0.5.0     bit_1.1-14       
  [9] evaluate_0.13     lattice_0.20-38   jsonlite_1.6      lubridate_1.7.4  
-[13] RSQLite_2.1.1     memoise_1.1.0     pkgconfig_2.0.2   rlang_0.3.1      
-[17] Matrix_1.2-16     DBI_1.0.0         rstudioapi_0.10   xfun_0.5         
+[13] RSQLite_2.1.1     memoise_1.1.0     pkgconfig_2.0.2   rlang_0.3.3      
+[17] Matrix_1.2-17     DBI_1.0.0         rstudioapi_0.10   xfun_0.5         
 [21] xml2_1.2.0        httr_1.4.0        stringr_1.4.0     archetypes_2.2-0 
 [25] hms_0.4.2         stats4_3.5.3      bit64_0.9-7       grid_3.5.3       
 [29] tidyselect_0.2.5  snakecase_0.9.2   glue_1.3.1        R6_2.4.0         
 [33] mvglmmRank_1.2-2  rmarkdown_1.12    tidyr_0.8.3       purrr_0.3.2      
 [37] blob_1.1.1        magrittr_1.5      htmltools_0.3.6   MASS_7.3-51.1    
-[41] modeltools_0.2-22 nnls_1.4          rvest_0.3.2       assertthat_0.2.0 
+[41] modeltools_0.2-22 nnls_1.4          rvest_0.3.2       assertthat_0.2.1 
 [45] numDeriv_2016.8-1 keyring_1.1.0     stringi_1.4.3     crayon_1.3.4     </code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->

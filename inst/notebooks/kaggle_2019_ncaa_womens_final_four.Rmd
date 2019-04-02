@@ -1,0 +1,64 @@
+---
+title: "Google Cloud & NCAA® ML Competition 2019-Women's Final Four"
+output: html_notebook
+---
+
+## ReLoad the saved data from the `NB` model run, which took 2.9 hours
+```{r}
+load("~/DFS/kaggle/slow.RData")
+# `WFinalFour` is the teams / ID table
+# `nb_model` is the `mvglmmRank` model
+```
+
+## Attach libraries
+```{r}
+library(dplyr)
+library(tibble)
+library(mvglmmRank)
+library(knitr)
+```
+## Utility function for parsing a row of `mvglmmRank::game.pred` output
+```{r}
+.get_number <- function(text)
+  as.numeric(sub(pattern = "^.*: ", replacement = "", text))
+```
+
+## Make a tibble of the six possible games
+```{r}
+predictions <- tibble()
+for (irow in 1:3) {
+  for (jrow in (irow + 1):4) {
+    team1_id <- as.character(WFinalFour$TeamID[irow])
+    team2_id <- as.character(WFinalFour$TeamID[jrow])
+    game_prediction <- capture.output(game.pred(
+      nb_model, team1_id, team2_id, neutral.site = TRUE))
+    pred_score_1 <- .get_number(game_prediction[2])
+    pred_score_2 <- .get_number(game_prediction[3])
+    spread_1 <- pred_score_2 - pred_score_1
+    spread_2 <- pred_score_1 - pred_score_2
+    over_under <- pred_score_1 + pred_score_2
+    win_prob_1 <- .get_number(game_prediction[9])
+    win_prob_2 <- 1 - win_prob_1
+    
+    predictions <- predictions %>% 
+      bind_rows(tibble(
+        team_1 = WFinalFour$TeamName[irow],
+        team_2 = WFinalFour$TeamName[jrow],
+        pred_score_1,
+        pred_score_2,
+        spread_1,
+        spread_2,
+        over_under,
+        win_prob_1,
+        win_prob_2
+      ))
+  }
+}
+
+kable(predictions)
+```
+
+## Session info
+```{r}
+sessionInfo()
+```
