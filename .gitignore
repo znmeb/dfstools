@@ -4,3 +4,4 @@
 .Ruserdata
 .env
 *.sqlite
+.httr-oauth

@@ -12,3 +12,4 @@ arch_install.bash
 install_me.R
 debian_ubuntu_install.bash
 fedora_install.bash
+^\.httr-oauth$
