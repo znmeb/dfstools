@@ -1,7 +1,6 @@
 #! /bin/bash
 
-yay -Syu --needed \
-  kaggle-api \
+sudo pacman -Syu --needed \
   libsodium \
   qpdf
 ./install_me.R
