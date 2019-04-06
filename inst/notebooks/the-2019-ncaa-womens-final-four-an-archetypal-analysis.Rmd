@@ -1,0 +1,163 @@
+---
+title: "The 2019 NCAA Women's Final Four - An Archetypal Analysis"
+author: "M. Edward (Ed) Borasky"
+date: "04-05-2019"
+output:
+  html_document:
+    df_print: paged
+  html_notebook:
+    self_contained: yes
+bibliography: archetypes.bib
+---
+
+As of this writing the 2019 NCAA® women's division I Final Four® tournament is about to begin. There's a high degree of interest here in Oregon, because the Oregon Ducks are competing against Baylor, Notre Dame and UConn for the championship. So I've wrangled some data and come up with an archetypal analysis.
+
+## Introduction to archetypal analysis
+Archetypal analysis [@Eugster2012] is a statistical technique for analyzing athletes' performance. It operates as follows:
+
+1. The user prepares a dataset of metrics, one row per athlete. In its simplest form, this is the totals of various box score metrics over a season.
+2. The archetypal analyzer then steps through a user-specified sequence of archetype counts. At each step, the analyzer attempts to minimize an error criterion.
+3. When the steps have finished, the user examines a scree plot of the errors and selects the number of archetypes to use. For basketball this is typically in the range of three to six.
+4. Finally, the archetypal athelets are chosen, one for each archetype, and a table is prepared of all the athletes' rating in terms of the archetypal athletes.
+
+## The 2019 data
+We create the input data as follows:
+
+1. Read the raw data.
+2. Compute the total minutes by parsing a text field.
+3. Select the relevant variables. We consider only completed actions - games, minutes, shots mades, rebounds, etc. - as relevant. We discard per-minute, per-game and percentages per attempt.
+```{r message=FALSE, warning=FALSE}
+library(dplyr) # get the pipe operator
+
+# the minutes played are given in the form "800:45"
+.parse_minutes <- function(text_minutes) {
+  items <- stringr::str_split_fixed(text_minutes, ":", -1)
+  return(as.numeric(items[, 1]) + as.numeric(items[, 2]) / 60.0)
+}
+
+# raw data - just filter out some NAs
+raw <- readr::read_delim(
+  "~/Downloads/division_1_womens.tsv",
+  "\t", escape_double = FALSE, 
+  trim_ws = TRUE
+) %>%
+  dplyr::filter(
+    !is.na(minutes_played), 
+    !is.na(games_played),
+    !is.na(class_year),
+    !is.na(position)
+  )
+
+# clean - some fields have NA where there really should be a zero
+cleaned <- raw %>% 
+  tidyr::replace_na(list(
+    field_goals_made = 0,
+    three_point_field_goals = 0,
+    free_throws = 0,
+    offensive_rebounds = 0,
+    defensive_rebounds = 0,
+    assists = 0,
+    turnovers = 0,
+    steals = 0,     
+    blocks = 0
+  )) %>% 
+  dplyr::mutate(
+    two_point_field_goals = field_goals_made - three_point_field_goals,
+    total_minutes = .parse_minutes(minutes_played)
+  ) %>%
+  dplyr::select(
+    player_name,
+    team_name,
+    class_year,
+    position,
+    height,
+    games_played,
+    total_minutes,
+    two_point_field_goals,
+    three_point_field_goals,
+    free_throws,
+    offensive_rebounds,
+    defensive_rebounds,
+    assists,
+    turnovers,
+    steals,
+    blocks
+  )
+
+# there are duplicate player names in this data set, so we add the team name
+# in parentheses
+cleaned$player_name <- paste0(cleaned$player_name, " (", cleaned$team_name, ")")
+
+```
+
+## Running the archetypal analysis
+Normally we would search for the number of archetypes to use, typically three to seven for basketball. However, for simplicity we will use the default, three. This has some advantages in interpretation and visualization:
+
+1. With three archetypes, you get two high-value archetypes and a "bench" archetype. The bench archetype corresponds to lightly played players. The two high-value archetypes are usually three-point masters like James Harden and Damian Lillard, and rim protectors like Andre Drummond and Rudy Gobert. All-stars like Giannis Antetokompou and LeBron James generally are a mix of the two with very low "bench" scores.
+2. Given the the three archetype scores sum to 1.0, we can do a ternary plot. See [Archetypal Ballers and Ternary Plots](https://rpubs.com/znmeb/pdxdataviz20170209) [@Borasky2017] for an overview.
+
+We use the [`dfstools`](https://znmeb.github.io/dfstools) library package [@Borasky2019] to do the calculations.
+```{r}
+player_totals <- cleaned %>% dplyr::select(player_name, total_minutes:blocks)
+player_labels <- cleaned %>% dplyr::select(player_name:height)
+archetype_models <- dfstools::compute_archetypes(player_totals, player_labels)
+player_alphas <- archetype_models[["player_alphas"]] %>% dplyr::arrange(Bench)
+player_alphas[, 6:8] <- round(player_alphas[, 6:8], digits = 3)
+DT::datatable(player_alphas)
+```
+Notes:
+
+1. The ratings are in terms of the archetype listed in the column header and the ratings for each player sum to one. So archetype one, Ciera Dillard, will have a 1 in her own column and zero in the others. You can see this by using the sort buttons to sort the archetype columns in descending order.
+2. Ciera Dillard is the archetypal three-point shooter in this dataset. A descending sort on this column will show the best three-point shooters. Teaira McCowan is the archetypal rim protector. A descending sort on this column will show the best rim protectors.
+3. Since the archetype ratings must sum to one, the "Bench" archetype is one minus the sum of the other two archetypes. An _ascending_ sort on this column will show the best overall players.
+
+## The Final Four
+I've broken out the teams in the Final Four for exploration below.
+
+### Baylor
+```{r}
+Baylor <- player_alphas %>% dplyr::filter(team_name == "Baylor")
+DT::datatable(Baylor)
+```
+
+### Notre Dame
+```{r}
+NotreDame <- player_alphas %>% dplyr::filter(team_name == "Notre Dame")
+DT::datatable(NotreDame)
+```
+### UConn
+```{r}
+UConn <- player_alphas %>% dplyr::filter(team_name == "UConn")
+DT::datatable(UConn)
+```
+
+### Oregon
+```{r}
+Oregon <- player_alphas %>% dplyr::filter(team_name == "Oregon")
+DT::datatable(Oregon)
+```
+
+### Comparing the teams
+To wrap up, let's look at the totals of archetypal ratings for the teams.
+```{r}
+column_sums <- dplyr::bind_rows(
+  colSums(Baylor[, 6:7]),
+  colSums(NotreDame[, 6:7]),
+  colSums(UConn[, 6:7]),
+  colSums(Oregon[, 6:7])
+)
+column_sums <- dplyr::bind_cols(
+  tibble::enframe(c("Baylor", "Notre Dame", "UConn", "Oregon"), 
+                  name = NULL, value = "Team"),
+  column_sums
+)
+column_sums$Total <- (column_sums[, 2] + column_sums[, 3]) %>% tibble::deframe()
+column_sums <- column_sums %>% arrange(desc(Total))
+
+DT::datatable(column_sums)
+```
+What this says is that Baylor has the equivalent of 1.866 Ciera Dillards and 3.286 Teaira McCowans, etc. The totals give the overall strength of the teams. It appears that Notre Dame is strongest overall, with Baylor being best at the rim and Oregon being best in three-point shooting.
+
+Of course, coaching and strategy can even things up, and three-point shooting tends to add more value than rim protection in modern basketball. This promises to be an exciting tournament. And #GoDucks!
+
+## References
