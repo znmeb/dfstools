@@ -3,8 +3,6 @@ title: "The 2019 NCAA Women's Final Four - An Archetypal Analysis"
 author: "M. Edward (Ed) Borasky"
 date: "04-05-2019"
 output:
-  html_document:
-    df_print: paged
   html_notebook:
     self_contained: yes
 bibliography: archetypes.bib
