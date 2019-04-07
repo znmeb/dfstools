@@ -223,7 +223,8 @@ archetype_search <- function(player_totals, player_labels,
   ordering <- order(-archetype_parameters[1, ])
 
   # get the player_alphas
-  player_alphas <- archetype_model[["alphas"]]
+  raw_player_alphas <- archetype_model[["alphas"]]
+  player_alphas <- raw_player_alphas / rowSums(raw_player_alphas)
   rownames(player_alphas) <- rownames(input_matrix)
 
   # reorder the columns
@@ -296,7 +297,8 @@ compute_archetypes <- function(player_totals, player_labels,
   ordering <- order(-archetype_parameters[1, ])
 
   # get the player_alphas
-  player_alphas <- archetype_model[["alphas"]]
+  raw_player_alphas <- archetype_model[["alphas"]]
+  player_alphas <- raw_player_alphas / rowSums(raw_player_alphas)
   rownames(player_alphas) <- rownames(input_matrix)
 
   # reorder the columns
