@@ -182,6 +182,7 @@ nba_archetype_search <- function(player_totals, num_steps = 7) {
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
+#' @importFrom scales rescale
 #' @export archetype_search
 #' @param player_totals a tibble of the values to use for archetypal analysis.
 #' The first column must be the player name, which must match the player name
@@ -224,7 +225,10 @@ archetype_search <- function(player_totals, player_labels,
 
   # get the player_alphas
   raw_player_alphas <- archetype_model[["alphas"]]
-  player_alphas <- raw_player_alphas / rowSums(raw_player_alphas)
+  player_alphas <- raw_player_alphas
+  for (i in 1:ncol(player_alphas)) {
+    player_alphas[, i] <- scales::rescale(player_alphas[, i], to = c(0, 1))
+  }
   rownames(player_alphas) <- rownames(input_matrix)
 
   # reorder the columns
@@ -263,6 +267,7 @@ archetype_search <- function(player_totals, player_labels,
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
+#' @importFrom scales rescale
 #' @export compute_archetypes
 #' @param player_totals a tibble of the values to use for archetypal analysis.
 #' The first column must be the player name, which must match the player name
@@ -298,7 +303,10 @@ compute_archetypes <- function(player_totals, player_labels,
 
   # get the player_alphas
   raw_player_alphas <- archetype_model[["alphas"]]
-  player_alphas <- raw_player_alphas / rowSums(raw_player_alphas)
+  player_alphas <- raw_player_alphas
+  for (i in 1:ncol(player_alphas)) {
+    player_alphas[, i] <- scales::rescale(player_alphas[, i], to = c(0, 1))
+  }
   rownames(player_alphas) <- rownames(input_matrix)
 
   # reorder the columns

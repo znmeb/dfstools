@@ -27,7 +27,8 @@ Imports:
     rvest,
     stringr,
     magrittr,
-    mvglmmRank
+    mvglmmRank,
+    scales
 Suggests: 
     knitr,
     rmarkdown,
