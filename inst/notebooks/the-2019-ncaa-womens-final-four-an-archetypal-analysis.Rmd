@@ -33,6 +33,12 @@ library(dplyr) # get the pipe operator
   return(as.numeric(items[, 1]) + as.numeric(items[, 2]) / 60.0)
 }
 
+# the height is given in the form "6-1"
+.parse_height <- function(text_height) {
+  items <- stringr::str_split_fixed(text_height, "-", -1)
+  return(as.numeric(items[, 1]) + as.numeric(items[, 2]) / 12.0)
+}
+
 # raw data - just filter out some NAs
 raw <- readr::read_delim(
   "~/Downloads/division_1_womens.tsv",
@@ -45,15 +51,17 @@ raw <- readr::read_delim(
     !is.na(class_year),
     !is.na(position)
   )
+```
 
+
+```{r message=FALSE, warning=FALSE}
 # clean - some fields have NA where there really should be a zero
 cleaned <- raw %>% 
   tidyr::replace_na(list(
     field_goals_made = 0,
     three_point_field_goals = 0,
     free_throws = 0,
-    offensive_rebounds = 0,
-    defensive_rebounds = 0,
+    total_rebounds = 0,
     assists = 0,
     turnovers = 0,
     steals = 0,     
@@ -61,6 +69,7 @@ cleaned <- raw %>%
   )) %>% 
   dplyr::mutate(
     two_point_field_goals = field_goals_made - three_point_field_goals,
+    player_height_ft = .parse_height(height),
     total_minutes = .parse_minutes(minutes_played)
   ) %>%
   dplyr::select(
@@ -68,14 +77,14 @@ cleaned <- raw %>%
     team_name,
     class_year,
     position,
-    height,
+    player_height = height,
+    player_height_ft,
     games_played,
+    total_rebounds,
     total_minutes,
     two_point_field_goals,
     three_point_field_goals,
     free_throws,
-    offensive_rebounds,
-    defensive_rebounds,
     assists,
     turnovers,
     steals,
@@ -97,7 +106,7 @@ Normally we would search for the number of archetypes to use, typically three to
 We use the [`dfstools`](https://znmeb.github.io/dfstools) library package [@Borasky2019] to do the calculations.
 ```{r}
 player_totals <- cleaned %>% dplyr::select(player_name, total_minutes:blocks)
-player_labels <- cleaned %>% dplyr::select(player_name:height)
+player_labels <- cleaned %>% dplyr::select(player_name:player_height)
 archetype_models <- dfstools::compute_archetypes(player_totals, player_labels)
 player_alphas <- archetype_models[["player_alphas"]] %>% dplyr::arrange(Bench)
 player_alphas[, 6:8] <- round(player_alphas[, 6:8], digits = 4)
