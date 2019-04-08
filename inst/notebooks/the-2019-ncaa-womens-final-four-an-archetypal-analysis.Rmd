@@ -23,7 +23,7 @@ We create the input data as follows:
 
 1. Read the raw data.
 2. Compute the total minutes by parsing a text field.
-3. Select the relevant variables. We consider only completed actions - games, minutes, shots mades, rebounds, etc. - as relevant. We discard per-minute, per-game and percentages per attempt.
+3. Select the relevant variables. We consider only completed actions - games, minutes, shots made, rebounds, etc. - as relevant. We discard per-minute, per-game and percentages per attempt.
 ```{r message=FALSE, warning=FALSE}
 library(dplyr) # get the pipe operator
 
@@ -100,7 +100,7 @@ player_totals <- cleaned %>% dplyr::select(player_name, total_minutes:blocks)
 player_labels <- cleaned %>% dplyr::select(player_name:height)
 archetype_models <- dfstools::compute_archetypes(player_totals, player_labels)
 player_alphas <- archetype_models[["player_alphas"]] %>% dplyr::arrange(Bench)
-player_alphas[, 6:8] <- round(player_alphas[, 6:8], digits = 3)
+player_alphas[, 6:8] <- round(player_alphas[, 6:8], digits = 4)
 DT::datatable(player_alphas)
 ```
 Notes:
