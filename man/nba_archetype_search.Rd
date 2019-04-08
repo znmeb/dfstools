@@ -4,12 +4,17 @@
 \alias{nba_archetype_search}
 \title{NBA Archetype Search}
 \usage{
-nba_archetype_search(player_totals, num_steps = 7)
+nba_archetype_search(player_totals, num_steps = 1:5, nrep = 4,
+  verbose = FALSE)
 }
 \arguments{
 \item{player_totals}{a tibble returned by \code{nba_player_season_totals}}
 
-\item{num_steps}{number of steps to use (default 7)}
+\item{num_steps}{number of steps to use (default 1:5)}
+
+\item{nrep}{number of repetitions at each step (default 4)}
+
+\item{verbose}{should the search be verbose? (default FALSE)}
 }
 \value{
 a list of
