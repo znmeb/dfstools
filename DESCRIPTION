@@ -28,7 +28,10 @@ Imports:
     stringr,
     magrittr,
     mvglmmRank,
-    scales
+    scales,
+    RColorBrewer,
+    ggtern,
+    ggplot2
 Suggests: 
     knitr,
     rmarkdown,
