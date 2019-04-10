@@ -40,11 +40,15 @@
   player_alphas <- player_alphas[, ordering]
 
   # use archetypal players for column names
-  name_vector <- c()
-  for (i in 1:ncol(player_alphas)) {
-    name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
+  if (ncol(player_alphas) == 3) { # default case
+    name_vector <- c("Rim", "Floor", "Bench")
+  } else { # use the best players for column names
+    name_vector <- c()
+    for (i in 1:ncol(player_alphas)) {
+      name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
+    }
+    name_vector[ncol(player_alphas)] <- "Bench"
   }
-  name_vector[ncol(player_alphas)] <- "Bench"
   colnames(archetype_parameters) <- name_vector
   colnames(player_alphas) <- name_vector
 
