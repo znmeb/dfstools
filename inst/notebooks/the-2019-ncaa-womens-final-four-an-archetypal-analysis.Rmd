@@ -105,8 +105,10 @@ Normally we would search for the number of archetypes to use, typically three to
 
 We use the [`dfstools`](https://znmeb.github.io/dfstools) library package [@Borasky2019] to do the calculations.
 ```{r}
-player_totals <- cleaned %>% dplyr::select(player_name, total_minutes:blocks)
-player_labels <- cleaned %>% dplyr::select(player_name:player_height)
+player_totals <- cleaned %>% 
+  dplyr::select(player_name, total_rebounds:blocks)
+player_labels <- cleaned %>% 
+  dplyr::select(player_name:position, player_height_ft)
 archetype_models <- dfstools::compute_archetypes(player_totals, player_labels)
 player_alphas <- archetype_models[["player_alphas"]] %>% dplyr::arrange(Bench)
 player_alphas[, 6:8] <- round(player_alphas[, 6:8], digits = 4)
