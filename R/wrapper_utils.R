@@ -185,6 +185,7 @@ msf_get_feed <- function(url, verbose) {
 #' @importFrom dplyr select_if
 #' @importFrom dplyr summarize
 #' @importFrom dplyr full_join
+#' @importFrom dplyr n
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
 #' @importFrom lubridate as_datetime
@@ -253,8 +254,8 @@ msf_seasonal_games <- function(league, season, verbose) {
         )
       )
     ot_counts <- games %>% tidyr::unnest() %>%
-      group_by(slug) %>%
-      summarize(ot = n() - 4)
+      dplyr::group_by(slug) %>%
+      dplyr::summarize(ot = dplyr::n() - 4)
     games <- dplyr::full_join(games, ot_counts) %>%
       dplyr::select(-score_quarters)
     return(list(
