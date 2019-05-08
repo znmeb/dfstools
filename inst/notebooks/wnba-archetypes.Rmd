@@ -1,0 +1,47 @@
+---
+title: "WNBA Archetypal Analysis - 2016 - 2018 Regular Seasons"
+output: html_notebook
+---
+
+## Load data and libraries
+```{r}
+library(tidyverse)
+library(janitor)
+WNBA_2016_Player_BoxScore_Dataset <-
+  read_excel("~/DFS/NBAStuffer_WNBA/WNBA-2016-Player-BoxScore-Dataset.xlsx") %>% 
+  filter(DATASET == "2016 Regular Season") %>% 
+  clean_names()
+WNBA_2017_Player_BoxScore_Dataset <-
+  read_excel("~/DFS/NBAStuffer_WNBA/WNBA-2017-Player-BoxScore-Dataset.xlsx") %>% 
+    filter(DATASET == "2017 Regular Season")
+colnames(WNBA_2017_Player_BoxScore_Dataset) <-
+  colnames(WNBA_2016_Player_BoxScore_Dataset)
+WNBA_2018_Player_BoxScore_Dataset <-
+  read_excel("~/DFS/NBAStuffer_WNBA/WNBA-2018-Player-BoxScore-Dataset.xlsx") %>% 
+  filter(`DATA SET` == "2018 Regular Season")
+colnames(WNBA_2018_Player_BoxScore_Dataset) <-
+    colnames(WNBA_2016_Player_BoxScore_Dataset)
+wnba_data <- bind_rows(
+  WNBA_2016_Player_BoxScore_Dataset,
+  WNBA_2017_Player_BoxScore_Dataset,
+  WNBA_2018_Player_BoxScore_Dataset
+)
+rm(
+  WNBA_2016_Player_BoxScore_Dataset,
+  WNBA_2017_Player_BoxScore_Dataset,
+  WNBA_2018_Player_BoxScore_Dataset
+)
+gc(verbose = TRUE)
+
+```
+
+## Augment the raw data
+The NBA / WNBA player box score files from BigDataBall have the raw data only. 
+For fantasy sports analytics, we need to compute some derived metrics. We need
+double-doubles and triple-doubles, and we also compute the FanDuel, DraftKings
+and Yahoo fantasy points. Finally, we also compute the "Game Score", another 
+popular single-number metric.
+```{r}
+
+```
+
