@@ -31,7 +31,8 @@ Imports:
     scales,
     RColorBrewer,
     ggtern,
-    ggplot2
+    ggplot2,
+    janitor
 Suggests: 
     knitr,
     rmarkdown,
