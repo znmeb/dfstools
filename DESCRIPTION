@@ -32,7 +32,8 @@ Imports:
     RColorBrewer,
     ggtern,
     ggplot2,
-    janitor
+    janitor,
+    readxl
 Suggests: 
     knitr,
     rmarkdown,
