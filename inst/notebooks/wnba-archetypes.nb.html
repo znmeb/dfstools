@@ -1771,8 +1771,9 @@ $(document).ready(function () {
 <h2>Load libraries and data</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG53bmJhX2RhdGEgPC0gYmluZF9yb3dzKFxuICBwbGF5ZXJfYm94X3Njb3JlKFxuICAgIFwifi9ERlMvTkJBU3R1ZmZlcl9XTkJBL1dOQkEtMjAxNi1QbGF5ZXItQm94U2NvcmUtRGF0YXNldC54bHN4XCIpICU+JSBcbiAgICBmaWx0ZXIoZGF0YV9zZXQgPT0gXCIyMDE2IFJlZ3VsYXIgU2Vhc29uXCIpLFxuICBwbGF5ZXJfYm94X3Njb3JlKFxuICAgIFwifi9ERlMvTkJBU3R1ZmZlcl9XTkJBL1dOQkEtMjAxNy1QbGF5ZXItQm94U2NvcmUtRGF0YXNldC54bHN4XCIpICU+JSBcbiAgICBmaWx0ZXIoZGF0YV9zZXQgPT0gXCIyMDE3IFJlZ3VsYXIgU2Vhc29uXCIpLFxuICBwbGF5ZXJfYm94X3Njb3JlKFxuICAgIFwifi9ERlMvTkJBU3R1ZmZlcl9XTkJBL1dOQkEtMjAxOC1QbGF5ZXItQm94U2NvcmUtRGF0YXNldC54bHN4XCIpICU+JSBcbiAgZmlsdGVyKGRhdGFfc2V0ID09IFwiMjAxOCBSZWd1bGFyIFNlYXNvblwiKVxuKVxuXG5cbmBgYCJ9 -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5saWJyYXJ5KGRmc3Rvb2xzKVxud25iYV9kYXRhIDwtIGJpbmRfcm93cyhcbiAgcGxheWVyX2JveF9zY29yZShcbiAgICBcIn4vREZTL05CQVN0dWZmZXJfV05CQS9XTkJBLTIwMTYtUGxheWVyLUJveFNjb3JlLURhdGFzZXQueGxzeFwiKSAlPiUgXG4gICAgZmlsdGVyKGRhdGFfc2V0ID09IFwiMjAxNiBSZWd1bGFyIFNlYXNvblwiKSxcbiAgcGxheWVyX2JveF9zY29yZShcbiAgICBcIn4vREZTL05CQVN0dWZmZXJfV05CQS9XTkJBLTIwMTctUGxheWVyLUJveFNjb3JlLURhdGFzZXQueGxzeFwiKSAlPiUgXG4gICAgZmlsdGVyKGRhdGFfc2V0ID09IFwiMjAxNyBSZWd1bGFyIFNlYXNvblwiKSxcbiAgcGxheWVyX2JveF9zY29yZShcbiAgICBcIn4vREZTL05CQVN0dWZmZXJfV05CQS9XTkJBLTIwMTgtUGxheWVyLUJveFNjb3JlLURhdGFzZXQueGxzeFwiKSAlPiUgXG4gIGZpbHRlcihkYXRhX3NldCA9PSBcIjIwMTggUmVndWxhciBTZWFzb25cIilcbilcblxuXG5gYGAifQ== -->
 <pre class="r"><code>library(tidyverse)
+library(dfstools)
 wnba_data &lt;- bind_rows(
   player_box_score(
     &quot;~/DFS/NBAStuffer_WNBA/WNBA-2016-Player-BoxScore-Dataset.xlsx&quot;) %&gt;% 
@@ -1787,9 +1788,54 @@ wnba_data &lt;- bind_rows(
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="prepare-archetypal-analysis-input" class="section level2">
+<h2>Prepare archetypal analysis input</h2>
+<p>We select a subset of the box score variables - those used to compute fantasy points, plus minutes and games. Then we sum those over each season for each player.</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxucGxheWVyX3RvdGFscyA8LSB3bmJhX2RhdGEgJT4lIFxuICBtdXRhdGUocGxheWVyX25hbWUgPSBwYXN0ZTAoZGF0YV9zZXQsIFwiIHwgXCIsIHBsYXllcl9mdWxsX25hbWUpKSAlPiUgXG4gIHNlbGVjdChcbiAgICBwbGF5ZXJfbmFtZSwgdG90LCB4M3AsIGEsIHN0LCB0bywgYmwsIHB0cywgZGRibCwgdGRibCwgbWluLCBnYW1lcykgJT4lIFxuICBncm91cF9ieShwbGF5ZXJfbmFtZSkgJT4lIFxuICBzdW1tYXJpemVfaWYoaXMubnVtZXJpYywgc3VtKSAlPiUgXG4gIHVuZ3JvdXAoKVxucGxheWVyX2xhYmVscyA8LSBwbGF5ZXJfdG90YWxzICU+JSBzZWxlY3QocGxheWVyX25hbWUpXG5cbmBgYCJ9 -->
+<pre class="r"><code>player_totals &lt;- wnba_data %&gt;% 
+  mutate(player_name = paste0(data_set, &quot; | &quot;, player_full_name)) %&gt;% 
+  select(
+    player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %&gt;% 
+  group_by(player_name) %&gt;% 
+  summarize_if(is.numeric, sum) %&gt;% 
+  ungroup()
+player_labels &lt;- player_totals %&gt;% select(player_name)
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="choose-number-of-archetypes" class="section level2">
+<h2>Choose number of archetypes</h2>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYXJjaGV0eXBlX21vZGVscyA8LSBcbiAgYXJjaGV0eXBlX3NlYXJjaChwbGF5ZXJfdG90YWxzLCBwbGF5ZXJfbGFiZWxzLCBudW1fc3RlcHMgPSAxOjgsIG5yZXAgPSAzMilcbmBgYCJ9 -->
+<pre class="r"><code>archetype_models &lt;- 
+  archetype_search(player_totals, player_labels, num_steps = 1:8, nrep = 32)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-output-begin eyJkYXRhIjoiaz0zOiBFcnJvciBpbiBxci5zb2x2ZShhbHBoYXMgJSolIHQoYWxwaGFzKSk6IHNpbmd1bGFyIG1hdHJpeCAnYScgaW4gc29sdmVcbms9NDogRXJyb3IgaW4gcXIuc29sdmUoYWxwaGFzICUqJSB0KGFscGhhcykpOiBzaW5ndWxhciBtYXRyaXggJ2EnIGluIHNvbHZlXG5rPTU6IEVycm9yIGluIHFyLnNvbHZlKGFscGhhcyAlKiUgdChhbHBoYXMpKTogc2luZ3VsYXIgbWF0cml4ICdhJyBpbiBzb2x2ZVxuaz02OiB6cyA+IG1heEthcHBhaz02OiB6cyA+IG1heEthcHBhaz02OiB6cyA+IG1heEthcHBhaz02OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiB6cyA+IG1heEthcHBhaz03OiBFcnJvciBpbiBxci5zb2x2ZShhbHBoYXMgJSolIHQoYWxwaGFzKSk6IHNpbmd1bGFyIG1hdHJpeCAnYScgaW4gc29sdmVcbms9ODogenMgPiBtYXhLYXBwYWs9ODogenMgPiBtYXhLYXBwYWs9ODogenMgPiBtYXhLYXBwYWs9ODogRXJyb3IgaW4gcXIuc29sdmUoYWxwaGFzICUqJSB0KGFscGhhcykpOiBzaW5ndWxhciBtYXRyaXggJ2EnIGluIHNvbHZlXG5rPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IHpzID4gbWF4S2FwcGFrPTg6IEVycm9yIGluIHFyLnNvbHZlKGFscGhhcyAlKiUgdChhbHBoYXMpKTogc2luZ3VsYXIgbWF0cml4ICdhJyBpbiBzb2x2ZVxuSm9pbmluZywgYnkgPSBcInBsYXllcl9uYW1lXCJcbiJ9 -->
+<pre><code>k=3: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+k=4: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+k=5: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+k=6: zs &gt; maxKappak=6: zs &gt; maxKappak=6: zs &gt; maxKappak=6: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: zs &gt; maxKappak=7: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+k=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+k=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: zs &gt; maxKappak=8: Error in qr.solve(alphas %*% t(alphas)): singular matrix &#39;a&#39; in solve
+Joining, by = &quot;player_name&quot;</code></pre>
+<!-- rnb-output-end -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2NyZWVwbG90KGFyY2hldHlwZV9tb2RlbHNbW1wiYXJjaGV0eXBlX21vZGVsc1wiXV0pXG5cbmBgYCJ9 -->
+<pre class="r"><code>screeplot(archetype_models[[&quot;archetype_models&quot;]])
+</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiV05CQSBBcmNoZXR5cGFsIEFuYWx5c2lzIC0gMjAxNiAtIDIwMTggUmVndWxhciBTZWFzb25zIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyBMb2FkIGxpYnJhcmllcyBhbmQgZGF0YQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCnduYmFfZGF0YSA8LSBiaW5kX3Jvd3MoCiAgcGxheWVyX2JveF9zY29yZSgKICAgICJ+L0RGUy9OQkFTdHVmZmVyX1dOQkEvV05CQS0yMDE2LVBsYXllci1Cb3hTY29yZS1EYXRhc2V0Lnhsc3giKSAlPiUgCiAgICBmaWx0ZXIoZGF0YV9zZXQgPT0gIjIwMTYgUmVndWxhciBTZWFzb24iKSwKICBwbGF5ZXJfYm94X3Njb3JlKAogICAgIn4vREZTL05CQVN0dWZmZXJfV05CQS9XTkJBLTIwMTctUGxheWVyLUJveFNjb3JlLURhdGFzZXQueGxzeCIpICU+JSAKICAgIGZpbHRlcihkYXRhX3NldCA9PSAiMjAxNyBSZWd1bGFyIFNlYXNvbiIpLAogIHBsYXllcl9ib3hfc2NvcmUoCiAgICAifi9ERlMvTkJBU3R1ZmZlcl9XTkJBL1dOQkEtMjAxOC1QbGF5ZXItQm94U2NvcmUtRGF0YXNldC54bHN4IikgJT4lIAogIGZpbHRlcihkYXRhX3NldCA9PSAiMjAxOCBSZWd1bGFyIFNlYXNvbiIpCikKCgpgYGAK</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiV05CQSBBcmNoZXR5cGFsIEFuYWx5c2lzIC0gMjAxNiAtIDIwMTggUmVndWxhciBTZWFzb25zIgpvdXRwdXQ6IGh0bWxfbm90ZWJvb2sKLS0tCgojIyBMb2FkIGxpYnJhcmllcyBhbmQgZGF0YQpgYGB7cn0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZGZzdG9vbHMpCnduYmFfZGF0YSA8LSBiaW5kX3Jvd3MoCiAgcGxheWVyX2JveF9zY29yZSgKICAgICJ+L0RGUy9OQkFTdHVmZmVyX1dOQkEvV05CQS0yMDE2LVBsYXllci1Cb3hTY29yZS1EYXRhc2V0Lnhsc3giKSAlPiUgCiAgICBmaWx0ZXIoZGF0YV9zZXQgPT0gIjIwMTYgUmVndWxhciBTZWFzb24iKSwKICBwbGF5ZXJfYm94X3Njb3JlKAogICAgIn4vREZTL05CQVN0dWZmZXJfV05CQS9XTkJBLTIwMTctUGxheWVyLUJveFNjb3JlLURhdGFzZXQueGxzeCIpICU+JSAKICAgIGZpbHRlcihkYXRhX3NldCA9PSAiMjAxNyBSZWd1bGFyIFNlYXNvbiIpLAogIHBsYXllcl9ib3hfc2NvcmUoCiAgICAifi9ERlMvTkJBU3R1ZmZlcl9XTkJBL1dOQkEtMjAxOC1QbGF5ZXItQm94U2NvcmUtRGF0YXNldC54bHN4IikgJT4lIAogIGZpbHRlcihkYXRhX3NldCA9PSAiMjAxOCBSZWd1bGFyIFNlYXNvbiIpCikKCgpgYGAKCiMjIFByZXBhcmUgYXJjaGV0eXBhbCBhbmFseXNpcyBpbnB1dApXZSBzZWxlY3QgYSBzdWJzZXQgb2YgdGhlIGJveCBzY29yZSB2YXJpYWJsZXMgLSB0aG9zZSB1c2VkIHRvIGNvbXB1dGUgCmZhbnRhc3kgcG9pbnRzLCBwbHVzIG1pbnV0ZXMgYW5kIGdhbWVzLiBUaGVuIHdlIHN1bSB0aG9zZSBvdmVyIGVhY2gKc2Vhc29uIGZvciBlYWNoIHBsYXllci4KYGBge3J9CnBsYXllcl90b3RhbHMgPC0gd25iYV9kYXRhICU+JSAKICBtdXRhdGUocGxheWVyX25hbWUgPSBwYXN0ZTAoZGF0YV9zZXQsICIgfCAiLCBwbGF5ZXJfZnVsbF9uYW1lKSkgJT4lIAogIHNlbGVjdCgKICAgIHBsYXllcl9uYW1lLCB0b3QsIHgzcCwgYSwgc3QsIHRvLCBibCwgcHRzLCBkZGJsLCB0ZGJsLCBtaW4sIGdhbWVzKSAlPiUgCiAgZ3JvdXBfYnkocGxheWVyX25hbWUpICU+JSAKICBzdW1tYXJpemVfaWYoaXMubnVtZXJpYywgc3VtKSAlPiUgCiAgdW5ncm91cCgpCnBsYXllcl9sYWJlbHMgPC0gcGxheWVyX3RvdGFscyAlPiUgc2VsZWN0KHBsYXllcl9uYW1lKQoKYGBgCgojIyBDaG9vc2UgbnVtYmVyIG9mIGFyY2hldHlwZXMKYGBge3J9CmFyY2hldHlwZV9tb2RlbHMgPC0gCiAgYXJjaGV0eXBlX3NlYXJjaChwbGF5ZXJfdG90YWxzLCBwbGF5ZXJfbGFiZWxzLCBudW1fc3RlcHMgPSAxOjgsIG5yZXAgPSAzMikKc2NyZWVwbG90KGFyY2hldHlwZV9tb2RlbHNbWyJhcmNoZXR5cGVfbW9kZWxzIl1dKQoKYGBgCgo=</div>
 
 
 

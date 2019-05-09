@@ -6,6 +6,7 @@ output: html_notebook
 ## Load libraries and data
 ```{r}
 library(tidyverse)
+library(dfstools)
 wnba_data <- bind_rows(
   player_box_score(
     "~/DFS/NBAStuffer_WNBA/WNBA-2016-Player-BoxScore-Dataset.xlsx") %>% 
@@ -20,3 +21,28 @@ wnba_data <- bind_rows(
 
 
 ```
+
+## Prepare archetypal analysis input
+We select a subset of the box score variables - those used to compute 
+fantasy points, plus minutes and games. Then we sum those over each
+season for each player.
+```{r}
+player_totals <- wnba_data %>% 
+  mutate(player_name = paste0(data_set, " | ", player_full_name)) %>% 
+  select(
+    player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %>% 
+  group_by(player_name) %>% 
+  summarize_if(is.numeric, sum) %>% 
+  ungroup()
+player_labels <- player_totals %>% select(player_name)
+
+```
+
+## Choose number of archetypes
+```{r}
+archetype_models <- 
+  archetype_search(player_totals, player_labels, num_steps = 1:8, nrep = 32)
+screeplot(archetype_models[["archetype_models"]])
+
+```
+
