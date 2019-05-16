@@ -33,7 +33,9 @@ Imports:
     ggtern,
     ggplot2,
     janitor,
-    readxl
+    readxl,
+    SportsAnalytics,
+    Anthropometry
 Suggests: 
     knitr,
     rmarkdown,
