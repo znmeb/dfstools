@@ -126,7 +126,7 @@ dfstools::ternary_plot(
     top_n(12, -Bench) %>% 
     arrange(Bench) %>% 
     mutate(Player = fct_reorder(PlayerCode, -Rim)), 
-  plot_title = "2018 WNBA Top Twelve Overall")
+  plot_title = " ")
 
 ```
 
@@ -137,7 +137,7 @@ dfstools::ternary_plot(
     top_n(12, Floor) %>% 
     arrange(desc(Floor)) %>% 
     mutate(Player = fct_reorder(PlayerCode, -Floor)), 
-  plot_title = "2018 WNBA Top Twelve Floor Spacers")
+  plot_title = " ")
 
 ```
 
@@ -148,7 +148,7 @@ dfstools::ternary_plot(
     top_n(12, Rim) %>% 
     arrange(desc(Rim)) %>% 
     mutate(Player = fct_reorder(PlayerCode, -Rim)), 
-  plot_title = "2018 WNBA Top Twelve Rim Protectors")
+  plot_title = " ")
 
 ```
 
