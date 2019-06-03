@@ -41,7 +41,7 @@
 
   # use archetypal players for column names
   if (ncol(player_alphas) == 3) { # default case
-    name_vector <- c("Rim", "Floor", "Bench")
+    name_vector <- c("Rim\nProtection", "Floor\nSpacing", "Bench")
   } else { # use the best players for column names
     name_vector <- c()
     for (i in 1:ncol(player_alphas)) {
@@ -55,7 +55,8 @@
   # make tibbles
   player_alphas <- player_alphas %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "player_name") %>% as_tibble()
-  player_alphas <- dplyr::left_join(player_labels, player_alphas)
+  player_alphas <- dplyr::left_join(player_labels, player_alphas) %>%
+    arrange(Bench)
   archetype_parameters <- archetype_parameters %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "statistic") %>% as_tibble()
   return(list(

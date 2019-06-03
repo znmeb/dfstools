@@ -12,7 +12,10 @@ player_box_score(spreadsheet, sheet_number = 1)
 \item{sheet_number}{the sheet number within the spreadsheet (default 1)}
 }
 \value{
-a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
+a data frame of the input spreadsheet, augmented with columns for
+double-doubles, triple doubles, "game scores" and fantasy points. Note that
+since turnovers are bad, the turnover column is the negative of the numbe
+of turnovers!
 }
 \description{
 Creates a player box score data frame from an BigDataBall spreadsheet

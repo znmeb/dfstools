@@ -8,8 +8,9 @@ ternary_plot(player_alphas, plot_title)
 }
 \arguments{
 \item{player_alphas}{a data frame with player archetype values. The player
-name must be in column \code{player_name} and the position in column \code{position}.
-There must be exactly three archetypes, in order \code{Rim}, \code{Floor} and \code{Bench}.}
+name must be in column \code{player_name}.
+There must be exactly three archetypes, in order \code{Rim Protection},
+\code{Floor Spacing} and \code{Bench}.}
 
 \item{plot_title}{the plot title}
 }

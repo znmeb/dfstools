@@ -160,7 +160,10 @@ yahoo_points <- function(boxscore) {
 #' @importFrom lubridate mdy
 #' @param spreadsheet a file with an BigDataBall player box score dataset
 #' @param sheet_number the sheet number within the spreadsheet (default 1)
-#' @return a data frame of the input spreadsheet, augmented with columns for double-doubles, triple doubles and fantasy points
+#' @return a data frame of the input spreadsheet, augmented with columns for
+#' double-doubles, triple doubles, "game scores" and fantasy points. Note that
+#' since turnovers are bad, the turnover column is the negative of the numbe
+#' of turnovers!
 #' @examples
 #' \dontrun{
 #' playerbox <- player_box_score(
@@ -193,6 +196,7 @@ player_box_score <- function(spreadsheet, sheet_number = 1) {
   df$fdfp <- fanduel_points(df)
   df$dkfp <- draftkings_points(df)
   df$yfp <- yahoo_points(df)
+  df$to <- -df$to # negate turnovers so high numbers are good ;-)
   df$games <- 1
 
   # result

@@ -1,20 +1,13 @@
 ---
-title: "WNBA Archetypal Analysis - 2016 - 2018 Regular Seasons"
+title: "WNBA Archetypal Analysis - 2018 Regular Season"
 output: html_notebook
 ---
 
 ## Load libraries and data
 ```{r}
 library(tidyverse)
-library(dfstools)
 wnba_data <- bind_rows(
-  player_box_score(
-    "~/DFS/NBAStuffer_WNBA/WNBA-2016-Player-BoxScore-Dataset.xlsx") %>% 
-    filter(data_set == "2016 Regular Season"),
-  player_box_score(
-    "~/DFS/NBAStuffer_WNBA/WNBA-2017-Player-BoxScore-Dataset.xlsx") %>% 
-    filter(data_set == "2017 Regular Season"),
-  player_box_score(
+  dfstools::player_box_score(
     "~/DFS/NBAStuffer_WNBA/WNBA-2018-Player-BoxScore-Dataset.xlsx") %>% 
   filter(data_set == "2018 Regular Season")
 )
@@ -38,11 +31,34 @@ player_labels <- player_totals %>% select(player_name)
 
 ```
 
-## Choose number of archetypes
+## Compute the three-archetype model
 ```{r}
-archetype_models <- 
-  archetype_search(player_totals, player_labels, num_steps = 1:8, nrep = 32)
-screeplot(archetype_models[["archetype_models"]])
+archetypal_analysis <- dfstools::compute_archetypes(
+  player_totals, player_labels, num_archetypes = 3)
+player_alphas <- archetypal_analysis[["player_alphas"]]
 
 ```
 
+## Top Twelve Overall
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% top_n(12, -Bench), 
+  plot_title = "2018 WNBA Top Twelve")
+
+```
+
+## Top Twelve Rim Protectors
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% top_n(12, `Rim\nProtection`), 
+  plot_title = "2018 WNBA Top Twelve Rim Protectors")
+
+```
+
+## Top Twelve Floor Spacers
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% top_n(12, `Floor\nSpacing`), 
+  plot_title = "2018 WNBA Top Twelve Floor Spacers")
+
+```
