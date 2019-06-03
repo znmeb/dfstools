@@ -1,7 +1,8 @@
 ---
 title: "Archetypal Ballers and Ternary Plots"
 subtitle: "A look at the 2018 WNBA season"
-author: M. Edward (Ed) Borasky <https://znmeb.github.io/dfstools/>
+author: M. Edward (Ed) Borasky
+institute: <https://znmeb.github.io/dfstools/>
 date: June 8, 2019
 output: 
   beamer_presentation:
@@ -41,7 +42,7 @@ player_alphas <- archetypal_analysis[["player_alphas"]] %>%
 
 ```
 
-## Archetypal Analysis [@Eugster2009]
+## Archetypal analysis [@Eugster2009]
 * Goal:
     - Dimensionality reduction
     - Reduce a dataset with 17 box score metrics to three archetypes
@@ -53,36 +54,72 @@ player_alphas <- archetypal_analysis[["player_alphas"]] %>%
     - Archetype table
     - Player table
 
-## The Three Archetypes
-* Weighted box score metrics
+## The three archetypes
 * Each archetype represents a skill set
     - Floor Spacing [@Shea2014, chapter 5]: 
         - skills for a backcourt player (Guard) 
-        - dominated by three-point shots
+        - dominated by three-point shooting
     - Rim Protection [@Shea2014, chapter 6]: 
         - skills for a frontcourt player (Center, Forward)
-        - dominated by rebounds
+        - dominated by rebounding
     - Bench: the "bad" archetype - players with low overall skills
+        - the best players have a "Bench" value near zero
 
-## The Player Table
-* For each player, the percentage of a player's skill in each archetype
-* Floor + Rim + Bench = 1
-* Rim + Floor = 1 - Bench represents overall skill
-* The archetypal player is the one with the largest value for the archetype
+## The archetype table
+* Rows are archetypes, columns are box score metrics
+* Metrics can be raw or scaled
+* For this analysis I used raw metrics - season totals
+
+## Sample archetype table
+```{r}
+atx <- t(
+  archetypal_analysis$archetype_parameters %>%
+    filter(statistic != "ddbl", statistic != "tdbl", statistic != "games") %>% 
+    column_to_rownames(var = "statistic") %>% 
+    round(digits = 1)
+  )
+knitr::kable(atx, format = "latex")
+
+```
+* `tot` = total rebounds (offensive + defensive)
+* `x3p` = three-point shots made
+
+## The player table
+* Rows are players, columns are archetypes
+* For each archetype
+    - the _archetypal player_ has the largest value for the archetype
+    - this value is usually very close to 1.0
+    - the other values for an archetypal player will be very close to zero
+* For other players
+    - a fraction of the archetypal player's value in each archetype
+* For all players
+    - Floor + Rim + Bench = 1
+    - Floor + Rim = (1 - Bench) is a measure of overall skill
+
+## Sample player table
+```{r}
+ptx <- player_alphas[, 1:4] %>%  
+  top_n(12, -Bench) %>% 
+  arrange(Bench) 
+colnames(ptx)[1] <- "Player"
+ptx[, 2:4] <- round(ptx[, 2:4], 4)
+knitr::kable(ptx, format = "latex")
+
+```
 
 ## Ternary plots [@Hamilton2018]
-* Rim, Floor and Bench sum to 1.0
+* Floor, Rim and Bench sum to 1.0
 * So we can plot them on a ternary plot
     - equilateral triangle with the corners labeled Rim, Floor and Bench
     - The poor players cluster near "Bench"
     - The good rebounders cluster near "Rim"
     - The good three-point shooters cluster near "Floor"
-    - And the all-stars are near the Rim - Floor line
+    - And the All-Stars are near the Rim - Floor line
 
 _Who are the archetypal floor spacers and rim protectors in the WNBA?_
 
 
-## 2018 WNBA Top Twelve Overall - The All-Stars
+## 2018 WNBA top twelve overall - the All-Stars
 ```{r}
 dfstools::ternary_plot(
   player_alphas %>% 
@@ -93,7 +130,7 @@ dfstools::ternary_plot(
 
 ```
 
-## 2018 WNBA Top Twelve Floor Spacers
+## 2018 WNBA top twelve floor spacers
 ```{r}
 dfstools::ternary_plot(
   player_alphas %>% 
@@ -104,7 +141,7 @@ dfstools::ternary_plot(
 
 ```
 
-## 2018 WNBA Top Twelve Rim Protectors
+## 2018 WNBA top twelve rim protectors
 ```{r}
 dfstools::ternary_plot(
   player_alphas %>% 
