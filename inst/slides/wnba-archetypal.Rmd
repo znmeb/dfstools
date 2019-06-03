@@ -1,9 +1,12 @@
 ---
 title: "Archetypal Ballers and Ternary Plots"
 subtitle: "A look at the 2018 WNBA season"
+author: M. Edward (Ed) Borasky <https://znmeb.github.io/dfstools/>
+date: June 8, 2019
 output: 
   beamer_presentation:
     theme: EastLansing
+bibliography: ternary.bib
 ---
 
 ```{r setup, include=FALSE}
@@ -11,10 +14,8 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Load libraries and data
 library(tidyverse)
-wnba_data <- bind_rows(
-  dfstools::player_box_score(
-    "~/DFS/NBAStuffer_WNBA/WNBA-2018-Player-BoxScore-Dataset.xlsx") %>% 
-  filter(data_set == "2018 Regular Season")
+wnba_data <- dfstools::player_box_score(
+  "~/DFS/NBAStuffer_WNBA/WNBA-2018-Player-BoxScore-Dataset.xlsx"
 )
 
 ## Prepare archetypal analysis input
@@ -40,8 +41,48 @@ player_alphas <- archetypal_analysis[["player_alphas"]] %>%
 
 ```
 
+## Archetypal Analysis [@Eugster2009]
+* Goal:
+    - Dimensionality reduction
+    - Reduce a dataset with 17 box score metrics to three archetypes
+    - Represent players' skills in terms of the archetypes
+* Inputs:
+    - Player box scores for the 2018 WNBA season
+    - About 160 players
+* Outputs:
+    - Archetype table
+    - Player table
 
-## 2018 WNBA Top Twelve Overall
+## The Three Archetypes
+* Weighted box score metrics
+* Each archetype represents a skill set
+    - Floor Spacing [@Shea2014, chapter 5]: 
+        - skills for a backcourt player (Guard) 
+        - dominated by three-point shots
+    - Rim Protection [@Shea2014, chapter 6]: 
+        - skills for a frontcourt player (Center, Forward)
+        - dominated by rebounds
+    - Bench: the "bad" archetype - players with low overall skills
+
+## The Player Table
+* For each player, the percentage of a player's skill in each archetype
+* Floor + Rim + Bench = 1
+* Rim + Floor = 1 - Bench represents overall skill
+* The archetypal player is the one with the largest value for the archetype
+
+## Ternary plots [@Hamilton2018]
+* Rim, Floor and Bench sum to 1.0
+* So we can plot them on a ternary plot
+    - equilateral triangle with the corners labeled Rim, Floor and Bench
+    - The poor players cluster near "Bench"
+    - The good rebounders cluster near "Rim"
+    - The good three-point shooters cluster near "Floor"
+    - And the all-stars are near the Rim - Floor line
+
+_Who are the archetypal floor spacers and rim protectors in the WNBA?_
+
+
+## 2018 WNBA Top Twelve Overall - The All-Stars
 ```{r}
 dfstools::ternary_plot(
   player_alphas %>% 
@@ -49,6 +90,17 @@ dfstools::ternary_plot(
     arrange(Bench) %>% 
     mutate(Player = fct_reorder(PlayerCode, -Rim)), 
   plot_title = "2018 WNBA Top Twelve Overall")
+
+```
+
+## 2018 WNBA Top Twelve Floor Spacers
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% 
+    top_n(12, Floor) %>% 
+    arrange(desc(Floor)) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Floor)), 
+  plot_title = "2018 WNBA Top Twelve Floor Spacers")
 
 ```
 
@@ -63,13 +115,4 @@ dfstools::ternary_plot(
 
 ```
 
-## 2018 WNBA Top Twelve Floor Spacers
-```{r}
-dfstools::ternary_plot(
-  player_alphas %>% 
-    top_n(12, Floor) %>% 
-    arrange(desc(Floor)) %>% 
-    mutate(Player = fct_reorder(PlayerCode, -Floor)), 
-  plot_title = "2018 WNBA Top Twelve Floor Spacers")
-
-```
+## References
