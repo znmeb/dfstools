@@ -27,7 +27,7 @@ ternary_plot <- function(player_alphas, plot_title) {
     geom_point(aes(
       shape = Player,
       colour = Player),
-      size = 7.5) +
+      size = 5) +
     theme_nomask() +
     scale_colour_manual(values = palette) +
     scale_shape_manual(values = c(1:12)) +
