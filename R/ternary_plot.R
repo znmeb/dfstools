@@ -31,7 +31,6 @@ ternary_plot <- function(player_alphas, plot_title) {
     theme_nomask() +
     scale_colour_manual(values = palette) +
     scale_shape_manual(values = c(1:12)) +
-    ggtitle(plot_title) +
     labs(x = "Rim", y = "Floor", z = "Bench")
     return(plot_object)
 }

@@ -1,0 +1,75 @@
+---
+title: "Archetypal Ballers and Ternary Plots"
+subtitle: "A look at the 2018 WNBA season"
+output: 
+  beamer_presentation:
+    theme: EastLansing
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+## Load libraries and data
+library(tidyverse)
+wnba_data <- bind_rows(
+  dfstools::player_box_score(
+    "~/DFS/NBAStuffer_WNBA/WNBA-2018-Player-BoxScore-Dataset.xlsx") %>% 
+  filter(data_set == "2018 Regular Season")
+)
+
+## Prepare archetypal analysis input
+player_totals <- wnba_data %>% 
+  mutate(player_name = player_full_name) %>% 
+  select(
+    player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %>% 
+  group_by(player_name) %>% 
+  summarize_if(is.numeric, sum) %>% 
+  ungroup()
+player_labels <- player_totals %>% select(player_name)
+
+## Compute the three-archetype model
+archetypal_analysis <- dfstools::compute_archetypes(
+  player_totals, player_labels, num_archetypes = 3)
+player_alphas <- archetypal_analysis[["player_alphas"]] %>% 
+  mutate(PlayerCode = as_factor(sprintf(
+    "%s: Rin %1.4f, Floor %1.4f",
+    player_name, 
+    Rim, 
+    Floor
+  )))
+
+```
+
+
+## 2018 WNBA Top Twelve Overall
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% 
+    top_n(12, -Bench) %>% 
+    arrange(Bench) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Rim)), 
+  plot_title = "2018 WNBA Top Twelve Overall")
+
+```
+
+## 2018 WNBA Top Twelve Rim Protectors
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% 
+    top_n(12, Rim) %>% 
+    arrange(desc(Rim)) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Rim)), 
+  plot_title = "2018 WNBA Top Twelve Rim Protectors")
+
+```
+
+## 2018 WNBA Top Twelve Floor Spacers
+```{r}
+dfstools::ternary_plot(
+  player_alphas %>% 
+    top_n(12, Floor) %>% 
+    arrange(desc(Floor)) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Floor)), 
+  plot_title = "2018 WNBA Top Twelve Floor Spacers")
+
+```
