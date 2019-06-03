@@ -21,7 +21,7 @@ fantasy points, plus minutes and games. Then we sum those over each
 season for each player.
 ```{r}
 player_totals <- wnba_data %>% 
-  mutate(player_name = paste0(data_set, " | ", player_full_name)) %>% 
+  mutate(player_name = player_full_name) %>% 
   select(
     player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %>% 
   group_by(player_name) %>% 
@@ -35,22 +35,34 @@ player_labels <- player_totals %>% select(player_name)
 ```{r}
 archetypal_analysis <- dfstools::compute_archetypes(
   player_totals, player_labels, num_archetypes = 3)
-player_alphas <- archetypal_analysis[["player_alphas"]]
+player_alphas <- archetypal_analysis[["player_alphas"]] %>% 
+  mutate(PlayerCode = as_factor(sprintf(
+    "%s: Rin %1.4f, Floor %1.4f",
+    player_name, 
+    Rim, 
+    Floor
+  )))
 
 ```
 
 ## Top Twelve Overall
 ```{r}
 dfstools::ternary_plot(
-  player_alphas %>% top_n(12, -Bench), 
-  plot_title = "2018 WNBA Top Twelve")
+  player_alphas %>% 
+    top_n(12, -Bench) %>% 
+    arrange(Bench) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Rim)), 
+  plot_title = "2018 WNBA Top Twelve Overall")
 
 ```
 
 ## Top Twelve Rim Protectors
 ```{r}
 dfstools::ternary_plot(
-  player_alphas %>% top_n(12, `Rim\nProtection`), 
+  player_alphas %>% 
+    top_n(12, Rim) %>% 
+    arrange(desc(Rim)) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Rim)), 
   plot_title = "2018 WNBA Top Twelve Rim Protectors")
 
 ```
@@ -58,7 +70,10 @@ dfstools::ternary_plot(
 ## Top Twelve Floor Spacers
 ```{r}
 dfstools::ternary_plot(
-  player_alphas %>% top_n(12, `Floor\nSpacing`), 
+  player_alphas %>% 
+    top_n(12, Floor) %>% 
+    arrange(desc(Floor)) %>% 
+    mutate(Player = fct_reorder(PlayerCode, -Floor)), 
   plot_title = "2018 WNBA Top Twelve Floor Spacers")
 
 ```

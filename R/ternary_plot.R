@@ -12,7 +12,7 @@
 #' @importFrom ggtern theme_nomask
 #' @importFrom RColorBrewer brewer.pal
 #' @param player_alphas a data frame with player archetype values. The player
-#' name must be in column `player_name`.
+#' name must be in column `Player`.
 #' There must be exactly three archetypes, in order `Rim Protection`,
 #' `Floor Spacing` and `Bench`.
 #' @param plot_title the plot title
@@ -20,31 +20,26 @@
 
 ternary_plot <- function(player_alphas, plot_title) {
 
-  # colour-blind-friendly palette
-  cbPalette <- RColorBrewer::brewer.pal(n = 12, name = "Paired")
-  xdata <- dplyr::mutate(
-    player_alphas,
-    `Player Name` = player_name
-  ) %>%
-    dplyr::arrange(Bench)
+  x4 <- c("#FF0000", "#008000", "#0000FF", "#000000")
+  palette <- c(x4, x4, x4)
   plot_object <- ggtern(
-    data = xdata, mapping = aes(`Rim\nProtection`, `Floor\nSpacing`, Bench)) +
+    data = player_alphas, mapping = aes(Rim, Floor, Bench)) +
     geom_point(aes(
-      shape = `Player Name`,
-      colour = `Player Name`),
+      shape = Player,
+      colour = Player),
       size = 7.5) +
     theme_nomask() +
-    scale_colour_manual(values = cbPalette) +
+    scale_colour_manual(values = palette) +
     scale_shape_manual(values = c(1:12)) +
     ggtitle(plot_title) +
-    labs(x = "Rim\nProtection", y = "Floor\nSpacing", z = "Bench")
+    labs(x = "Rim", y = "Floor", z = "Bench")
     return(plot_object)
 }
 
 utils::globalVariables(c(
   "Bench",
-  "Floor\nSpacing",
-  "Player Name",
+  "Floor",
+  "Player",
   "position",
-  "Rim\nProtection"
+  "Rim"
 ))

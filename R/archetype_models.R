@@ -41,7 +41,7 @@
 
   # use archetypal players for column names
   if (ncol(player_alphas) == 3) { # default case
-    name_vector <- c("Rim\nProtection", "Floor\nSpacing", "Bench")
+    name_vector <- c("Rim", "Floor", "Bench")
   } else { # use the best players for column names
     name_vector <- c()
     for (i in 1:ncol(player_alphas)) {
