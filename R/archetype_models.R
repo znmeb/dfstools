@@ -66,6 +66,15 @@
 
 }
 
+# all-zero columns crash the archetype algorithm
+.is_valid_column <- function(x) {
+  if (!is.numeric(x)) {
+    TRUE
+  } else {
+    sum(x * x) > 0
+  }
+}
+
 #' @title NBA Archetypal Analysis
 #' @name nba_archetypes
 #' @description perform an "archetypal athletes" analysis
@@ -157,6 +166,7 @@ nba_archetype_search <-
 #' @importFrom archetypes robustArchetypes
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
+#' @importFrom dplyr select_if
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
@@ -183,6 +193,7 @@ archetype_search <- function(player_totals, player_labels,
                              num_steps = 1:5, nrep = 4, verbose = FALSE) {
 
   input_matrix <- player_totals %>%
+    dplyr::select_if(.predicate = .is_valid_column) %>%
     tibble::column_to_rownames(var = "player_name") %>%
     as.matrix()
   set.seed(1776)
@@ -212,6 +223,7 @@ archetype_search <- function(player_totals, player_labels,
 #' @importFrom archetypes archetypes
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
+#' @importFrom dplyr select_if
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
@@ -234,6 +246,7 @@ compute_archetypes <- function(player_totals, player_labels,
                                num_archetypes = 3) {
 
   input_matrix <- player_totals %>%
+    dplyr::select_if(.predicate = .is_valid_column) %>%
     tibble::column_to_rownames(var = "player_name") %>%
     as.matrix()
   set.seed(1776)
