@@ -1,0 +1,61 @@
+---
+title: "Exploring WNBA DFS Data"
+output: html_notebook
+---
+
+```{r}
+library(readxl)
+library(dplyr)
+library(Rmixmod)
+column_names <- c(
+  "dataset",
+  "date",
+  "player",
+  "own_team",
+  "opponent_team",
+  "starter_y_n",
+  "venue_r_h",
+  "minutes",
+  "usage_rate",
+  "draftkings_position",
+  "fanduel_position",
+  "draftkings_salary",
+  "fanduel_salary",
+  "draftkings_points",
+  "fanduel_points"
+)
+wnba_season_dfs_feed <- read_excel(
+  "~/Dropbox/19-wnba-dfs/06-23-2019-wnba-season-dfs-feed.xlsx",
+  skip = 2
+)
+colnames(wnba_season_dfs_feed) <- column_names
+wnba_season_dfs_feed <- wnba_season_dfs_feed %>% 
+  dplyr::filter(!is.na(fanduel_salary)) %>% 
+  dplyr::mutate(value = fanduel_points * 1000 / fanduel_salary)
+raw <- wnba_season_dfs_feed %>% 
+  dplyr::select(minutes, usage_rate, fanduel_salary, fanduel_points)
+model <- mixmodCluster(raw, nbCluster = 1:5)
+plot(model)
+
+```
+
+
+```{r}
+best_cluster <- which.max(model@bestResult@parameters@mean[,4])
+wnba_season_dfs_feed <- wnba_season_dfs_feed %>% 
+  dplyr::mutate(cluster = model@bestResult@partition)
+best_players <- wnba_season_dfs_feed %>% 
+  dplyr::filter(cluster == best_cluster) %>% 
+  dplyr::select(player) %>% 
+  unique()
+leaderboard <- wnba_season_dfs_feed %>% 
+  dplyr::semi_join(best_players)
+stats <- leaderboard %>% 
+  dplyr::group_by(player) %>% 
+  dplyr::summarize(
+    count = n(),
+    p50 = median(value),
+    p75 = quantile(value, 0.75, names = FALSE),
+    p95 = quantile(value, 0.95)
+  )
+```
