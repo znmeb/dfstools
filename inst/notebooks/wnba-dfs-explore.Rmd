@@ -3,12 +3,13 @@ title: "Exploring WNBA DFS Data"
 output: html_notebook
 ---
 
-```{r}
+## Load libraries and data
+```{r message=FALSE}
 library(readxl)
 library(tidyverse)
 library(Rmixmod)
 library(DT)
-column_names <- c(
+.dfs_column_names <- c(
   "dataset",
   "date",
   "player",
@@ -25,52 +26,89 @@ column_names <- c(
   "draftkings_points",
   "fanduel_points"
 )
+regular_season_schedule <- read_excel(
+  "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx",
+  col_names = FALSE, 
+  col_types = c(
+    "date",
+    "text", 
+    "skip", 
+    "skip", 
+    "text", 
+    "skip",
+    "skip", 
+    "text", 
+    "skip"
+  ), skip = 7
+)
+names(regular_season_schedule) <- c("date", "time", "road_team", "home_team")
+regular_season_schedule <- regular_season_schedule %>% dplyr::mutate(
+  date_time = as.POSIXct(strptime(
+    paste(date, time), format = "%Y-%m-%d %I:%M %p", tz = "EST5EDT"
+  ))
+)
+
 wnba_season_dfs_feed <- read_excel(
-  "~/Dropbox/19-wnba-dfs/06-23-2019-wnba-season-dfs-feed.xlsx",
+  "~/Dropbox/19-wnba-dfs/06-25-2019-wnba-season-dfs-feed.xlsx",
   skip = 2
 )
-colnames(wnba_season_dfs_feed) <- column_names
-wnba_season_dfs_feed <- wnba_season_dfs_feed %>% 
-  dplyr::filter(!is.na(fanduel_salary)) %>% 
-  dplyr::mutate(value = fanduel_points * 1000 / fanduel_salary)
-print(value_line <- ggplot(
-  data = wnba_season_dfs_feed, 
-  aes(fanduel_salary, fanduel_points)) +
-    geom_point() + geom_smooth(method = MASS::rlm)
+names(wnba_season_dfs_feed) <- .dfs_column_names
+```
+
+## FanDuel value line
+```{r}
+fanduel_data <- wnba_season_dfs_feed %>% dplyr::filter(!is.na(fanduel_salary))
+fanduel_model <- MASS::rlm(
+  1000 * fanduel_points ~ fanduel_salary, data = fanduel_data
 )
+fanduel_value_line <- ggplot(
+  data = fanduel_data, 
+  aes(fanduel_salary, fanduel_points)
+) +
+  geom_point() + 
+  geom_smooth(method = MASS::rlm)
+print(fanduel_value_line)
 
 ```
 
+## DraftKings value line
 ```{r}
-leaderboard <- wnba_season_dfs_feed %>% 
-  dplyr::group_by(player) %>% 
-  dplyr::summarize(
-    count = n(),
-    p50 = round(quantile(value, 0.50, names = FALSE), 2),
-    p75 = round(quantile(value, 0.75, names = FALSE), 2),
-    p95 = round(quantile(value, 0.95, names = FALSE), 2)
-  ) %>% 
-  dplyr::arrange(desc(p50))
-DT::datatable(leaderboard)
+draftkings_data <- wnba_season_dfs_feed %>% dplyr::filter(!is.na(draftkings_salary))
+draftkings_model <- MASS::rlm(
+  1000 * draftkings_points ~ draftkings_salary, data = draftkings_data
+)
+draftkings_value_line <- ggplot(
+  data = draftkings_data, 
+  aes(draftkings_salary, draftkings_points)
+) +
+  geom_point() + 
+  geom_smooth(method = MASS::rlm)
+print(draftkings_value_line)
 
 ```
 
+## FanDuel prediction model
 ```{r}
-raw <- wnba_season_dfs_feed %>% 
-  dplyr::select(minutes, usage_rate, fanduel_salary, fanduel_points)
-model <- mixmodCluster(raw, nbCluster = 1:5)
-plot(model)
-
+fanduel_filtered <- fanduel_data %>% dplyr::filter(fanduel_points >= 0)
+fanduel_glmodel <- stats::glm(
+  fanduel_points ~ player + opponent_team + starter_y_n + venue_r_h - 1, 
+  data = fanduel_filtered, family = quasipoisson
+)
+fanduel_coefficients <- broom::tidy(fanduel_glmodel) %>% 
+  dplyr::filter(p.value <= 0.05)
+DT::datatable(fanduel_coefficients)
 ```
 
 
+## DraftKings prediction model
 ```{r}
-best_cluster <- which.max(model@bestResult@parameters@mean[,4])
-wnba_season_dfs_feed <- wnba_season_dfs_feed %>% 
-  dplyr::mutate(cluster = model@bestResult@partition)
-best_players <- wnba_season_dfs_feed %>% 
-  dplyr::filter(cluster == best_cluster) %>% 
-  dplyr::select(player) %>% 
-  unique()
-
+draftkings_filtered <- draftkings_data %>% dplyr::filter(draftkings_points >= 0)
+draftkings_glmodel <- stats::glm(
+  draftkings_points ~ player + opponent_team + starter_y_n + venue_r_h - 1, 
+  data = draftkings_filtered, family = quasipoisson
+)
+draftkings_coefficients <- broom::tidy(draftkings_glmodel) %>% 
+  dplyr::filter(p.value <= 0.05)
+DT::datatable(draftkings_coefficients)
 ```
+
