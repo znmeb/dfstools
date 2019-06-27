@@ -43,7 +43,7 @@ regular_season_schedule <- read_excel(
   ), skip = 7
 )
 names(regular_season_schedule) <- .schedule_column_names
-regular_season_schedule <- regular_season_schedule %>% dplyr::mutate(
+regular_season_schedule <- regular_season_schedule %>% mutate(
   date_time = as.POSIXct(strptime(
     paste(date, time), format = "%Y-%m-%d %I:%M %p", tz = "EST5EDT"
   ))
@@ -53,6 +53,7 @@ season_dfs_feed <- read_excel(
   "~/Dropbox/19-wnba-dfs/06-25-2019-wnba-season-dfs-feed.xlsx",
   skip = 2
 )
+names(season_dfs_feed) <- .dfs_column_names
 
 player_box_score <- dfstools::player_box_score(
   "~/Dropbox/19-wnba-player/06-25-2019-wnba-season-player-feed.xlsx"
@@ -90,7 +91,7 @@ datatable(player_alphas) %>%
 
 ## FanDuel value line
 ```{r}
-fanduel_data <- season_dfs_feed %>% dplyr::filter(!is.na(fanduel_salary))
+fanduel_data <- season_dfs_feed %>% filter(!is.na(fanduel_salary))
 fanduel_model <- MASS::rlm(
   1000 * fanduel_points ~ fanduel_salary, data = fanduel_data
 )
@@ -106,7 +107,7 @@ print(fanduel_value_line)
 
 ## DraftKings value line
 ```{r}
-draftkings_data <- season_dfs_feed %>% dplyr::filter(!is.na(draftkings_salary))
+draftkings_data <- season_dfs_feed %>% filter(!is.na(draftkings_salary))
 draftkings_model <- MASS::rlm(
   1000 * draftkings_points ~ draftkings_salary, data = draftkings_data
 )
@@ -123,7 +124,7 @@ print(draftkings_value_line)
 ## FanDuel prediction model
 ```{r}
 fanduel_filtered <- fanduel_data %>% 
-  dplyr::filter(fanduel_points >= 0, 
+  filter(fanduel_points >= 0, 
                 own_team == "Los Angeles" | own_team == "Las Vegas")
 fanduel_glmodel <- stats::glm(
   fanduel_points ~ 
@@ -133,17 +134,18 @@ fanduel_glmodel <- stats::glm(
 fanduel_augmented <- broom::augment(
   fanduel_glmodel, type.predict = "response", type.residuals = "response"
 ) %>% 
-  dplyr::select(-.se.fit, -.hat:-.std.resid) %>% 
-  dplyr::mutate(pct = round(100 * .resid / fanduel_points, 1))
+  select(-.se.fit, -.hat:-.std.resid) %>% 
+  mutate(pct = 100 * .resid / fanduel_points)
 fanduel_leaderboard <- fanduel_augmented %>% 
   group_by(player) %>% summarize(
     count = n(), 
-    p50 = round(quantile(pct, 0.50, names = FALSE), 2), 
-    p75 = round(quantile(pct, 0.75, names = FALSE), 2),
-    p95 = round(quantile(pct, 0.95, names = FALSE), 2)
+    p50 = quantile(pct, 0.50, names = FALSE), 
+    p75 = quantile(pct, 0.75, names = FALSE),
+    p95 = quantile(pct, 0.95, names = FALSE)
   ) %>% 
   arrange(desc(p50))
-DT::datatable(fanduel_leaderboard)
+datatable(fanduel_leaderboard) %>% 
+  formatRound(columns = c("p50", "p75", "p95"), digits = 1)
 
 ```
 
@@ -151,7 +153,7 @@ DT::datatable(fanduel_leaderboard)
 ## DraftKings prediction model
 ```{r}
 draftkings_filtered <- draftkings_data %>% 
-  dplyr::filter(draftkings_points >= 0, 
+  filter(draftkings_points >= 0, 
                 own_team == "Los Angeles" | own_team == "Las Vegas")
 draftkings_glmodel <- stats::glm(
   draftkings_points ~ 
@@ -161,17 +163,18 @@ draftkings_glmodel <- stats::glm(
 draftkings_augmented <- broom::augment(
   draftkings_glmodel, type.predict = "response", type.residuals = "response"
 ) %>% 
-  dplyr::select(-.se.fit, -.hat:-.std.resid) %>% 
-  dplyr::mutate(pct = round(100 * .resid / draftkings_points, 1))
+  select(-.se.fit, -.hat:-.std.resid) %>% 
+  mutate(pct = 100 * .resid / draftkings_points)
 draftkings_leaderboard <- draftkings_augmented %>% 
   group_by(player) %>% summarize(
     count = n(), 
-    p50 = round(quantile(pct, 0.50, names = FALSE), 2), 
-    p75 = round(quantile(pct, 0.75, names = FALSE), 2),
-    p95 = round(quantile(pct, 0.95, names = FALSE), 2)
+    p50 = quantile(pct, 0.50, names = FALSE), 
+    p75 = quantile(pct, 0.75, names = FALSE),
+    p95 = quantile(pct, 0.95, names = FALSE)
   ) %>% 
   arrange(desc(p50))
-DT::datatable(draftkings_leaderboard)
+datatable(draftkings_leaderboard) %>% 
+  formatRound(columns = c("p50", "p75", "p95"), digits = 1)
 
 ```
 
