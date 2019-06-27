@@ -50,13 +50,13 @@ regular_season_schedule <- regular_season_schedule %>% mutate(
 )
 
 season_dfs_feed <- read_excel(
-  "~/Dropbox/19-wnba-dfs/06-25-2019-wnba-season-dfs-feed.xlsx",
+  "~/Dropbox/19-wnba-dfs/06-26-2019-wnba-season-dfs-feed.xlsx",
   skip = 2
 )
 names(season_dfs_feed) <- .dfs_column_names
 
 player_box_score <- dfstools::player_box_score(
-  "~/Dropbox/19-wnba-player/06-25-2019-wnba-season-player-feed.xlsx"
+  "~/Dropbox/19-wnba-player/06-26-2019-wnba-season-player-feed.xlsx"
 )
 
 ```
