@@ -7,8 +7,8 @@ output: html_notebook
 ```{r message=FALSE}
 library(readxl)
 library(tidyverse)
-library(Rmixmod)
 library(DT)
+.schedule_column_names <- c("date", "time", "road_team", "home_team")
 .dfs_column_names <- c(
   "dataset",
   "date",
@@ -26,6 +26,7 @@ library(DT)
   "draftkings_points",
   "fanduel_points"
 )
+
 regular_season_schedule <- read_excel(
   "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx",
   col_names = FALSE, 
@@ -41,23 +42,55 @@ regular_season_schedule <- read_excel(
     "skip"
   ), skip = 7
 )
-names(regular_season_schedule) <- c("date", "time", "road_team", "home_team")
+names(regular_season_schedule) <- .schedule_column_names
 regular_season_schedule <- regular_season_schedule %>% dplyr::mutate(
   date_time = as.POSIXct(strptime(
     paste(date, time), format = "%Y-%m-%d %I:%M %p", tz = "EST5EDT"
   ))
 )
 
-wnba_season_dfs_feed <- read_excel(
+season_dfs_feed <- read_excel(
   "~/Dropbox/19-wnba-dfs/06-25-2019-wnba-season-dfs-feed.xlsx",
   skip = 2
 )
-names(wnba_season_dfs_feed) <- .dfs_column_names
+
+player_box_score <- dfstools::player_box_score(
+  "~/Dropbox/19-wnba-player/06-25-2019-wnba-season-player-feed.xlsx"
+)
+
 ```
+
+## Archetypal analysis
+```{r}
+## Prepare archetypal analysis input
+player_totals <- player_box_score %>% 
+  mutate(player_name = player_full_name) %>% 
+  select(
+    player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %>% 
+  group_by(player_name) %>% 
+  summarize_if(is.numeric, sum) %>% 
+  ungroup()
+player_labels <- player_totals %>% select(player_name)
+
+## Compute the three-archetype model
+archetypal_analysis <- dfstools::compute_archetypes(
+  player_totals, player_labels, num_archetypes = 3)
+player_alphas <- archetypal_analysis[["player_alphas"]] %>% 
+  mutate(PlayerCode = as_factor(sprintf(
+    "%s: Rim %1.4f, Floor %1.4f",
+    player_name, 
+    Rim, 
+    Floor
+  )))
+datatable(player_alphas) %>% 
+  formatRound(columns = c("Rim", "Floor", "Bench"), digits = 4)
+
+```
+
 
 ## FanDuel value line
 ```{r}
-fanduel_data <- wnba_season_dfs_feed %>% dplyr::filter(!is.na(fanduel_salary))
+fanduel_data <- season_dfs_feed %>% dplyr::filter(!is.na(fanduel_salary))
 fanduel_model <- MASS::rlm(
   1000 * fanduel_points ~ fanduel_salary, data = fanduel_data
 )
@@ -73,7 +106,7 @@ print(fanduel_value_line)
 
 ## DraftKings value line
 ```{r}
-draftkings_data <- wnba_season_dfs_feed %>% dplyr::filter(!is.na(draftkings_salary))
+draftkings_data <- season_dfs_feed %>% dplyr::filter(!is.na(draftkings_salary))
 draftkings_model <- MASS::rlm(
   1000 * draftkings_points ~ draftkings_salary, data = draftkings_data
 )
@@ -100,13 +133,14 @@ fanduel_glmodel <- stats::glm(
 fanduel_augmented <- broom::augment(
   fanduel_glmodel, type.predict = "response", type.residuals = "response"
 ) %>% 
-  dplyr::select(-.se.fit, -.hat:-.std.resid)
+  dplyr::select(-.se.fit, -.hat:-.std.resid) %>% 
+  dplyr::mutate(pct = round(100 * .resid / fanduel_points, 1))
 fanduel_leaderboard <- fanduel_augmented %>% 
   group_by(player) %>% summarize(
     count = n(), 
-    p50 = round(quantile(.resid, 0.50, names = FALSE), 2), 
-    p75 = round(quantile(.resid, 0.75, names = FALSE), 2),
-    p95 = round(quantile(.resid, 0.95, names = FALSE), 2)
+    p50 = round(quantile(pct, 0.50, names = FALSE), 2), 
+    p75 = round(quantile(pct, 0.75, names = FALSE), 2),
+    p95 = round(quantile(pct, 0.95, names = FALSE), 2)
   ) %>% 
   arrange(desc(p50))
 DT::datatable(fanduel_leaderboard)
@@ -127,13 +161,14 @@ draftkings_glmodel <- stats::glm(
 draftkings_augmented <- broom::augment(
   draftkings_glmodel, type.predict = "response", type.residuals = "response"
 ) %>% 
-  dplyr::select(-.se.fit, -.hat:-.std.resid)
+  dplyr::select(-.se.fit, -.hat:-.std.resid) %>% 
+  dplyr::mutate(pct = round(100 * .resid / draftkings_points, 1))
 draftkings_leaderboard <- draftkings_augmented %>% 
   group_by(player) %>% summarize(
     count = n(), 
-    p50 = round(quantile(.resid, 0.50, names = FALSE), 2), 
-    p75 = round(quantile(.resid, 0.75, names = FALSE), 2),
-    p95 = round(quantile(.resid, 0.95, names = FALSE), 2)
+    p50 = round(quantile(pct, 0.50, names = FALSE), 2), 
+    p75 = round(quantile(pct, 0.75, names = FALSE), 2),
+    p95 = round(quantile(pct, 0.95, names = FALSE), 2)
   ) %>% 
   arrange(desc(p50))
 DT::datatable(draftkings_leaderboard)
