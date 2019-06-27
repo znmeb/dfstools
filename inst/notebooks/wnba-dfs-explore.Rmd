@@ -89,26 +89,54 @@ print(draftkings_value_line)
 
 ## FanDuel prediction model
 ```{r}
-fanduel_filtered <- fanduel_data %>% dplyr::filter(fanduel_points >= 0)
+fanduel_filtered <- fanduel_data %>% 
+  dplyr::filter(fanduel_points >= 0, 
+                own_team == "Los Angeles" | own_team == "Las Vegas")
 fanduel_glmodel <- stats::glm(
-  fanduel_points ~ player + opponent_team + starter_y_n + venue_r_h - 1, 
+  fanduel_points ~ 
+    fanduel_salary + player + opponent_team + starter_y_n + venue_r_h - 1, 
   data = fanduel_filtered, family = quasipoisson
 )
-fanduel_coefficients <- broom::tidy(fanduel_glmodel) %>% 
-  dplyr::filter(p.value <= 0.05)
-DT::datatable(fanduel_coefficients)
+fanduel_augmented <- broom::augment(
+  fanduel_glmodel, type.predict = "response", type.residuals = "response"
+) %>% 
+  dplyr::select(-.se.fit, -.hat:-.std.resid)
+fanduel_leaderboard <- fanduel_augmented %>% 
+  group_by(player) %>% summarize(
+    count = n(), 
+    p50 = round(quantile(.resid, 0.50, names = FALSE), 2), 
+    p75 = round(quantile(.resid, 0.75, names = FALSE), 2),
+    p95 = round(quantile(.resid, 0.95, names = FALSE), 2)
+  ) %>% 
+  arrange(desc(p50))
+DT::datatable(fanduel_leaderboard)
+
 ```
 
 
 ## DraftKings prediction model
 ```{r}
-draftkings_filtered <- draftkings_data %>% dplyr::filter(draftkings_points >= 0)
+draftkings_filtered <- draftkings_data %>% 
+  dplyr::filter(draftkings_points >= 0, 
+                own_team == "Los Angeles" | own_team == "Las Vegas")
 draftkings_glmodel <- stats::glm(
-  draftkings_points ~ player + opponent_team + starter_y_n + venue_r_h - 1, 
+  draftkings_points ~ 
+    draftkings_salary + player + opponent_team + starter_y_n + venue_r_h - 1, 
   data = draftkings_filtered, family = quasipoisson
 )
-draftkings_coefficients <- broom::tidy(draftkings_glmodel) %>% 
-  dplyr::filter(p.value <= 0.05)
-DT::datatable(draftkings_coefficients)
+draftkings_augmented <- broom::augment(
+  draftkings_glmodel, type.predict = "response", type.residuals = "response"
+) %>% 
+  dplyr::select(-.se.fit, -.hat:-.std.resid)
+draftkings_leaderboard <- draftkings_augmented %>% 
+  group_by(player) %>% summarize(
+    count = n(), 
+    p50 = round(quantile(.resid, 0.50, names = FALSE), 2), 
+    p75 = round(quantile(.resid, 0.75, names = FALSE), 2),
+    p95 = round(quantile(.resid, 0.95, names = FALSE), 2)
+  ) %>% 
+  arrange(desc(p50))
+DT::datatable(draftkings_leaderboard)
+
 ```
 
