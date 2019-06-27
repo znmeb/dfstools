@@ -5,55 +5,16 @@ output: html_notebook
 
 ## Load libraries and data
 ```{r message=FALSE}
-library(readxl)
 library(tidyverse)
 library(DT)
-.schedule_column_names <- c("date", "time", "road_team", "home_team")
-.dfs_column_names <- c(
-  "dataset",
-  "date",
-  "player",
-  "own_team",
-  "opponent_team",
-  "starter_y_n",
-  "venue_r_h",
-  "minutes",
-  "usage_rate",
-  "draftkings_position",
-  "fanduel_position",
-  "draftkings_salary",
-  "fanduel_salary",
-  "draftkings_points",
-  "fanduel_points"
+library(dfstools)
+regular_season_schedule <- dfstools::bdb_wnba_schedule(
+  "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx"
 )
 
-regular_season_schedule <- read_excel(
-  "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx",
-  col_names = FALSE, 
-  col_types = c(
-    "date",
-    "text", 
-    "skip", 
-    "skip", 
-    "text", 
-    "skip",
-    "skip", 
-    "text", 
-    "skip"
-  ), skip = 7
+season_dfs_feed <- dfstools::bdb_wnba_dfs(
+  "~/Dropbox/19-wnba-dfs/06-26-2019-wnba-season-dfs-feed.xlsx"
 )
-names(regular_season_schedule) <- .schedule_column_names
-regular_season_schedule <- regular_season_schedule %>% mutate(
-  date_time = as.POSIXct(strptime(
-    paste(date, time), format = "%Y-%m-%d %I:%M %p", tz = "EST5EDT"
-  ))
-)
-
-season_dfs_feed <- read_excel(
-  "~/Dropbox/19-wnba-dfs/06-26-2019-wnba-season-dfs-feed.xlsx",
-  skip = 2
-)
-names(season_dfs_feed) <- .dfs_column_names
 
 player_box_score <- dfstools::player_box_score(
   "~/Dropbox/19-wnba-player/06-26-2019-wnba-season-player-feed.xlsx"
