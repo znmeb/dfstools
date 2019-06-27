@@ -208,7 +208,6 @@ player_box_score <- function(spreadsheet, sheet_number = 1) {
 #' @description Creates a game box score data frame from a player box score data frame
 #' @export game_box_score
 #' @importFrom dplyr %>%
-#' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr group_by
 #' @importFrom dplyr summarize
@@ -236,8 +235,75 @@ game_box_score <- function(pbs) {
   return(as.data.frame(df))
 }
 
+#' @title read BigDataBall WNBA schedule spreadsheet
+#' @name bdb_wnba_schedule
+#' @description Reads a BigDataBall schedule spreadsheet to a tibble
+#' @export bdb_wnba_schedule
+#' @importFrom readxl read_excel
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @param excel_file a BigDataBall Excel schedule file
+#' @return a tibble with the schedule
+
+bdb_wnba_schedule <- function(excel_file) {
+  return(
+    readxl::read_excel(excel_file, col_names = FALSE, skip = 7) %>%
+      dplyr::mutate(game_start_time = as.POSIXct(strptime(
+        paste(...1, ...2), format = "%Y-%m-%d %I:%M %p", tz = "EST5EDT"))
+      ) %>%
+      dplyr::select(
+        game_start_time,
+        road_team = ...5,
+        road_team_rest = ...4,
+        home_team = ...8,
+        home_team_rest = ...9
+      )
+  )
+}
+
+#' @title read BigDataBall WNBA DFS spreadsheet
+#' @name bdb_wnba_dfs
+#' @description Reads a BigDataBall WNBA DFS spreadsheet to a tibble
+#' @export bdb_wnba_dfs
+#' @importFrom readxl read_excel
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @param excel_file a BigDataBall Excel DFS file
+#' @return a tibble with the DFS data
+
+bdb_wnba_dfs <- function(excel_file) {
+  season_dfs_feed <- readxl::read_excel(excel_file, skip = 2)
+  names(season_dfs_feed) <- c(
+    "dataset",
+    "date",
+    "player",
+    "own_team",
+    "opponent_team",
+    "starter_y_n",
+    "venue_r_h",
+    "minutes",
+    "usage_rate",
+    "draftkings_position",
+    "fanduel_position",
+    "draftkings_salary",
+    "fanduel_salary",
+    "draftkings_points",
+    "fanduel_points"
+  )
+  return(season_dfs_feed)
+}
+
 utils::globalVariables(c(
+  "...1",
+  "...2",
+  "...4",
+  "...5",
+  "...8",
+  "...9",
   "data_set",
+  "game_start_time",
   "pts",
   "own_team",
   "opp_team",

@@ -2,6 +2,8 @@
 
 export(archetype_search)
 export(archetypoid_search)
+export(bdb_wnba_dfs)
+export(bdb_wnba_schedule)
 export(compute_archetypes)
 export(draftkings_points)
 export(fanduel_points)
