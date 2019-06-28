@@ -13,12 +13,21 @@ regular_season_schedule <- dfstools::bdb_wnba_schedule(
 )
 
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
-  "~/Dropbox/19-wnba-dfs/06-26-2019-wnba-season-dfs-feed.xlsx"
+  "~/Dropbox/19-wnba-dfs/06-27-2019-wnba-season-dfs-feed.xlsx"
 )
 
 player_box_score <- dfstools::player_box_score(
-  "~/Dropbox/19-wnba-player/06-26-2019-wnba-season-player-feed.xlsx"
+  "~/Dropbox/19-wnba-player/06-27-2019-wnba-season-player-feed.xlsx"
 )
+
+teams_playing <- tibble::enframe(c(
+  "Dallas",
+  "New York",
+  "Chicago",
+  "Seattle",
+  "Indiana",
+  "Phoenix"
+), name = NULL, value = "own_team")
 
 ```
 
@@ -85,11 +94,15 @@ print(draftkings_value_line)
 ## FanDuel prediction model
 ```{r}
 fanduel_filtered <- fanduel_data %>% 
-  filter(fanduel_points >= 0, 
-                own_team == "Los Angeles" | own_team == "Las Vegas")
-fanduel_glmodel <- stats::glm(
-  fanduel_points ~ 
-    fanduel_salary + player + opponent_team + starter_y_n + venue_r_h - 1, 
+  semi_join(teams_playing) %>% 
+  filter(fanduel_points >= 0)
+fanduel_glmodel <- stats::glm(fanduel_points ~ 
+    fanduel_salary +
+    player + 
+    fanduel_position + 
+    opponent_team + 
+    starter_y_n + 
+    venue_r_h - 1, 
   data = fanduel_filtered, family = quasipoisson
 )
 fanduel_augmented <- broom::augment(
@@ -98,11 +111,11 @@ fanduel_augmented <- broom::augment(
   select(-.se.fit, -.hat:-.std.resid) %>% 
   mutate(pct = 100 * .resid / fanduel_points)
 fanduel_leaderboard <- fanduel_augmented %>% 
-  group_by(player) %>% summarize(
+  group_by(player, fanduel_position) %>% summarize(
     count = n(), 
-    p50 = quantile(pct, 0.50, names = FALSE), 
-    p75 = quantile(pct, 0.75, names = FALSE),
-    p95 = quantile(pct, 0.95, names = FALSE)
+    p50 = quantile(.resid, 0.50, names = FALSE), 
+    p75 = quantile(.resid, 0.75, names = FALSE),
+    p95 = quantile(.resid, 0.95, names = FALSE)
   ) %>% 
   arrange(desc(p50))
 datatable(fanduel_leaderboard) %>% 
@@ -114,11 +127,16 @@ datatable(fanduel_leaderboard) %>%
 ## DraftKings prediction model
 ```{r}
 draftkings_filtered <- draftkings_data %>% 
-  filter(draftkings_points >= 0, 
-                own_team == "Los Angeles" | own_team == "Las Vegas")
+  semi_join(teams_playing) %>% 
+  filter(draftkings_points >= 0)
 draftkings_glmodel <- stats::glm(
   draftkings_points ~ 
-    draftkings_salary + player + opponent_team + starter_y_n + venue_r_h - 1, 
+    draftkings_salary + 
+    player + 
+    draftkings_position +
+    opponent_team + 
+    starter_y_n + 
+    venue_r_h - 1, 
   data = draftkings_filtered, family = quasipoisson
 )
 draftkings_augmented <- broom::augment(
@@ -127,11 +145,11 @@ draftkings_augmented <- broom::augment(
   select(-.se.fit, -.hat:-.std.resid) %>% 
   mutate(pct = 100 * .resid / draftkings_points)
 draftkings_leaderboard <- draftkings_augmented %>% 
-  group_by(player) %>% summarize(
+  group_by(player, draftkings_position) %>% summarize(
     count = n(), 
-    p50 = quantile(pct, 0.50, names = FALSE), 
-    p75 = quantile(pct, 0.75, names = FALSE),
-    p95 = quantile(pct, 0.95, names = FALSE)
+    p50 = quantile(.resid, 0.50, names = FALSE), 
+    p75 = quantile(.resid, 0.75, names = FALSE),
+    p95 = quantile(.resid, 0.95, names = FALSE)
   ) %>% 
   arrange(desc(p50))
 datatable(draftkings_leaderboard) %>% 
