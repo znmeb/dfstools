@@ -295,7 +295,110 @@ bdb_wnba_dfs <- function(excel_file) {
   return(season_dfs_feed)
 }
 
+#' @title read BigDataBall WNBA team feed spreadsheet
+#' @name bdb_wnba_team
+#' @description Reads a BigDataBall WNBA DFS spreadsheet to a tibble
+#' @export bdb_wnba_team
+#' @importFrom readxl read_excel
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @param excel_file a BigDataBall season team Excel file
+#' @return a tibble with the team data
+
+bdb_wnba_team <- function(excel_file) {
+  raw_data <- readxl::read_excel(excel_file) %>% dplyr::select(
+    -`1Q`:-`OT5`, -`OPENING\r\nODDS`, -`1st HALF\r\nODDS`:-`2nd HALF\r\nODDS`
+  )
+  road <- raw_data %>% dplyr::filter(VENUE == "Road") %>%
+    dplyr::select(-VENUE)
+  names(road) <- c(
+    "dataset",
+    "date",
+    "road_team",
+    "road_final",
+    "road_min",
+    "road_fg",
+    "road_fga",
+    "road_3p",
+    "road_3pa",
+    "road_ft",
+    "road_fta",
+    "road_or",
+    "road_dr",
+    "road_tot",
+    "road_ast",
+    "road_pf",
+    "road_stl",
+    "road_to",
+    "road_blk",
+    "road_pts",
+    "road_poss",
+    "road_pace",
+    "road_oeff",
+    "road_deff",
+    "road_rest_days",
+    "road_closing_odds"
+  )
+  home <- raw_data %>% dplyr::filter(VENUE == "Home") %>%
+    dplyr::select(-DATASET, -DATE, -VENUE)
+  names(home) <- c(
+    "home_team",
+    "home_final",
+    "home_min",
+    "home_fg",
+    "home_fga",
+    "home_3p",
+    "home_3pa",
+    "home_ft",
+    "home_fta",
+    "home_or",
+    "home_dr",
+    "home_tot",
+    "home_ast",
+    "home_pf",
+    "home_stl",
+    "home_to",
+    "home_blk",
+    "home_pts",
+    "home_poss",
+    "home_pace",
+    "home_oeff",
+    "home_deff",
+    "home_rest_days",
+    "home_closing_odds"
+  )
+  merged <- dplyr::bind_cols(road, home) %>%
+    dplyr::mutate(
+      num_ot = round((home_min - 200) / 5, 0),
+      over_under = ifelse(
+        road_closing_odds > 0, road_closing_odds, home_closing_odds),
+      road_closing_spread = ifelse(
+        road_closing_odds > 0, -home_closing_odds, road_closing_odds),
+      home_closing_spread = ifelse(
+        home_closing_odds > 0, -road_closing_odds, home_closing_odds)
+    ) %>% dplyr::select(
+      -home_closing_odds, -road_closing_odds, -road_min, -home_final, -road_final
+    )
+  return( merged)
+}
+
 utils::globalVariables(c(
+  "DATASET",
+  "DATE",
+  "VENUE",
+  "1Q",
+  "OT5",
+  "OPENING\r\nODDS",
+  "1st HALF\r\nODDS",
+  "2nd HALF\r\nODDS",
+  "home_closing_odds",
+  "road_closing_odds",
+  "home_final",
+  "home_min",
+  "road_final",
+  "road_min",
   "...1",
   "...2",
   "...4",
