@@ -16,7 +16,10 @@ regular_season_schedule <- dfstools::bdb_wnba_schedule(
 
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
   "~/Dropbox/19-wnba-dfs/06-28-2019-wnba-season-dfs-feed.xlsx"
-) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
+) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary)) %>% 
+  dplyr::mutate(
+    fanduel_value = 1000 * fanduel_points / fanduel_salary,
+    draftkings_value = 1000 * draftkings_points / draftkings_salary)
 
 player_box_score <- dfstools::player_box_score(
   "~/Dropbox/19-wnba-player/06-28-2019-wnba-season-player-feed.xlsx"
@@ -35,22 +38,33 @@ teams_playing <- tibble::enframe(c(
 
 ## Gaussian mixture model
 ```{r fig.width=16, fig.height=9}
-mixture_input <- season_dfs_feed %>% 
+player_table <- season_dfs_feed %>% 
+  dplyr::group_by(player) %>% 
+  dplyr::summarize(
+    games = n(),
+    minutes = sum(minutes),
+    fanduel_points = sum(fanduel_points),
+    fanduel_value = sum(fanduel_value),
+    draftkings_points = sum(draftkings_points),
+    draftkings_value = sum(draftkings_value)
+ )
+mixture_input <- player_table %>% 
   dplyr::select(
+    games,
     minutes,
-    fanduel_salary,
     fanduel_points,
-    draftkings_salary,
-    draftkings_points
+    fanduel_value,
+    draftkings_points,
+    draftkings_value
   ) 
 mixture_model <- Rmixmod::mixmodCluster(mixture_input, nbCluster = 3)
 summary(mixture_model)
 plot(mixture_model)
-season_dfs_feed <- season_dfs_feed %>% 
+player_table <- player_table %>%
   dplyr::mutate(partition = mixture_model@bestResult@partition)
-partitions <- season_dfs_feed %>% 
-  dplyr::group_by(partition) %>% 
-  dplyr::summarize(count = n(), median_minutes = median(minutes)) %>% 
+partitions <- player_table %>%
+  dplyr::group_by(partition) %>%
+  dplyr::summarize(count = n(), median_minutes = median(minutes)) %>%
   dplyr::arrange(desc(median_minutes))
 
 ```
