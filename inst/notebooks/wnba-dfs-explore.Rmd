@@ -8,16 +8,18 @@ output: html_notebook
 library(tidyverse)
 library(DT)
 library(dfstools)
+library(Rmixmod)
+library(mclust)
 regular_season_schedule <- dfstools::bdb_wnba_schedule(
   "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx"
 )
 
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
-  "~/Dropbox/19-wnba-dfs/06-27-2019-wnba-season-dfs-feed.xlsx"
-)
+  "~/Dropbox/19-wnba-dfs/06-28-2019-wnba-season-dfs-feed.xlsx"
+) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
 
 player_box_score <- dfstools::player_box_score(
-  "~/Dropbox/19-wnba-player/06-27-2019-wnba-season-player-feed.xlsx"
+  "~/Dropbox/19-wnba-player/06-28-2019-wnba-season-player-feed.xlsx"
 )
 
 teams_playing <- tibble::enframe(c(
@@ -28,6 +30,28 @@ teams_playing <- tibble::enframe(c(
   "Indiana",
   "Phoenix"
 ), name = NULL, value = "own_team")
+
+```
+
+## Gaussian mixture model
+```{r fig.width=16, fig.height=9}
+mixture_input <- season_dfs_feed %>% 
+  dplyr::select(
+    minutes,
+    fanduel_salary,
+    fanduel_points,
+    draftkings_salary,
+    draftkings_points
+  ) 
+mixture_model <- Rmixmod::mixmodCluster(mixture_input, nbCluster = 3)
+summary(mixture_model)
+plot(mixture_model)
+season_dfs_feed <- season_dfs_feed %>% 
+  dplyr::mutate(partition = mixture_model@bestResult@partition)
+partitions <- season_dfs_feed %>% 
+  dplyr::group_by(partition) %>% 
+  dplyr::summarize(count = n(), median_minutes = median(minutes)) %>% 
+  dplyr::arrange(desc(median_minutes))
 
 ```
 
