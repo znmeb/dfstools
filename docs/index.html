@@ -96,7 +96,7 @@
 <ol style="list-style-type: decimal">
 <li>
 <p>Install git, R and RStudio for your work environment. This is a developers’ release; for the moment, you’ll need to be familiar with git / GitHub, R and RStudio.</p>
-<p>I test regularly on Windows 10 Pro, Arch Linux and the <a href="https://github.com/znmeb/data-science-pet-containers">Data Science Pet Containers</a> toolset, but any environment that supports RStudio Desktop or Server should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/dfstools/issues/new/choose" class="uri">https://github.com/znmeb/dfstools/issues/new/choose</a></p>
+<p>I test regularly on Windows 10 Pro, Arch Linux and the <a href="https://github.com/znmeb/silver-potato">Silver Potato</a> toolset, but any environment that supports RStudio Desktop or Server should work. If anything doesn’t work or the documentation is unclear, please file an issue at <a href="https://github.com/znmeb/dfstools/issues/new/choose" class="uri">https://github.com/znmeb/dfstools/issues/new/choose</a></p>
 </li>
 <li><p>Open RStudio. If you haven’t already, install <code>devtools</code> from CRAN.</p></li>
 <li><p>In the RStudio console, type <code><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">devtools::install_github("znmeb/dfstools")</a></code>.</p></li>
@@ -105,34 +105,12 @@
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#features" class="anchor"></a>Features</h2>
-<p><code>dfstools</code> has are two classes of functions:</p>
+<p><code>dfstools</code> has three classes of functions:</p>
 <ol style="list-style-type: decimal">
 <li>Functions that read from the MySportsFeeds v2.0 API. These have names starting with <code>msf_</code>.</li>
 <li>Functions that create and populate SQLite databases. These have names starting with <code>sq_</code>.</li>
+<li>Analytics and visualization functions.</li>
 </ol>
-<p>Note that there is limited support for Major League Baseball in version v1.0.0, for two reasons:</p>
-<ol style="list-style-type: decimal">
-<li>The datasets for MLB are both wider (more data columns) and longer (more games) than NBA, NHL and NFL. The sizes and network download times are significantly more than the other three leagues, and I want to get a handle on that before releasing MLB functionality.</li>
-<li>MLB is not currently playing, so the only thing I could do with MLB data is backtest algorithms. For those of you unfamiliar with predictive analytics, backtesting is mostly a waste of time and it’s terribly difficult to avoid “future leak” in the process.</li>
-</ol>
-</div>
-<div id="road-map" class="section level2">
-<h2 class="hasAnchor">
-<a href="#road-map" class="anchor"></a>Road map</h2>
-<p>The next few releases will add:</p>
-<ol style="list-style-type: decimal">
-<li>
-<code>msf_</code> functions for the <em>current</em> NBA, NHL and NFL seasons, and</li>
-<li>
-<em>Some</em> analytics. There are lots of DFS projection systems and optimizers out there, many of them free. It’s not clear to me that there’s anything to be gained from writing my own except that I’d know how they work and what their strengths and weaknesses are.</li>
-</ol>
-<p>But I do have some ideas for how to do DFS analytics beyond the projection / mixed integer-linear programming optimization approach currently popular. And there are two analytics features I know I’ll be adding, at least for NBA:</p>
-<ol style="list-style-type: decimal">
-<li>Score prediction via <a href="https://cran.r-project.org/web/packages/mvglmmRank/index.html"><code>mvglmmRank</code></a>, and</li>
-<li>Archetypoidal analysis of players via <a href="https://cran.r-project.org/web/packages/Anthropometry/index.html"><code>Anthrompometry</code></a>.</li>
-</ol>
-<p>I have code for these in a private repository already and I know they give plausible results for NBA. I just need to integrate them with MySportsFeeds data.</p>
-<p>And yes, I will be adding support for MLB as soon as I get the NBA analytics done.</p>
 </div>
 <div id="contributing" class="section level2">
 <h2 class="hasAnchor">
@@ -147,6 +125,7 @@
 <a href="#about-some-of-the-design-decisions" class="anchor"></a>About some of the design decisions</h2>
 <p>Earlier versions of this package used the R wrapper provided by MySportsFeeds, <a href="https://github.com/MySportsFeeds/mysportsfeeds-r" class="uri">https://github.com/MySportsFeeds/mysportsfeeds-r</a>. I found I was spending so much time troubleshooting networking issues that I decided to write my own low-level routine, <code>msf_get_feed</code>, and build my own API on top of that.</p>
 <p>I decided to use SQLite for the database because both the R interface and the database administration process are much simpler than PostgreSQL or MySQL. The databases we’re dealing with aren’t big enough to require an industrial-strength relational database management system.</p>
+<p>Analytics and visualization: I lean heavily on <code>mvglmmRank</code> for a quick assessment of team capabilities. The results it gives are about as good as you can get with just past scores as inputs. For player evaulation, I use archetypal analysis, at least for basketball.</p>
 </div>
   </div>
 
