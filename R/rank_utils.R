@@ -31,6 +31,69 @@ mvglmmRank_model <- function(
   return(nb_model)
 }
 
+#' @title Game predict
+#' @name game_predict
+#' @description Creates a data frame with game predictions
+#' @export game_predict
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @param schedule a data frame team names in "away" and "home" columns
+#' @param model a model from mvglmmRank::mvglmmRank
+#' @return the schedule augmented with prediction columns
+
+game_predict <-
+  function(schedule, model) {
+    aug_schedule <- schedule %>%
+      dplyr::mutate(method = model$method)
+
+    # are there normal score ratings?
+    if (!is.null(model$n.ratings.offense)) {
+      aug_schedule <- aug_schedule %>% dplyr::mutate(
+        away_score_p =
+          round(model$n.mean["LocationAway"] +
+          model$n.ratings.offense[away] -
+          model$n.ratings.defense[home], 1),
+        home_score_p =
+          round(model$n.mean["LocationHome"] +
+          model$n.ratings.offense[home] -
+          model$n.ratings.defense[away], 1),
+        total_p =  round(home_score_p + away_score_p, 0),
+        home_mov_p = round(home_score_p - away_score_p, 1))
+    }
+
+    # are there Poisson score ratings?
+    if (!is.null(model$p.ratings.offense)) {
+      aug_schedule <- aug_schedule %>% dplyr::mutate(
+        away_score_p =
+          round(exp(
+            model$p.mean["LocationAway"] +
+              model$p.ratings.offense[away] -
+              model$p.ratings.defense[home]), 1),
+        home_score_p =
+          round(exp(
+            model$p.mean["LocationHome"] +
+              model$p.ratings.offense[home] -
+              model$p.ratings.defense[away]), 1),
+        total_p = round(home_score_p + away_score_p, 0),
+        home_mov_p = round(home_score_p - away_score_p, 1))
+    }
+
+    # are there binomial win probability ratings?
+    if (!is.null(model$b.ratings)) {
+      aug_schedule <- aug_schedule %>% dplyr::mutate(
+        home_prob_w =
+          round(stats::pnorm(
+            model$b.mean +
+              model$b.ratings[home] -
+              model$b.ratings[away]), 3),
+        away_prob_w = round(1 - home_prob_w, 3),
+        entropy = round(-log2(home_prob_w) * home_prob_w -
+          log2(away_prob_w) * away_prob_w, 3))
+    }
+
+    return(aug_schedule)
+  }
+
 ## wrappers for wrangling Kaggle NCAA data
 
 #' @title Create a `game.data` tibble from Kaggle NCAA data
@@ -164,6 +227,10 @@ kaggle_probability <- function(model, game_id) {
 ## global name declarations
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "away_prob_w",
+  "away_score_p",
+  "home_prob_w",
+  "home_score_p",
   "LScore",
   "LTeamID",
   "NumOT",

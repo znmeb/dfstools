@@ -254,10 +254,10 @@ bdb_wnba_schedule <- function(excel_file) {
       ) %>%
       dplyr::select(
         game_start_time,
-        road_team = ...5,
-        road_team_rest = ...4,
-        home_team = ...8,
-        home_team_rest = ...9
+        away = ...5,
+        away_rest = ...4,
+        home = ...8,
+        home_rest = ...9
       )
   )
 }
