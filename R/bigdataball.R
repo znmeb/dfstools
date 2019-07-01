@@ -384,6 +384,36 @@ bdb_wnba_team <- function(excel_file) {
   return( merged)
 }
 
+#' @title BigDataBall WNBA mvglmmRank model
+#' @name bdb_wnba_rank_model
+#' @description creates a WNBA mvglmmRank model
+#' @export bdb_wnba_rank_model
+#' @importFrom readxl read_excel
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select
+#' @param season_team_feed a BigDataBall season team feed tibble
+#' @return the model returned by dfstools::mvglmmRank_model
+
+bdb_wnba_rank_model <- function(season_team_feed) {
+  game_data <- season_team_feed %>%
+    dplyr::mutate(
+      binary.response = as.integer(home_pts > road_pts),
+      neutral.site = 0
+    ) %>%
+    dplyr::select(
+      home = home_team,
+      away = road_team,
+      home.response = home_pts,
+      away.response = road_pts,
+      binary.response,
+      neutral.site,
+      OT = num_ot
+    )
+    rank_model <- dfstools::mvglmmRank_model(
+      game_data, method = "NB", first.order = FALSE, verbose = FALSE)
+}
+
 utils::globalVariables(c(
   "DATASET",
   "DATE",
@@ -410,5 +440,11 @@ utils::globalVariables(c(
   "pts",
   "own_team",
   "opp_team",
-  "venue_r_h"
+  "venue_r_h",
+  "binary.response",
+  "home_pts",
+  "home_team",
+  "num_ot",
+  "road_pts",
+  "road_team"
 ))

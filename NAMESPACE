@@ -3,6 +3,7 @@
 export(archetype_search)
 export(archetypoid_search)
 export(bdb_wnba_dfs)
+export(bdb_wnba_rank_model)
 export(bdb_wnba_schedule)
 export(bdb_wnba_team)
 export(compute_archetypes)
