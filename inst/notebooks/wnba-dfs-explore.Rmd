@@ -10,62 +10,86 @@ library(DT)
 library(dfstools)
 library(Rmixmod)
 library(mclust)
+library(gt)
 regular_season_schedule <- dfstools::bdb_wnba_schedule(
   "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx"
 )
+this_week <- regular_season_schedule %>% 
+  dplyr::filter(
+    game_start_time > '2019-07-01',
+    game_start_time < '2019-07-08'
+  )
 
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
-  "~/Dropbox/19-wnba-dfs/06-28-2019-wnba-season-dfs-feed.xlsx"
-) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary)) %>% 
-  dplyr::mutate(
-    fanduel_value = 1000 * fanduel_points / fanduel_salary,
-    draftkings_value = 1000 * draftkings_points / draftkings_salary)
+  "~/Dropbox/19-wnba-dfs/06-30-2019-wnba-season-dfs-feed.xlsx"
+) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
 
-player_box_score <- dfstools::player_box_score(
-  "~/Dropbox/19-wnba-player/06-28-2019-wnba-season-player-feed.xlsx"
+# negative points crash the GLM quasi-poisson
+season_dfs_feed$fanduel_points <- 
+  pmax(season_dfs_feed$fanduel_points, 0)
+season_dfs_feed$draftkings_points <-
+  pmax(season_dfs_feed$draftkings_points, 0)
+
+season_dfs_feed <- season_dfs_feed %>% dplyr::mutate(
+  fanduel_value = 1000 * fanduel_points / fanduel_salary,
+  draftkings_value = 1000 * draftkings_points / draftkings_salary
 )
 
-teams_playing <- tibble::enframe(c(
-  "Dallas",
-  "New York",
-  "Chicago",
-  "Seattle",
-  "Indiana",
-  "Phoenix"
-), name = NULL, value = "own_team")
+player_box_score <- dfstools::player_box_score(
+  "~/Dropbox/19-wnba-player/06-30-2019-wnba-season-player-feed.xlsx"
+)
+last_game_played <- season_dfs_feed %>% 
+  dplyr::group_by(player, own_team) %>% 
+  dplyr::summarize(games = n(), last_game = max(date)) %>% 
+  ungroup()
+
+# who's playing where?
+road_players <- this_week %>% 
+  dplyr::left_join(last_game_played, by = c("away" = "own_team")) %>%
+  select(player, opponent_team = home) %>% 
+  mutate(venue_r_h = "Road")
+home_players <- this_week %>% 
+  dplyr::left_join(last_game_played, by = c("home" = "own_team")) %>%
+  select(player, opponent_team = away) %>% 
+  mutate(venue_r_h = "Home")
+to_project <- dplyr::bind_rows(road_players, home_players)
+
+season_team_feed <- dfstools::bdb_wnba_team("~/Dropbox/19-wnba-team/06-30-2019-wnba-season-team-feed.xlsx")
 
 ```
 
-## Gaussian mixture model
-```{r fig.width=16, fig.height=9}
-player_table <- season_dfs_feed %>% 
-  dplyr::group_by(player) %>% 
-  dplyr::summarize(
-    games = n(),
-    minutes = sum(minutes),
-    fanduel_points = sum(fanduel_points),
-    fanduel_value = sum(fanduel_value),
-    draftkings_points = sum(draftkings_points),
-    draftkings_value = sum(draftkings_value)
- )
-mixture_input <- player_table %>% 
+## Game predictions
+```{r}
+game_data <- season_team_feed %>% 
+  dplyr::mutate(
+    binary.response = as.integer(home_pts > road_pts),
+    neutral.site = 0
+    ) %>% dplyr::select(
+      home = home_team,
+      away = road_team,
+      home.response = home_pts,
+      away.response = road_pts,
+      binary.response,
+      neutral.site,
+      OT = num_ot
+    )
+rank_model <- dfstools::mvglmmRank_model(game_data)
+augmented_schedule <- dfstools::game_predict(
+  regular_season_schedule, rank_model
+)
+game_score_projections <- augmented_schedule %>%
+  dplyr::semi_join(this_week) %>% 
   dplyr::select(
-    games,
-    minutes,
-    fanduel_points,
-    fanduel_value,
-    draftkings_points,
-    draftkings_value
-  ) 
-mixture_model <- Rmixmod::mixmodCluster(mixture_input, nbCluster = 3)
-summary(mixture_model)
-plot(mixture_model)
-player_table <- player_table %>%
-  dplyr::mutate(partition = mixture_model@bestResult@partition)
-partitions <- player_table %>%
-  dplyr::group_by(partition) %>%
-  dplyr::summarize(count = n(), median_minutes = median(minutes)) %>%
-  dplyr::arrange(desc(median_minutes))
+    `Game Start (EDT)` = game_start_time,
+    "Road Team" = away,
+    "Home Team" = home,
+    "Projected Road Score" = away_score_p,
+    "Projected Home Score" = home_score_p,
+    "Projected Total" = total_p,
+    "Projected Home Margin of Victory"= home_mov_p
+  )
+game_score_projections %>% gt() %>% 
+  gtsave(filename = "game_score_projections_20190702.png")
 
 ```
 
@@ -96,102 +120,27 @@ datatable(player_alphas) %>%
 
 ```
 
-
-## FanDuel value line
+## Fantasy points predictions
 ```{r}
-fanduel_data <- season_dfs_feed %>% filter(!is.na(fanduel_salary))
-fanduel_model <- MASS::rlm(
-  1000 * fanduel_points ~ fanduel_salary, data = fanduel_data
-)
-fanduel_value_line <- ggplot(
-  data = fanduel_data, 
-  aes(fanduel_salary, fanduel_points)
-) +
-  geom_point() + 
-  geom_smooth(method = MASS::rlm)
-print(fanduel_value_line)
-
-```
-
-## DraftKings value line
-```{r}
-draftkings_data <- season_dfs_feed %>% filter(!is.na(draftkings_salary))
-draftkings_model <- MASS::rlm(
-  1000 * draftkings_points ~ draftkings_salary, data = draftkings_data
-)
-draftkings_value_line <- ggplot(
-  data = draftkings_data, 
-  aes(draftkings_salary, draftkings_points)
-) +
-  geom_point() + 
-  geom_smooth(method = MASS::rlm)
-print(draftkings_value_line)
-
-```
-
-## FanDuel prediction model
-```{r}
-fanduel_filtered <- fanduel_data %>% 
-  semi_join(teams_playing) %>% 
-  filter(fanduel_points >= 0)
 fanduel_glmodel <- stats::glm(fanduel_points ~ 
-    fanduel_salary +
     player + 
-    fanduel_position + 
     opponent_team + 
-    starter_y_n + 
     venue_r_h - 1, 
-  data = fanduel_filtered, family = quasipoisson
+  data = season_dfs_feed, family = quasipoisson
 )
-fanduel_augmented <- broom::augment(
-  fanduel_glmodel, type.predict = "response", type.residuals = "response"
-) %>% 
-  select(-.se.fit, -.hat:-.std.resid) %>% 
-  mutate(pct = 100 * .resid / fanduel_points)
-fanduel_leaderboard <- fanduel_augmented %>% 
-  group_by(player, fanduel_position) %>% summarize(
-    count = n(), 
-    p50 = quantile(.resid, 0.50, names = FALSE), 
-    p75 = quantile(.resid, 0.75, names = FALSE),
-    p95 = quantile(.resid, 0.95, names = FALSE)
-  ) %>% 
-  arrange(desc(p50))
-datatable(fanduel_leaderboard) %>% 
-  formatRound(columns = c("p50", "p75", "p95"), digits = 1)
-
-```
-
-
-## DraftKings prediction model
-```{r}
-draftkings_filtered <- draftkings_data %>% 
-  semi_join(teams_playing) %>% 
-  filter(draftkings_points >= 0)
-draftkings_glmodel <- stats::glm(
-  draftkings_points ~ 
-    draftkings_salary + 
+draftkings_glmodel <- stats::glm(draftkings_points ~ 
     player + 
-    draftkings_position +
     opponent_team + 
-    starter_y_n + 
     venue_r_h - 1, 
-  data = draftkings_filtered, family = quasipoisson
+  data = season_dfs_feed, family = quasipoisson
 )
-draftkings_augmented <- broom::augment(
-  draftkings_glmodel, type.predict = "response", type.residuals = "response"
-) %>% 
-  select(-.se.fit, -.hat:-.std.resid) %>% 
-  mutate(pct = 100 * .resid / draftkings_points)
-draftkings_leaderboard <- draftkings_augmented %>% 
-  group_by(player, draftkings_position) %>% summarize(
-    count = n(), 
-    p50 = quantile(.resid, 0.50, names = FALSE), 
-    p75 = quantile(.resid, 0.75, names = FALSE),
-    p95 = quantile(.resid, 0.95, names = FALSE)
-  ) %>% 
-  arrange(desc(p50))
-datatable(draftkings_leaderboard) %>% 
-  formatRound(columns = c("p50", "p75", "p95"), digits = 1)
+dfs_projections <- to_project %>% 
+  dplyr::mutate(
+    projected_fanduel_points = predict(
+      fanduel_glmodel, newdata = to_project, type = "response"),
+    projected_draftkings_points = predict(
+      draftkings_glmodel, newdata = to_project, type = "response")
+  )
 
 ```
 
