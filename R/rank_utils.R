@@ -9,14 +9,14 @@
 #' @importFrom stats rbinom
 #' @importFrom mvglmmRank mvglmmRank
 #' @param game_data a `game_data` tibble.
-#' @param method the `mvglmmRank` method to use - default is "NB.mov"
+#' @param method the `mvglmmRank` method to use - default is "NB"
 #' @param first.order the `mvglmmRank` first-order correction flag -
-#' default is `TRUE`
+#' default is `FALSE`
 #' @param verbose print a lot of stuff whilst iterating - default is `FALSE`
 #' @return an mvglmmRank model object
 
 mvglmmRank_model <- function(
-  game_data, method = "NB.mov", first.order = TRUE, verbose = FALSE) {
+  game_data, method = "NB", first.order = FALSE, verbose = FALSE) {
   print(start_time <- Sys.time())
   nb_model <- mvglmmRank::mvglmmRank(
     game.data = game_data,
