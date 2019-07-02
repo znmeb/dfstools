@@ -270,6 +270,7 @@ bdb_wnba_schedule <- function(excel_file) {
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr select
+#' @importFrom lubridate mdy
 #' @param excel_file a BigDataBall Excel DFS file
 #' @return a tibble with the DFS data
 
@@ -292,6 +293,7 @@ bdb_wnba_dfs <- function(excel_file) {
     "draftkings_points",
     "fanduel_points"
   )
+  season_dfs_feed$date <- lubridate::mdy(season_dfs_feed$date)
   return(season_dfs_feed)
 }
 
