@@ -227,10 +227,10 @@ kaggle_probability <- function(model, game_id) {
 ## global name declarations
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-  "away_prob_w",
-  "away_score_p",
-  "home_prob_w",
-  "home_score_p",
+  "road_team_prob_w",
+  "road_team_score_p",
+  "home_team_prob_w",
+  "home_team_score_p",
   "LScore",
   "LTeamID",
   "NumOT",

@@ -7,7 +7,7 @@
 game_predict(schedule, model)
 }
 \arguments{
-\item{schedule}{a data frame team names in "away" and "home" columns}
+\item{schedule}{a data frame team names in "road_team" and "home_team" columns}
 
 \item{model}{a model from mvglmmRank::mvglmmRank}
 }
