@@ -7,14 +7,14 @@
 # columns and some have 24 columns. The 24th column is usage rate as a
 # percentage. So we have two different standardized column names
 .colnames_23_cols <- c(
-  "data_set",
-  "date",
-  "player_full_name",
-  "position",
+  "dataset",
+  "game_date",
+  "player_name",
+  "bdb_position",
   "own_team",
   "opp_team",
   "venue_r_h",
-  "min",
+  "minutes",
   "fg",
   "fga",
   "x3p",
@@ -31,7 +31,7 @@
   "bl",
   "pts"
 )
-.colnames_24_cols <- c(.colnames_23_cols, "usage_rate_percent")
+.colnames_24_cols <- c(.colnames_23_cols, "usage_rate")
 
 #  Points calculators
 #' @title Real-world points
@@ -180,13 +180,13 @@ player_box_score <- function(spreadsheet, sheet_number = 1) {
   }
 
   # enforce venue code consistency
-  rx <- df$venue_r_h == "Road"
-  df$venue_r_h[rx] <- "R"
-  hx <- df$venue_r_h == "Home"
-  df$venue_r_h[hx] <- "H"
+  rx <- df$venue_r_h == "R"
+  df$venue_r_h[rx] <- "Road"
+  hx <- df$venue_r_h == "H"
+  df$venue_r_h[hx] <- "Home"
 
   # comparable date stamp
-  df$date <- lubridate::mdy(df$date)
+  df$game_date <- lubridate::mdy(df$game_date)
 
   # compute double-double, triple-double and fantasy points
   count <- .dd(df$tot) + .dd(df$a) + .dd(df$st) + .dd(df$bl) + .dd(df$pts)
@@ -222,9 +222,9 @@ player_box_score <- function(spreadsheet, sheet_number = 1) {
 #' }
 
 game_box_score <- function(pbs) {
-  df <- pbs %>% dplyr::select(`data_set`:`pts`) %>% dplyr::group_by(
-    data_set,
-    date,
+  df <- pbs %>% dplyr::select(`dataset`:`pts`) %>% dplyr::group_by(
+    dataset,
+    game_date,
     own_team,
     opp_team,
     venue_r_h
@@ -254,9 +254,9 @@ bdb_wnba_schedule <- function(excel_file) {
       ) %>%
       dplyr::select(
         game_start_time,
-        away = ...5,
-        away_rest = ...4,
-        home = ...8,
+        road_team = ...5,
+        road_rest = ...4,
+        home_team = ...8,
         home_rest = ...9
       )
   )
@@ -278,10 +278,10 @@ bdb_wnba_dfs <- function(excel_file) {
   season_dfs_feed <- readxl::read_excel(excel_file, skip = 2)
   names(season_dfs_feed) <- c(
     "dataset",
-    "date",
-    "player",
+    "game_date",
+    "player_name",
     "own_team",
-    "opponent_team",
+    "opp_team",
     "starter_y_n",
     "venue_r_h",
     "minutes",
@@ -293,7 +293,7 @@ bdb_wnba_dfs <- function(excel_file) {
     "draftkings_points",
     "fanduel_points"
   )
-  season_dfs_feed$date <- lubridate::mdy(season_dfs_feed$date)
+  season_dfs_feed$game_date <- lubridate::mdy(season_dfs_feed$game_date)
   return(season_dfs_feed)
 }
 
@@ -317,7 +317,7 @@ bdb_wnba_team <- function(excel_file) {
     dplyr::select(-VENUE)
   names(road) <- c(
     "dataset",
-    "date",
+    "game_date",
     "road_team",
     "road_final",
     "road_min",
@@ -437,8 +437,9 @@ utils::globalVariables(c(
   "...5",
   "...8",
   "...9",
-  "data_set",
+  "dataset",
   "game_start_time",
+  "game_date",
   "pts",
   "own_team",
   "opp_team",

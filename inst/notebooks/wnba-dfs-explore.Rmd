@@ -8,8 +8,6 @@ output: html_notebook
 library(tidyverse)
 library(DT)
 library(dfstools)
-library(Rmixmod)
-library(mclust)
 library(gt)
 regular_season_schedule <- dfstools::bdb_wnba_schedule(
   "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx"
@@ -22,14 +20,14 @@ this_week <- regular_season_schedule %>%
 
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
   "~/Dropbox/19-wnba-dfs/06-30-2019-wnba-season-dfs-feed.xlsx"
-) %>% dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
+) %>% 
+  dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
 
 # negative points crash the GLM quasi-poisson
 season_dfs_feed$fanduel_points <- 
   pmax(season_dfs_feed$fanduel_points, 0)
 season_dfs_feed$draftkings_points <-
   pmax(season_dfs_feed$draftkings_points, 0)
-
 season_dfs_feed <- season_dfs_feed %>% dplyr::mutate(
   fanduel_value = 1000 * fanduel_points / fanduel_salary,
   draftkings_value = 1000 * draftkings_points / draftkings_salary
@@ -39,18 +37,18 @@ player_box_score <- dfstools::player_box_score(
   "~/Dropbox/19-wnba-player/06-30-2019-wnba-season-player-feed.xlsx"
 )
 last_game_played <- season_dfs_feed %>% 
-  dplyr::group_by(player, own_team) %>% 
-  dplyr::summarize(games = n(), last_game = max(date)) %>% 
+  dplyr::group_by(player_name, own_team) %>% 
+  dplyr::summarize(games = n(), last_game = max(game_date)) %>% 
   ungroup()
 
 # who's playing where?
 road_players <- this_week %>% 
-  dplyr::left_join(last_game_played, by = c("away" = "own_team")) %>%
-  select(player, opponent_team = home) %>% 
+  dplyr::left_join(last_game_played, by = c("road_team" = "own_team")) %>%
+  select(player_name, opp_team = home_team) %>% 
   mutate(venue_r_h = "Road")
 home_players <- this_week %>% 
-  dplyr::left_join(last_game_played, by = c("home" = "own_team")) %>%
-  select(player, opponent_team = away) %>% 
+  dplyr::left_join(last_game_played, by = c("home_team" = "own_team")) %>%
+  select(player_name, opp_team = road_team) %>% 
   mutate(venue_r_h = "Home")
 to_project <- dplyr::bind_rows(road_players, home_players)
 
@@ -60,20 +58,7 @@ season_team_feed <- dfstools::bdb_wnba_team("~/Dropbox/19-wnba-team/06-30-2019-w
 
 ## Game predictions
 ```{r}
-game_data <- season_team_feed %>% 
-  dplyr::mutate(
-    binary.response = as.integer(home_pts > road_pts),
-    neutral.site = 0
-    ) %>% dplyr::select(
-      home = home_team,
-      away = road_team,
-      home.response = home_pts,
-      away.response = road_pts,
-      binary.response,
-      neutral.site,
-      OT = num_ot
-    )
-rank_model <- dfstools::mvglmmRank_model(game_data)
+rank_model <- dfstools::bdb_wnba_rank_model(season_team_feed)
 augmented_schedule <- dfstools::game_predict(
   regular_season_schedule, rank_model
 )
@@ -81,58 +66,35 @@ game_score_projections <- augmented_schedule %>%
   dplyr::semi_join(this_week) %>% 
   dplyr::select(
     `Game Start (EDT)` = game_start_time,
-    "Road Team" = away,
-    "Home Team" = home,
-    "Projected Road Score" = away_score_p,
-    "Projected Home Score" = home_score_p,
+    "Road Team" = road_team,
+    "Home Team" = home_team,
+    "Projected Road Score" = road_team_score_p,
+    "Projected Home Score" = home_team_score_p,
     "Projected Total" = total_p,
-    "Projected Home Margin of Victory"= home_mov_p
+    "Projected Home Margin of Victory"= home_team_mov_p
   )
 game_score_projections %>% gt() %>% 
   gtsave(filename = "game_score_projections_20190702.png")
 
 ```
 
-## Archetypal analysis
-```{r}
-## Prepare archetypal analysis input
-player_totals <- player_box_score %>% 
-  mutate(player_name = player_full_name) %>% 
-  select(
-    player_name, tot, x3p, a, st, to, bl, pts, ddbl, tdbl, min, games) %>% 
-  group_by(player_name) %>% 
-  summarize_if(is.numeric, sum) %>% 
-  ungroup()
-player_labels <- player_totals %>% select(player_name)
-
-## Compute the three-archetype model
-archetypal_analysis <- dfstools::compute_archetypes(
-  player_totals, player_labels, num_archetypes = 3)
-player_alphas <- archetypal_analysis[["player_alphas"]] %>% 
-  mutate(PlayerCode = as_factor(sprintf(
-    "%s: Rim %1.4f, Floor %1.4f",
-    player_name, 
-    Rim, 
-    Floor
-  )))
-datatable(player_alphas) %>% 
-  formatRound(columns = c("Rim", "Floor", "Bench"), digits = 4)
-
-```
-
 ## Fantasy points predictions
 ```{r}
+fanduel_training <- season_dfs_feed %>% 
+  dplyr::select(player_name, opp_team, venue_r_h, fanduel_points)
 fanduel_glmodel <- stats::glm(fanduel_points ~ 
-    player + 
-    opponent_team + 
+    player_name + 
+    opp_team + 
     venue_r_h - 1, 
-  data = season_dfs_feed, family = quasipoisson
+  data = fanduel_training, family = quasipoisson
 )
+draftkings_training <- season_dfs_feed %>% 
+  dplyr::select(player_name, opp_team, venue_r_h, draftkings_points)
 draftkings_glmodel <- stats::glm(draftkings_points ~ 
-    player + 
-    opponent_team + 
+    player_name + 
+    opp_team + 
     venue_r_h - 1, 
-  data = season_dfs_feed, family = quasipoisson
+  data = draftkings_training, family = quasipoisson
 )
 dfs_projections <- to_project %>% 
   dplyr::mutate(

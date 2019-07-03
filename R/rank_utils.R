@@ -37,7 +37,7 @@ mvglmmRank_model <- function(
 #' @export game_predict
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
-#' @param schedule a data frame team names in "away" and "home" columns
+#' @param schedule a data frame team names in "road_team" and "home_team" columns
 #' @param model a model from mvglmmRank::mvglmmRank
 #' @return the schedule augmented with prediction columns
 
@@ -49,46 +49,46 @@ game_predict <-
     # are there normal score ratings?
     if (!is.null(model$n.ratings.offense)) {
       aug_schedule <- aug_schedule %>% dplyr::mutate(
-        away_score_p =
+        road_team_score_p =
           round(model$n.mean["LocationAway"] +
-          model$n.ratings.offense[away] -
-          model$n.ratings.defense[home], 1),
-        home_score_p =
+          model$n.ratings.offense[road_team] -
+          model$n.ratings.defense[home_team], 1),
+        home_team_score_p =
           round(model$n.mean["LocationHome"] +
-          model$n.ratings.offense[home] -
-          model$n.ratings.defense[away], 1),
-        total_p =  round(home_score_p + away_score_p, 0),
-        home_mov_p = round(home_score_p - away_score_p, 1))
+          model$n.ratings.offense[home_team] -
+          model$n.ratings.defense[road_team], 1),
+        total_p =  round(home_team_score_p + road_team_score_p, 0),
+        home_team_mov_p = round(home_team_score_p - road_team_score_p, 1))
     }
 
     # are there Poisson score ratings?
     if (!is.null(model$p.ratings.offense)) {
       aug_schedule <- aug_schedule %>% dplyr::mutate(
-        away_score_p =
+        road_team_score_p =
           round(exp(
             model$p.mean["LocationAway"] +
-              model$p.ratings.offense[away] -
-              model$p.ratings.defense[home]), 1),
-        home_score_p =
+              model$p.ratings.offense[road_team] -
+              model$p.ratings.defense[home_team]), 1),
+        home_team_score_p =
           round(exp(
             model$p.mean["LocationHome"] +
-              model$p.ratings.offense[home] -
-              model$p.ratings.defense[away]), 1),
-        total_p = round(home_score_p + away_score_p, 0),
-        home_mov_p = round(home_score_p - away_score_p, 1))
+              model$p.ratings.offense[home_team] -
+              model$p.ratings.defense[road_team]), 1),
+        total_p = round(home_team_score_p + road_team_score_p, 0),
+        home_team_mov_p = round(home_team_score_p - road_team_score_p, 1))
     }
 
     # are there binomial win probability ratings?
     if (!is.null(model$b.ratings)) {
       aug_schedule <- aug_schedule %>% dplyr::mutate(
-        home_prob_w =
+        home_team_prob_w =
           round(stats::pnorm(
             model$b.mean +
-              model$b.ratings[home] -
-              model$b.ratings[away]), 3),
-        away_prob_w = round(1 - home_prob_w, 3),
-        entropy = round(-log2(home_prob_w) * home_prob_w -
-          log2(away_prob_w) * away_prob_w, 3))
+              model$b.ratings[home_team] -
+              model$b.ratings[road_team]), 3),
+        road_team_prob_w = round(1 - home_team_prob_w, 3),
+        entropy = round(-log2(home_team_prob_w) * home_team_prob_w -
+          log2(road_team_prob_w) * road_team_prob_w, 3))
     }
 
     return(aug_schedule)
