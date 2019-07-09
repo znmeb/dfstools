@@ -15,14 +15,18 @@ library(gt)
 ```{r}
 regular_season_schedule <- dfstools::bdb_wnba_schedule(
   "~/DFS/NBAStuffer_WNBA/2019_WNBA_Regular_Season_Original_Schedule.xlsx"
+) %>% dplyr::mutate(
+    game_date = strftime(game_start_time, format = "%Y-%m-%d"),
+    game_slug = paste0(road_team, " @ ", home_team)
 )
+
 this_week <- regular_season_schedule %>% 
   dplyr::filter(
-    game_start_time > '2019-07-06',
-    game_start_time < '2019-07-13'
+    game_start_time > '2019-07-08',
+    game_start_time < '2019-07-15'
   )
 season_team_feed <- dfstools::bdb_wnba_team(
-  "~/Dropbox/19-wnba-team/07-05-2019-wnba-season-team-feed.xlsx"
+  "~/Dropbox/19-wnba-team/07-07-2019-wnba-season-team-feed.xlsx"
 )
 
 rank_model <- dfstools::bdb_wnba_rank_model(season_team_feed)
@@ -48,12 +52,8 @@ game_score_projections %>% gt() %>%
 ## DFS data wrangling
 ```{r message=FALSE}
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
-  "~/Dropbox/19-wnba-dfs/07-05-2019-wnba-season-dfs-feed.xlsx"
-) %>% 
-  dplyr::filter(!is.na(fanduel_salary), !is.na(draftkings_salary))
-
-# tidy DFS feed
-season_dfs_feed <- season_dfs_feed %>% dplyr::filter(
+  "~/Dropbox/19-wnba-dfs/07-07-2019-wnba-season-dfs-feed.xlsx"
+) %>% dplyr::filter(
   !is.na(fanduel_salary),
   !is.na(draftkings_salary),
   minutes > 0,
@@ -63,21 +63,23 @@ season_dfs_feed <- season_dfs_feed %>% dplyr::filter(
   fanduel_value = 1000 * fanduel_points / fanduel_salary,
   draftkings_value = 1000 * draftkings_points / draftkings_salary
 )
+fanduel_coefficients <- MASS::rlm(
+  fanduel_salary ~ fanduel_points, data = season_dfs_feed)$coefficients
+draftkings_coefficients <- MASS::rlm(
+  draftkings_salary ~ draftkings_points, data = season_dfs_feed)$coefficients
 
 last_game_played <- season_dfs_feed %>% 
-  dplyr::group_by(player_name, own_team) %>% 
+  dplyr::group_by(player_name, own_team, fanduel_position, draftkings_position) %>% 
   dplyr::summarize(games = n(), last_game = max(game_date)) %>% 
   ungroup()
 
 # who's playing where?
 road_players <- this_week %>% 
-  dplyr::left_join(last_game_played, by = c("road_team" = "own_team")) %>%
-  dplyr::select(player_name, opp_team = home_team, game_start_time) %>% 
-  dplyr::mutate(venue_r_h = "Road")
+  dplyr::left_join(last_game_played, by = c("road_team" = "own_team")) %>% 
+  dplyr::mutate(venue_r_h = "Road", opp_team = home_team)
 home_players <- this_week %>% 
   dplyr::left_join(last_game_played, by = c("home_team" = "own_team")) %>%
-  dplyr::select(player_name, opp_team = road_team, game_start_time) %>% 
-  dplyr::mutate(venue_r_h = "Home")
+  dplyr::mutate(venue_r_h = "Home", opp_team = road_team)
 to_project <- dplyr::bind_rows(road_players, home_players)
 
 ```
@@ -109,24 +111,78 @@ draftkings_glmodel <- stats::glm(
 
 ## Projections
 ```{r}
-dfs_projections <- to_project %>% 
+fanduel_projections <- to_project %>% 
   dplyr::mutate(
     projected_minutes = round(predict(
       minutes_glmodel, newdata = to_project, type = "response"), 2),
     projected_fanduel_points = round(predict(
       fanduel_glmodel, newdata = to_project, type = "response"), 2),
-    projected_draftkings_points = round(predict(
-      draftkings_glmodel, newdata = to_project, type = "response"), 2)
-  ) %>% 
-  dplyr::left_join(last_game_played) %>%
-  dplyr::mutate(
-    game_slug = ifelse(
-      venue_r_h == "Home",
-      paste0(opp_team, " @ ", own_team),
-      paste0(own_team, " @ ", opp_team)
-    ),
-    game_date = strftime(game_start_time, format = "%Y-%m-%d")
+    fair_fanduel_salary = round(
+      fanduel_coefficients[1] + fanduel_coefficients[2] * projected_fanduel_points, -2),
+  ) %>%
+  dplyr::select(
+    game_date, game_slug, player_name, fanduel_position, opp_team,
+    projected_minutes, projected_fanduel_points
   ) %>% 
   dplyr::arrange(game_date, desc(projected_fanduel_points))
 
+draftkings_projections <- to_project %>% 
+  dplyr::mutate(
+    projected_minutes = round(predict(
+      minutes_glmodel, newdata = to_project, type = "response"), 2),
+    projected_draftkings_points = round(predict(
+      draftkings_glmodel, newdata = to_project, type = "response"), 2),
+    fair_draftkings_salary = round(
+      draftkings_coefficients[1] + draftkings_coefficients[2] * projected_draftkings_points, -2),
+  ) %>%
+  dplyr::select(
+    game_date, game_slug, player_name, draftkings_position, opp_team,
+    projected_minutes, projected_draftkings_points
+  ) %>% 
+  dplyr::arrange(game_date, desc(projected_draftkings_points))
+
 ```
+
+## Value calculations
+```{r}
+fanduel_rosters <- read_csv("../../FanDuel-WNBA.csv") %>% 
+  dplyr::select(
+    player_name = Nickname, fanduel_position = Position, fanduel_salary = Salary
+  )
+fanduel_slate <- fanduel_projections %>% 
+  dplyr::filter(game_date == min(game_date)) %>% 
+  dplyr::select(-fanduel_position)
+fanduel_values <- fanduel_rosters %>% 
+  dplyr::left_join(fanduel_slate) %>% dplyr::select(
+    player_name,
+    fanduel_position,
+    fanduel_salary,
+    projected_minutes,
+    projected_fanduel_points
+  ) %>% dplyr::mutate(
+    fanduel_value = 1000 * projected_fanduel_points / fanduel_salary) %>% 
+  dplyr::arrange(desc(fanduel_value))
+View(fanduel_values)
+
+draftkings_rosters <- read_csv("../../DKSalaries.csv") %>% 
+  dplyr::select(
+    player_name = Name,
+    draftkings_position = "Roster Position",
+    draftkings_salary = Salary
+  )
+draftkings_slate <- draftkings_projections %>% 
+  dplyr::filter(game_date == min(game_date)) %>% 
+  dplyr::select(-draftkings_position) 
+draftkings_values <- draftkings_rosters %>% 
+  dplyr::left_join(draftkings_slate, by = "player_name") %>% dplyr::select(
+    player_name,
+    draftkings_position,
+    draftkings_salary,
+    projected_minutes,
+    projected_draftkings_points
+  ) %>% dplyr::mutate(
+    draftkings_value = 1000 * projected_draftkings_points / draftkings_salary) %>% 
+  dplyr::arrange(desc(draftkings_value))
+View(draftkings_values)
+```
+
