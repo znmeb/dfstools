@@ -22,8 +22,8 @@ regular_season_schedule <- dfstools::bdb_wnba_schedule(
 
 this_week <- regular_season_schedule %>% 
   dplyr::filter(
-    game_start_time > '2019-07-08',
-    game_start_time < '2019-07-15'
+    game_start_time > '2019-07-10',
+    game_start_time < '2019-07-17'
   )
 season_team_feed <- dfstools::bdb_wnba_team(
   "~/Dropbox/19-wnba-team/07-07-2019-wnba-season-team-feed.xlsx"
@@ -143,17 +143,17 @@ draftkings_projections <- to_project %>%
 
 ```
 
-## Value calculations
+## FanDuel main
 ```{r}
-fanduel_rosters <- read_csv("../../FanDuel-WNBA.csv") %>% 
+fanduel_main_rosters <- read_csv("../../FanDuel-WNBA-main.csv") %>% 
   dplyr::select(
     player_name = Nickname, fanduel_position = Position, fanduel_salary = Salary
   )
-fanduel_slate <- fanduel_projections %>% 
+fanduel_main_slate <- fanduel_projections %>% 
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-fanduel_position)
-fanduel_values <- fanduel_rosters %>% 
-  dplyr::left_join(fanduel_slate) %>% dplyr::select(
+fanduel_main_values <- fanduel_main_rosters %>% 
+  dplyr::left_join(fanduel_main_slate) %>% dplyr::select(
     player_name,
     fanduel_position,
     fanduel_salary,
@@ -162,8 +162,35 @@ fanduel_values <- fanduel_rosters %>%
   ) %>% dplyr::mutate(
     fanduel_value = 1000 * projected_fanduel_points / fanduel_salary) %>% 
   dplyr::arrange(desc(fanduel_value))
-View(fanduel_values)
+View(fanduel_main_values)
 
+```
+
+## FanDuel single
+```{r}
+fanduel_single_rosters <- read_csv("../../FanDuel-WNBA-single.csv") %>% 
+  dplyr::select(
+    player_name = Nickname, fanduel_position = Position, fanduel_salary = Salary
+  )
+fanduel_single_slate <- fanduel_projections %>% 
+  dplyr::filter(game_date == min(game_date)) %>% 
+  dplyr::select(-fanduel_position)
+fanduel_single_values <- fanduel_single_rosters %>% 
+  dplyr::left_join(fanduel_single_slate) %>% dplyr::select(
+    player_name,
+    fanduel_position,
+    fanduel_salary,
+    projected_minutes,
+    projected_fanduel_points
+  ) %>% dplyr::mutate(
+    fanduel_value = 1000 * projected_fanduel_points / fanduel_salary) %>% 
+  dplyr::arrange(desc(fanduel_value))
+View(fanduel_single_values)
+
+```
+
+## DraftKings
+```{r}
 draftkings_rosters <- read_csv("../../DKSalaries.csv") %>% 
   dplyr::select(
     player_name = Name,
