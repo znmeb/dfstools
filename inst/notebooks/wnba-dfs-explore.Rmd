@@ -153,7 +153,7 @@ fanduel_main_slate <- fanduel_projections %>%
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-fanduel_position)
 minutes_cutoff <- quantile(
-  fanduel_main_slate$projected_minutes, probs = 0.75, na.rm = TRUE
+  fanduel_main_slate$projected_minutes, probs = 0.50, na.rm = TRUE
 )
 fanduel_main_values <- fanduel_main_rosters %>% 
   dplyr::left_join(fanduel_main_slate) %>% dplyr::select(
@@ -180,7 +180,7 @@ fanduel_single_slate <- fanduel_projections %>%
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-fanduel_position)
 minutes_cutoff <- quantile(
-  fanduel_single_slate$projected_minutes, probs = 0.75, na.rm = TRUE
+  fanduel_single_slate$projected_minutes, probs = 0.50, na.rm = TRUE
 )
 fanduel_single_values <- fanduel_single_rosters %>% 
   dplyr::left_join(fanduel_single_slate) %>% dplyr::select(
@@ -209,7 +209,7 @@ draftkings_slate <- draftkings_projections %>%
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-draftkings_position) 
 minutes_cutoff <- quantile(
-  draftkings_slate$projected_minutes, probs = 0.75, na.rm = TRUE
+  draftkings_slate$projected_minutes, probs = 0.50, na.rm = TRUE
 )
 draftkings_values <- draftkings_rosters %>% 
   dplyr::left_join(draftkings_slate, by = "player_name") %>% dplyr::select(
