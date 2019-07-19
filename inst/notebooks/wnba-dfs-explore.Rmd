@@ -21,8 +21,8 @@ regular_season_schedule <- dfstools::bdb_wnba_schedule(
 
 this_week <- regular_season_schedule %>% 
   dplyr::filter(
-    game_start_time > '2019-07-18',
-    game_start_time < '2019-07-25'
+    game_start_time > '2019-07-19',
+    game_start_time < '2019-07-26'
   )
 season_team_feed <- dfstools::bdb_wnba_team(
   "~/Dropbox/19-wnba-team/07-17-2019-wnba-season-team-feed.xlsx"
@@ -151,9 +151,6 @@ fanduel_main_rosters <- read_csv("../../FanDuel-WNBA-main.csv") %>%
 fanduel_main_slate <- fanduel_projections %>% 
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-fanduel_position)
-minutes_cutoff <- quantile(
-  fanduel_main_slate$projected_minutes, probs = 0.50, na.rm = TRUE
-)
 fanduel_main_values <- fanduel_main_rosters %>% 
   dplyr::left_join(fanduel_main_slate) %>% dplyr::select(
     player_name,
@@ -163,8 +160,7 @@ fanduel_main_values <- fanduel_main_rosters %>%
     projected_fanduel_points
   ) %>% dplyr::mutate(
     fanduel_value = 1000 * projected_fanduel_points / fanduel_salary) %>% 
-  dplyr::arrange(desc(fanduel_value)) %>% 
-  dplyr::filter(projected_minutes > minutes_cutoff)
+  dplyr::arrange(desc(fanduel_value))
 View(fanduel_main_values)
 
 ```
@@ -178,9 +174,6 @@ fanduel_single_rosters <- read_csv("../../FanDuel-WNBA-single.csv") %>%
 fanduel_single_slate <- fanduel_projections %>% 
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-fanduel_position)
-minutes_cutoff <- quantile(
-  fanduel_single_slate$projected_minutes, probs = 0.50, na.rm = TRUE
-)
 fanduel_single_values <- fanduel_single_rosters %>% 
   dplyr::left_join(fanduel_single_slate) %>% dplyr::select(
     player_name,
@@ -190,8 +183,7 @@ fanduel_single_values <- fanduel_single_rosters %>%
     projected_fanduel_points
   ) %>% dplyr::mutate(
     fanduel_value = 1000 * projected_fanduel_points / fanduel_salary) %>% 
-  dplyr::arrange(desc(fanduel_value)) %>% 
-  dplyr::filter(projected_minutes > minutes_cutoff)
+  dplyr::arrange(desc(fanduel_value))
 View(fanduel_single_values)
 
 ```
@@ -207,9 +199,6 @@ draftkings_main_rosters <- read_csv("../../DKSalaries-main.csv") %>%
 draftkings_main_slate <- draftkings_projections %>% 
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-draftkings_position) 
-minutes_cutoff <- quantile(
-  draftkings_main_slate$projected_minutes, probs = 0.50, na.rm = TRUE
-)
 draftkings_main_values <- draftkings_main_rosters %>% 
   dplyr::left_join(draftkings_main_slate, by = "player_name") %>% dplyr::select(
     player_name,
@@ -219,8 +208,7 @@ draftkings_main_values <- draftkings_main_rosters %>%
     projected_draftkings_points
   ) %>% dplyr::mutate(
     draftkings_value = 1000 * projected_draftkings_points / draftkings_salary) %>% 
-  dplyr::arrange(desc(draftkings_value)) %>% 
-  dplyr::filter(projected_minutes > minutes_cutoff)
+  dplyr::arrange(desc(draftkings_value))
 View(draftkings_main_values)
 ```
 
@@ -236,9 +224,6 @@ draftkings_showdown_rosters <- read_csv("../../DKSalaries-showdown.csv") %>%
 draftkings_showdown_slate <- draftkings_projections %>% 
   dplyr::filter(game_date == min(game_date)) %>% 
   dplyr::select(-draftkings_position) 
-minutes_cutoff <- quantile(
-  draftkings_showdown_slate$projected_minutes, probs = 0.50, na.rm = TRUE
-)
 draftkings_showdown_values <- draftkings_showdown_rosters %>% 
   dplyr::left_join(draftkings_showdown_slate, by = "player_name") %>% dplyr::select(
     player_name,
@@ -248,8 +233,7 @@ draftkings_showdown_values <- draftkings_showdown_rosters %>%
     projected_draftkings_points
   ) %>% dplyr::mutate(
     draftkings_value = 1000 * projected_draftkings_points / draftkings_salary) %>% 
-  dplyr::arrange(desc(draftkings_value)) %>% 
-  dplyr::filter(projected_minutes > minutes_cutoff)
+  dplyr::arrange(desc(draftkings_value))
 View(draftkings_showdown_values)
 ```
 
