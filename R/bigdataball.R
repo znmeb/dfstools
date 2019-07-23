@@ -369,7 +369,7 @@ bdb_wnba_team <- function(excel_file) {
   merged <- dplyr::bind_cols(road, home) %>%
     dplyr::mutate(
       num_ot = round((home_min - 200) / 5, 0)
-    ) %>% dplyr::select(minutes = road_min, -home_min)
+    ) %>% dplyr::select(-home_min)
   return( merged)
 }
 
