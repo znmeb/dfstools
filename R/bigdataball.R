@@ -311,15 +311,15 @@ bdb_wnba_dfs <- function(excel_file) {
 
 bdb_wnba_team <- function(excel_file) {
   raw_data <- readxl::read_excel(excel_file) %>% dplyr::select(
-    -`1Q`:-`OT5`, -`OPENING\r\nODDS`, -`1st HALF\r\nODDS`:-`2nd HALF\r\nODDS`
+    `DATASET`:`VENUE`, `MIN`:`DEFF`
   )
+  #View(raw_data); stop()
   road <- raw_data %>% dplyr::filter(VENUE == "Road") %>%
     dplyr::select(-VENUE)
   names(road) <- c(
     "dataset",
     "game_date",
     "road_team",
-    "road_final",
     "road_min",
     "road_fg",
     "road_fga",
@@ -339,15 +339,12 @@ bdb_wnba_team <- function(excel_file) {
     "road_poss",
     "road_pace",
     "road_oeff",
-    "road_deff",
-    "road_rest_days",
-    "road_closing_odds"
+    "road_deff"
   )
   home <- raw_data %>% dplyr::filter(VENUE == "Home") %>%
     dplyr::select(-DATASET, -DATE, -VENUE)
   names(home) <- c(
     "home_team",
-    "home_final",
     "home_min",
     "home_fg",
     "home_fga",
@@ -367,22 +364,12 @@ bdb_wnba_team <- function(excel_file) {
     "home_poss",
     "home_pace",
     "home_oeff",
-    "home_deff",
-    "home_rest_days",
-    "home_closing_odds"
+    "home_deff"
   )
   merged <- dplyr::bind_cols(road, home) %>%
     dplyr::mutate(
-      num_ot = round((home_min - 200) / 5, 0),
-      over_under = ifelse(
-        road_closing_odds > 0, road_closing_odds, home_closing_odds),
-      road_closing_spread = ifelse(
-        road_closing_odds > 0, -home_closing_odds, road_closing_odds),
-      home_closing_spread = ifelse(
-        home_closing_odds > 0, -road_closing_odds, home_closing_odds)
-    ) %>% dplyr::select(
-      -home_closing_odds, -road_closing_odds, -road_min, -home_final, -road_final
-    )
+      num_ot = round((home_min - 200) / 5, 0)
+    ) %>% dplyr::select(minutes = road_min, -home_min)
   return( merged)
 }
 
@@ -422,6 +409,8 @@ utils::globalVariables(c(
   "VENUE",
   "1Q",
   "OT5",
+  "MIN",
+  "DEFF",
   "OPENING\r\nODDS",
   "1st HALF\r\nODDS",
   "2nd HALF\r\nODDS",
