@@ -21,11 +21,11 @@ regular_season_schedule <- dfstools::bdb_wnba_schedule(
 
 this_week <- regular_season_schedule %>% 
   dplyr::filter(
-    game_start_time > '2019-07-23',
-    game_start_time < '2019-07-30'
+    game_start_time > '2019-07-24',
+    game_start_time < '2019-07-31'
   )
 season_team_feed <- dfstools::bdb_wnba_team(
-  "~/Dropbox/19-wnba-team/07-21-2019-wnba-season-team-feed.xlsx"
+  "~/Dropbox/19-wnba-team/07-23-2019-wnba-season-team-feed.xlsx"
 )
 
 # rank_model <- dfstools::bdb_wnba_rank_model(season_team_feed)
@@ -51,7 +51,7 @@ season_team_feed <- dfstools::bdb_wnba_team(
 ## DFS data wrangling
 ```{r message=FALSE}
 season_dfs_feed <- dfstools::bdb_wnba_dfs(
-  "~/Dropbox/19-wnba-dfs/07-21-2019-wnba-season-dfs-feed.xlsx"
+  "~/Dropbox/19-wnba-dfs/07-23-2019-wnba-season-dfs-feed.xlsx"
 ) %>% dplyr::filter(
   !is.na(fanduel_salary),
   !is.na(draftkings_salary),
