@@ -1,5 +1,3 @@
 template:
   params:
-    bootswatch: flatly
-development:
-  mode: release
+    bootswatch: cerulean
