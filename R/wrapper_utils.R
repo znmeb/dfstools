@@ -1,14 +1,19 @@
 # locals
 
-# We want to ignore two types of columns:
-# 1. List columns - databases don't like them, and
-# 2. Columns that are filled with NAs - they waste
-#    space and time.
+# We want to ignore columns that are filled with NAs - they waste space
+# and time.
 .good_column <- function(x) {
-  !all(is.na(x)) & (typeof(x) != "list")
+  !all(is.na(x))
 }
 .good_columns <- function(df) {
   dplyr::select_if(.tbl = df, .predicate = .good_column)
+}
+
+.list_column <- function(league) {
+  if (league == "nba" | league == "nfl") return("score_quarters")
+  if (league == "mlb") return("score_innings")
+  if (league == "nhl") return("score_periods")
+  stop(league)
 }
 
 #' @title Set MySportsFeeds API key
@@ -208,8 +213,12 @@ msf_get_feed <- function(url, verbose) {
 #'   \item date the game date (started) in the Eastern USA
 #'     timezone ("EST5EDT").
 #'   \item slug the game slug (date-away_team-home_team)
-#'   \item ot number of overtime periods
 #' }
+#'
+#' The MySportsFeeds API returns a list column with the scores in each inning
+#' (MLB), quarter (NFL and NBA) or period (NHL). This column is unpacked with
+#' `unnest` row-wise, so there is a row for each inning / quarter / period in
+#' the game, including extra innings / overtime.
 #'
 #' The returned tibble will be sorted in chronological order.
 #' @examples
@@ -234,13 +243,11 @@ msf_seasonal_games <- function(league, season, verbose) {
     colnames(games) <- colnames(games) %>%
       snakecase::to_snake_case()
 
-    # save the quarter scores for OT calculation
-    score_quarters <- games[["score_quarters"]]
-
     games <- games %>%
       .good_columns() %>%
+      tidyr::unnest(cols = .list_column(league)) %>%
+      dplyr::select(-schedule_officials, -schedule_broadcasters) %>%
       dplyr::mutate(
-        score_quarters = score_quarters,
         league = league,
         season = season,
         date = lubridate::as_datetime(schedule_start_time) %>%
@@ -253,11 +260,7 @@ msf_seasonal_games <- function(league, season, verbose) {
           schedule_home_team_abbreviation
         )
       )
-    ot_counts <- games %>% tidyr::unnest() %>%
-      dplyr::group_by(slug) %>%
-      dplyr::summarize(ot = dplyr::n() - 4)
-    games <- dplyr::full_join(games, ot_counts) %>%
-      dplyr::select(-score_quarters)
+    colnames(games) <- colnames(games) %>% snakecase::to_snake_case()
     return(list(
       status_code = status_code,
       games = games %>% dplyr::arrange(schedule_start_time)
@@ -569,6 +572,8 @@ utils::globalVariables(c(
   "schedule.startTime",
   "schedule_start_time",
   "schedule.weather",
+  "schedule_broadcasters",
+  "schedule_officials",
   "score.currentIntermission",
   "score.currentQuarter",
   "score.quarters",

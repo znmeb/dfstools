@@ -32,8 +32,12 @@ Returns a data frame of games from MySportsFeeds version 2.0 API
 \item date the game date (started) in the Eastern USA
 timezone ("EST5EDT").
 \item slug the game slug (date-away_team-home_team)
-\item ot number of overtime periods
 }
+
+The MySportsFeeds API returns a list column with the scores in each inning
+(MLB), quarter (NFL and NBA) or period (NHL). This column is unpacked with
+\code{unnest} row-wise, so there is a row for each inning / quarter / period in
+the game, including extra innings / overtime.
 
 The returned tibble will be sorted in chronological order.
 }
