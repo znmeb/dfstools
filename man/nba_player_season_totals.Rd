@@ -7,7 +7,7 @@
 nba_player_season_totals(season)
 }
 \arguments{
-\item{season}{a valid MySportsFeeds v2.0 API season name}
+\item{season}{a valid MySportsFeeds v2.1 API season name}
 }
 \value{
 a tibble of season total box score statistics, arranged by

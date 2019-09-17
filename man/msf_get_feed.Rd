@@ -20,11 +20,11 @@ otherwise, the raw text.
 }
 }
 \description{
-GETs data from the MySportsFeeds 2.0 API feed
+GETs data from the MySportsFeeds 2.1 API feed
 }
 \examples{
 \dontrun{
 response <- dfstools::msf_get_feed(
-"https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
+"https://api.mysportsfeeds.com/v2.1/pull/nba/2018-playoff/games.json"
 )}
 }

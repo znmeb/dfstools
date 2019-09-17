@@ -31,10 +31,10 @@
 #' \enumerate{
 #'   \item Go to the MySportsFeeds Patreon page
 #'   \url{https://www.patreon.com/mysportsfeeds/posts} and become
-#'   a patron. You'll need to be a patron to use the v2.0 API.
+#'   a patron. You'll need to be a patron to use the v2.1 API.
 #'   \item Go to the MySportsFeeds home page
 #'   \url{https://www.mysportsfeeds.com/} and sign up.
-#'   \item Create a v2.0 API key and copy it to the clipboard.
+#'   \item Create a v2.1 API key and copy it to the clipboard.
 #'   This package does \strong{not} support the v1.x APIs.
 #'   \item In R, paste the API key in the following:
 #'
@@ -90,10 +90,6 @@ msf_seasons <- function() {
     "nhl", "2018-playoff",
     "nhl", "2018-2019-regular",
     "nhl", "2019-playoff",
-    "nfl", "2015-regular",
-    "nfl", "2016-playoff",
-    "nfl", "2016-regular",
-    "nfl", "2017-playoff",
     "nfl", "2017-regular",
     "nfl", "2018-playoff",
     "nfl", "2018-regular",
@@ -109,7 +105,7 @@ msf_seasons <- function() {
 
 #' @title GET from MySportsFeeds API
 #' @name msf_get_feed
-#' @description GETs data from the MySportsFeeds 2.0 API feed
+#' @description GETs data from the MySportsFeeds 2.1 API feed
 #' @importFrom httr GET
 #' @importFrom httr authenticate
 #' @importFrom httr status_code
@@ -127,7 +123,7 @@ msf_seasons <- function() {
 #' @examples
 #' \dontrun{
 #' response <- dfstools::msf_get_feed(
-#' "https://api.mysportsfeeds.com/v2.0/pull/nba/2018-playoff/games.json"
+#' "https://api.mysportsfeeds.com/v2.1/pull/nba/2018-playoff/games.json"
 #' )}
 
 msf_get_feed <- function(url, verbose) {
@@ -189,7 +185,7 @@ msf_get_feed <- function(url, verbose) {
 
 #' @title MySportsFeeds Seasonal Games
 #' @name msf_seasonal_games
-#' @description Returns a data frame of games from MySportsFeeds version 2.0 API
+#' @description Returns a data frame of games from MySportsFeeds version 2.1 API
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
@@ -235,7 +231,7 @@ msf_get_feed <- function(url, verbose) {
 
 msf_seasonal_games <- function(league, season, verbose) {
   url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/games.json",
+    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/games.json",
     league,
     season
   )
@@ -277,7 +273,7 @@ msf_seasonal_games <- function(league, season, verbose) {
 #' @title MySportsFeeds Seasonal Players
 #' @name msf_seasonal_players
 #' @description Returns a data frame of players from
-#' MySportsFeeds version 2.0 API
+#' MySportsFeeds version 2.1 API
 #' @importFrom dplyr %>%
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
@@ -304,7 +300,7 @@ msf_seasonal_games <- function(league, season, verbose) {
 
 msf_seasonal_players <- function(league, season, verbose) {
   url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.0/pull/%s/players.json?season=%s",
+    "https://api.mysportsfeeds.com/v2.1/pull/%s/players.json?season=%s",
     league,
     season
   )
@@ -330,7 +326,7 @@ msf_seasonal_players <- function(league, season, verbose) {
 
 #' @title MySportsFeeds Seasonal DFS
 #' @name msf_seasonal_dfs
-#' @description Gets DFS data object from from MySportsFeeds version 2.0 API
+#' @description Gets DFS data object from from MySportsFeeds version 2.1 API
 #' @export msf_seasonal_dfs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
@@ -359,7 +355,7 @@ msf_seasonal_players <- function(league, season, verbose) {
 msf_seasonal_dfs <- function(
   league, season, team, verbose) {
   url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/dfs.json?team=%s",
+    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/dfs.json?team=%s",
     league,
     season,
     team
@@ -394,7 +390,7 @@ msf_seasonal_dfs <- function(
 #' @title MySportsFeeds Seasonal Player Gamelogs
 #' @name msf_seasonal_player_gamelogs
 #' @description Gets player gamelogs object from from
-#' MySportsFeeds version 2.0 API
+#' MySportsFeeds version 2.1 API
 #' @export msf_seasonal_player_gamelogs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
@@ -423,7 +419,7 @@ msf_seasonal_dfs <- function(
 msf_seasonal_player_gamelogs <-
   function(league, season, team, verbose) {
     url <- sprintf(
-      "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_gamelogs.json?team=%s",
+      "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/player_gamelogs.json?team=%s",
       league,
       season,
       team
@@ -453,7 +449,7 @@ msf_seasonal_player_gamelogs <-
 #' @title MySportsFeeds Seasonal Team Gamelogs
 #' @name msf_seasonal_team_gamelogs
 #' @description Gets team gamelogs object from from MySportsFeeds
-#' version 2.0 API
+#' version 2.1 API
 #' @export msf_seasonal_team_gamelogs
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
@@ -482,7 +478,7 @@ msf_seasonal_player_gamelogs <-
 msf_seasonal_team_gamelogs <-
   function(league, season, team, verbose) {
     url <- sprintf(
-      "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/team_gamelogs.json?team=%s",
+      "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/team_gamelogs.json?team=%s",
       league,
       season,
       team
@@ -512,7 +508,7 @@ msf_seasonal_team_gamelogs <-
 #' @title MySportsFeeds Seasonal Player Stats Totals
 #' @name msf_seasonal_player_stats_totals
 #' @description Gets player gamelogs object from from
-#' MySportsFeeds version 2.0 API
+#' MySportsFeeds version 2.1 API
 #' @export msf_seasonal_player_stats_totals
 #' @importFrom tibble tibble
 #' @importFrom tibble as_tibble
@@ -540,7 +536,7 @@ msf_seasonal_team_gamelogs <-
 msf_seasonal_player_stats_totals <-
   function(league, season, verbose) {
     url <- sprintf(
-      "https://api.mysportsfeeds.com/v2.0/pull/%s/%s/player_stats_totals.json",
+      "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/player_stats_totals.json",
       league,
       season
     )

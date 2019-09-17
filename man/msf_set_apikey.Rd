@@ -22,10 +22,10 @@ Usage:
 \enumerate{
 \item Go to the MySportsFeeds Patreon page
 \url{https://www.patreon.com/mysportsfeeds/posts} and become
-a patron. You'll need to be a patron to use the v2.0 API.
+a patron. You'll need to be a patron to use the v2.1 API.
 \item Go to the MySportsFeeds home page
 \url{https://www.mysportsfeeds.com/} and sign up.
-\item Create a v2.0 API key and copy it to the clipboard.
+\item Create a v2.1 API key and copy it to the clipboard.
 This package does \strong{not} support the v1.x APIs.
 \item In R, paste the API key in the following:\preformatted{dfstools::msf_set_apikey("paste API key here")
 }

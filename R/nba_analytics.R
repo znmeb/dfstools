@@ -21,7 +21,7 @@
 #' @importFrom dplyr full_join
 #' @importFrom dplyr desc
 #' @export nba_player_season_totals
-#' @param season a valid MySportsFeeds v2.0 API season name
+#' @param season a valid MySportsFeeds v2.1 API season name
 #' @return a tibble of season total box score statistics, arranged by
 #' descending total points scored
 #' @examples

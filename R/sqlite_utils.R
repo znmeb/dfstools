@@ -127,16 +127,6 @@ sq_create_database <-
         player_gamelogs$player_gamelogs
       )
     }
-
-    # DFS
-    dfs <- msf_seasonal_dfs(
-      league, season, ixteam, verbose
-    )
-    status_code <- dfs[["status_code"]]
-    if (status_code == 200) {
-      dfs <- dfs[["dfs"]]
-      sq_append_table(connection, "dfs", dfs)
-    }
   }
   DBI::dbDisconnect(connection)
   return(connection)

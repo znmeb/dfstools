@@ -23,7 +23,7 @@ otherwise, the raw text.
 }
 \description{
 Returns a data frame of players from
-MySportsFeeds version 2.0 API
+MySportsFeeds version 2.1 API
 }
 \examples{
 \dontrun{

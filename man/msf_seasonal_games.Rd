@@ -22,7 +22,7 @@ otherwise, the raw text.
 }
 }
 \description{
-Returns a data frame of games from MySportsFeeds version 2.0 API
+Returns a data frame of games from MySportsFeeds version 2.1 API
 }
 \details{
 \code{msf_seasonal_games} adds four columns at the right of the tibble:

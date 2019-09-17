@@ -25,7 +25,7 @@ otherwise, the raw response text.
 }
 }
 \description{
-Gets DFS data object from from MySportsFeeds version 2.0 API
+Gets DFS data object from from MySportsFeeds version 2.1 API
 }
 \examples{
 \dontrun{

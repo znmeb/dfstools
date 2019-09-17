@@ -24,7 +24,7 @@ object; otherwise, the raw text.
 }
 \description{
 Gets player gamelogs object from from
-MySportsFeeds version 2.0 API
+MySportsFeeds version 2.1 API
 }
 \examples{
 \dontrun{
