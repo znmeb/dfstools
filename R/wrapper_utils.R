@@ -222,7 +222,7 @@ msf_get_feed <- function(url, verbose) {
 #' `unnest` row-wise, so there is a row for each inning / quarter / period in
 #' the game, including extra innings / overtime.
 #'
-#' The returned tibble will be sorted in chronological order.
+#' The returned tibble will be sorted in order of scheduled start time.
 #' @examples
 #' \dontrun{
 #' nba_games <- dfstools::msf_seasonal_games(

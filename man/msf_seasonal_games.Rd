@@ -39,7 +39,7 @@ The MySportsFeeds API returns a list column with the scores in each inning
 \code{unnest} row-wise, so there is a row for each inning / quarter / period in
 the game, including extra innings / overtime.
 
-The returned tibble will be sorted in chronological order.
+The returned tibble will be sorted in order of scheduled start time.
 }
 \examples{
 \dontrun{
