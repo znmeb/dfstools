@@ -4,8 +4,7 @@
 #' @name mvglmmRank_model
 #' @description Builds an mvglmmRank model
 #' @export mvglmmRank_model
-#' @importFrom magrittr %>%
-#' @importFrom magrittr %<>%
+#' @importFrom dplyr %>%
 #' @importFrom stats rbinom
 #' @importFrom mvglmmRank mvglmmRank
 #' @param game_data a `game_data` tibble.

@@ -25,19 +25,12 @@ Imports:
     archetypes,
     tidyr,
     rvest,
-    stringr,
-    magrittr,
     mvglmmRank,
     scales,
     RColorBrewer,
     ggtern,
     ggplot2,
-    janitor,
-    readxl,
-    SportsAnalytics,
-    Anthropometry,
-    DT,
-    Rmixmod
+    readxl
 Suggests: 
     knitr,
     rmarkdown,
