@@ -4,7 +4,7 @@
 \alias{msf_seasonal_player_stats_totals}
 \title{MySportsFeeds Seasonal Player Stats Totals}
 \usage{
-msf_seasonal_player_stats_totals(league, season, verbose)
+msf_seasonal_player_stats_totals(league, season, verbose = TRUE)
 }
 \arguments{
 \item{league}{the league to fetch}
@@ -14,13 +14,7 @@ msf_seasonal_player_stats_totals(league, season, verbose)
 \item{verbose}{print status info}
 }
 \value{
-a list of two items
-\itemize{
-\item status_code the HTTP status code (200 for success,
--200 for HTTP success but no data)
-\item  response if status_code == 200, a \code{player_stats_totals}
-object; otherwise, the raw text.
-}
+a \code{player_stats_totals} object
 }
 \description{
 Gets player gamelogs object from from

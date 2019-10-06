@@ -4,7 +4,7 @@
 \alias{msf_seasonal_games}
 \title{MySportsFeeds Seasonal Games}
 \usage{
-msf_seasonal_games(league, season, verbose)
+msf_seasonal_games(league, season, verbose = TRUE)
 }
 \arguments{
 \item{league}{the league to fetch}
@@ -14,12 +14,7 @@ msf_seasonal_games(league, season, verbose)
 \item{verbose}{print status info}
 }
 \value{
-a list of two items
-\itemize{
-\item status_code the HTTP status code (200 for success)
-\item response if status_code == 200, a tibble of games;
-otherwise, the raw text.
-}
+a tibble of games
 }
 \description{
 Returns a data frame of games from MySportsFeeds version 2.1 API

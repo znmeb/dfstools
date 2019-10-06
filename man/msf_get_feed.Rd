@@ -4,27 +4,25 @@
 \alias{msf_get_feed}
 \title{GET from MySportsFeeds API}
 \usage{
-msf_get_feed(url, verbose)
+msf_get_feed(url, verbose = TRUE)
 }
 \arguments{
 \item{url}{the URL to GET}
 
-\item{verbose}{print status info}
+\item{verbose}{print status info (default is TRUE)}
 }
 \value{
-a list of two items
-\itemize{
-\item status_code the HTTP status code (200 for success)
-\item response if status_code == 200, the JSON object;
-otherwise, the raw text.
-}
+if successful, returns a JSON object as a list
+if a fatal error, prints the response and does \code{stop(status_code)}
+if a recoverable error, retries 4 times with ten-second sleeps,
+prints the response and does \code{stop(status_code)} if all retries fail
 }
 \description{
 GETs data from the MySportsFeeds 2.1 API feed
 }
 \examples{
 \dontrun{
-response <- dfstools::msf_get_feed(
+nba_games <- dfstools::msf_get_feed(
 "https://api.mysportsfeeds.com/v2.1/pull/nba/2018-playoff/games.json"
 )}
 }

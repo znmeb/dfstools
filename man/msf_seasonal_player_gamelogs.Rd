@@ -4,7 +4,7 @@
 \alias{msf_seasonal_player_gamelogs}
 \title{MySportsFeeds Seasonal Player Gamelogs}
 \usage{
-msf_seasonal_player_gamelogs(league, season, team, verbose)
+msf_seasonal_player_gamelogs(league, season, team, verbose = TRUE)
 }
 \arguments{
 \item{league}{the league to fetch}
@@ -16,13 +16,7 @@ msf_seasonal_player_gamelogs(league, season, team, verbose)
 \item{verbose}{print status info}
 }
 \value{
-a list of two items
-\itemize{
-\item status_code the HTTP status code (200 for success,
--200 for HTTP success but no data)
-\item  response if status_code == 200, a `player_gamelogs``
-object; otherwise, the raw text.
-}
+a \code{player_gamelogs} object
 }
 \description{
 Gets player gamelogs object from from

@@ -4,7 +4,7 @@
 \alias{msf_seasonal_players}
 \title{MySportsFeeds Seasonal Players}
 \usage{
-msf_seasonal_players(league, season, verbose)
+msf_seasonal_players(league, season, verbose = TRUE)
 }
 \arguments{
 \item{league}{the league to fetch}
@@ -14,12 +14,7 @@ msf_seasonal_players(league, season, verbose)
 \item{verbose}{print status info}
 }
 \value{
-a list of two items
-\itemize{
-\item status_code the HTTP status code (200 for success)
-\item response if status_code == 200, a tibble of players;
-otherwise, the raw text.
-}
+a tibble of players
 }
 \description{
 Returns a data frame of players from
