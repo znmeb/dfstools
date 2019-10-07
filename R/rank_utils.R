@@ -1,5 +1,60 @@
 # Wrappers for mvglmmRank
 
+#' @title Make game.data
+#' @name make_game_data
+#' @description Builds a `mvglmmRank` "game.data" table from an
+#' `msf_seasonal_games`result
+#' @export make_game_data
+#' @param seasonal_games a tibble returned from `msf_seasonal_games`
+#' @return a "game data" table
+#' @examples
+#' \dontrun{
+#' nba_seasonal_games <- dfstools::msf_seasonal_games("nba", "2018-2019-regular")
+#' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
+#' nba.game.data <- dfstools::make_game_data(nba_seasonal_games)
+#' nhl.game.data <- dfstools::make_game_data(nhl_seasonal_games)
+#' }
+
+make_game_data <- function(seasonal_games) {
+  game.data <- seasonal_games %>% dplyr::filter(
+    schedule_played_status == "COMPLETED"
+  ) %>% dplyr::mutate(
+    home = schedule_home_team_abbreviation,
+    away = schedule_away_team_abbreviation,
+    home.response = score_home_score_total,
+    away.response = score_away_score_total,
+    binary.response = as.integer(
+      score_home_score_total > score_away_score_total
+    ),
+    neutral.site = as.integer(schedule_venue_allegiance == "NEUTRAL"),
+    OT = ot
+  ) %>% dplyr::select(home:OT)
+}
+
+#' @title Make schedule
+#' @name make_schedule
+#' @description Builds a `game_predict` "schedule" table from an
+#' `msf_seasonal_games`result
+#' @export make_schedule
+#' @param seasonal_games a tibble returned from `msf_seasonal_games`
+#' @return a "schedule" table
+#' @examples
+#' \dontrun{
+#' nba_seasonal_games <- dfstools::msf_seasonal_games("nba", "2018-2019-regular")
+#' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
+#' nba.schedule <- dfstools::make_schedule(nba_seasonal_games)
+#' nhl.schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' }
+
+make_schedule <- function(seasonal_games) {
+  schedule <- seasonal_games %>% dplyr::select(
+    road_team = schedule_away_team_abbreviation,
+    home_team = schedule_home_team_abbreviation,
+    road_actual_score = score_away_score_total,
+    home_actual_score = score_home_score_total
+  )
+}
+
 #' @title Build an mvglmmRank model
 #' @name mvglmmRank_model
 #' @description Builds an mvglmmRank model
@@ -24,6 +79,9 @@ mvglmmRank_model <- function(
     home.field = TRUE,
     OT.flag = TRUE,
     Hessian = FALSE,
+    max.iter.EM = 2000,
+    tol1 = 1e-03,
+    tol2 = 1e-03,
     verbose = verbose)
   print(end_time <- Sys.time())
   print(end_time - start_time)
@@ -96,6 +154,12 @@ game_predict <-
 ## global name declarations
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "OT",
+  "ot",
+  "schedule_played_status",
+  "schedule_venue_allegiance",
+  "score_away_score_total",
+  "score_home_score_total",
   "road_team_prob_w",
   "road_team_score_p",
   "home_team_prob_w",
