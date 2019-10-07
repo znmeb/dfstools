@@ -20,19 +20,15 @@ a tibble of games
 Returns a data frame of games from MySportsFeeds version 2.1 API
 }
 \details{
-\code{msf_seasonal_games} adds four columns at the right of the tibble:
+\code{msf_seasonal_games} adds five columns at the right of the tibble:
 \itemize{
-\item league the source league of the data
-\item season the source season of the data, and
-\item date the game date (started) in the Eastern USA
-timezone ("EST5EDT").
-\item slug the game slug (date-away_team-home_team)
+\item ot - the number of overtime periods / quarters / extra innings,
+\item league - the source league of the data,
+\item season - the source season of the data,
+\item date - the game date (started) in the Eastern USA
+timezone ("EST5EDT"), and
+\item slug - the game slug (date-away_team-home_team)
 }
-
-The MySportsFeeds API returns a list column with the scores in each inning
-(MLB), quarter (NFL and NBA) or period (NHL). This column is unpacked with
-\code{unnest} row-wise, so there is a row for each inning / quarter / period in
-the game, including extra innings / overtime.
 
 The returned tibble will be sorted in order of scheduled start time.
 }

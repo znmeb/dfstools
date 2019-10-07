@@ -3,7 +3,7 @@
 # We want to ignore columns that are filled with NAs - they waste space
 # and time.
 .good_column <- function(x) {
-  !all(is.na(x))
+  !all(is.na(x)) & class(x) != "list"
 }
 .good_columns <- function(df) {
   dplyr::select_if(.tbl = df, .predicate = .good_column)
@@ -13,6 +13,13 @@
   if (league == "nba" | league == "nfl") return("score_quarters")
   if (league == "mlb") return("score_innings")
   if (league == "nhl") return("score_periods")
+  stop(league)
+}
+
+.regulation_periods <- function(league) {
+  if (league == "nba" | league == "nfl") return(4)
+  if (league == "mlb") return(9)
+  if (league == "nhl") return(3)
   stop(league)
 }
 
@@ -227,8 +234,9 @@ msf_get_feed <- function(url, verbose = TRUE) {
 #' @importFrom dplyr mutate
 #' @importFrom dplyr arrange
 #' @importFrom dplyr select_if
+#' @importFrom dplyr group_by
 #' @importFrom dplyr summarize
-#' @importFrom dplyr full_join
+#' @importFrom dplyr left_join
 #' @importFrom dplyr n
 #' @importFrom tibble tibble
 #' @importFrom lubridate with_tz
@@ -240,19 +248,15 @@ msf_get_feed <- function(url, verbose = TRUE) {
 #' @param season the season to fetch
 #' @param verbose print status info
 #' @return a tibble of games
-#' @details `msf_seasonal_games` adds four columns at the right of the tibble:
+#' @details `msf_seasonal_games` adds five columns at the right of the tibble:
 #' \itemize{
-#'   \item league the source league of the data
-#'   \item season the source season of the data, and
-#'   \item date the game date (started) in the Eastern USA
-#'     timezone ("EST5EDT").
-#'   \item slug the game slug (date-away_team-home_team)
+#'   \item ot - the number of overtime periods / quarters / extra innings,
+#'   \item league - the source league of the data,
+#'   \item season - the source season of the data,
+#'   \item date - the game date (started) in the Eastern USA
+#'     timezone ("EST5EDT"), and
+#'   \item slug - the game slug (date-away_team-home_team)
 #' }
-#'
-#' The MySportsFeeds API returns a list column with the scores in each inning
-#' (MLB), quarter (NFL and NBA) or period (NHL). This column is unpacked with
-#' `unnest` row-wise, so there is a row for each inning / quarter / period in
-#' the game, including extra innings / overtime.
 #'
 #' The returned tibble will be sorted in order of scheduled start time.
 #' @examples
@@ -272,10 +276,17 @@ msf_seasonal_games <- function(league, season, verbose = TRUE) {
     tibble::as_tibble()
   colnames(games) <- colnames(games) %>%
     snakecase::to_snake_case()
+
+  # how many overtimes were there?
+  ot_work <- games %>%
+    dplyr::select(schedule_id, .list_column(league)) %>%
+    tidyr::unnest(.list_column(league)) %>%
+    dplyr::group_by(schedule_id) %>%
+    dplyr::summarize(ot = n() - .regulation_periods(league))
+
   games <- games %>%
+    dplyr::left_join(ot_work) %>%
     .good_columns() %>%
-    tidyr::unnest(cols = .list_column(league)) %>%
-    dplyr::select(-schedule_officials, -schedule_broadcasters) %>%
     dplyr::mutate(
       league = league,
       season = season,
@@ -408,20 +419,7 @@ msf_seasonal_player_stats_totals <- function(league, season, verbose = TRUE) {
 
 utils::globalVariables(c(
   ".",
-  "n",
-  "schedule.attendance",
   "schedule_away_team_abbreviation",
-  "schedule.delayedOrPostponedReason",
-  "schedule.endedTime",
-  "schedule_home_team_abbreviation",
-  "schedule.originalStartTime",
-  "schedule.startTime",
   "schedule_start_time",
-  "schedule.weather",
-  "schedule_broadcasters",
-  "schedule_officials",
-  "score.currentIntermission",
-  "score.currentQuarter",
-  "score.quarters",
-  "slug"
+  "schedule_id"
 ))

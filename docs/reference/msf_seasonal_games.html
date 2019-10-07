@@ -138,18 +138,15 @@
     <p>a tibble of games</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p><code>msf_seasonal_games</code> adds four columns at the right of the tibble:</p><ul>
-<li><p>league the source league of the data</p></li>
-<li><p>season the source season of the data, and</p></li>
-<li><p>date the game date (started) in the Eastern USA
-timezone ("EST5EDT").</p></li>
-<li><p>slug the game slug (date-away_team-home_team)</p></li>
+    <p><code>msf_seasonal_games</code> adds five columns at the right of the tibble:</p><ul>
+<li><p>ot - the number of overtime periods / quarters / extra innings,</p></li>
+<li><p>league - the source league of the data,</p></li>
+<li><p>season - the source season of the data,</p></li>
+<li><p>date - the game date (started) in the Eastern USA
+timezone ("EST5EDT"), and</p></li>
+<li><p>slug - the game slug (date-away_team-home_team)</p></li>
 </ul>
 
-<p>The MySportsFeeds API returns a list column with the scores in each inning
-(MLB), quarter (NFL and NBA) or period (NHL). This column is unpacked with
-<code>unnest</code> row-wise, so there is a row for each inning / quarter / period in
-the game, including extra innings / overtime.</p>
 <p>The returned tibble will be sorted in order of scheduled start time.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
