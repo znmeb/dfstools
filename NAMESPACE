@@ -3,6 +3,7 @@
 export(archetype_search)
 export(compute_archetypes)
 export(game_predict)
+export(msf_build_url)
 export(msf_get_apikey)
 export(msf_get_feed)
 export(msf_seasonal_games)

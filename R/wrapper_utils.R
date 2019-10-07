@@ -103,6 +103,51 @@ msf_seasons <- function() {
   )
 }
 
+#' @title Build MySportsFeeds API URL
+#' @name msf_build_url
+#' @description builds a MySportsFeeds 2.1 API URL
+#' @export msf_build_url
+#' @param league c("nba", "nhl", "nfl", "mlb")
+#' @param season string the season
+#' @param endpoint string the JSON endpoint, for example "games.json"
+#' @param team string for feeds that must be subsetted by team (default "")
+#' @param date string for feeds that must be subsetted by date (default "")
+#' @return the MySportsFeed URL
+#' @examples
+#' \dontrun{
+#' nba_games_url <- dfstools::msf_build_url(
+#'   "nba",
+#'   "2018-2018-regular",
+#'   "games.json"
+#' )
+#' redwings_gamelogs <- dfstools::msf_build_url(
+#'   "nhl",
+#'   "2018-2019-regular",
+#'   "team_gamelogs.json",
+#'   team = "DET"
+#' )
+#' xmas_nba_games <- msf_build_url(
+#'   "nba",
+#'   "2019-2020-regular",
+#'   "games.json",
+#'   date = "20191225"
+#' )
+#' }
+
+msf_build_url <- function(league, season, endpoint, team = "", date = "") {
+  url <- paste(
+    "https://api.mysportsfeeds.com/v2.1/pull", league, season, sep = "/"
+  )
+  if (date != "") {
+    url <- paste(url, "date", date, sep = "/")
+  }
+  url <- paste(url, endpoint, sep = "/")
+  if (team != "") {
+    url <- paste0(url, "?team=", team)
+  }
+  return(url)
+}
+
 #' @title GET from MySportsFeeds API
 #' @name msf_get_feed
 #' @description GETs data from the MySportsFeeds 2.1 API feed
