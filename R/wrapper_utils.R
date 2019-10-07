@@ -258,16 +258,16 @@ msf_get_feed <- function(url, verbose = TRUE) {
 #' @examples
 #' \dontrun{
 #' nba_games <- dfstools::msf_seasonal_games(
-#' season = "2017-2018-regular", league = "nba"
+#'   season = "2017-2018-regular", league = "nba"
 #' )}
 
 msf_seasonal_games <- function(league, season, verbose = TRUE) {
-  url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/games.json",
-    league,
-    season
+  response <- dfstools::msf_get_feed(
+    dfstools::msf_build_url(
+      league, season, "games.json"
+    ),
+    verbose = verbose
   )
-  response <- msf_get_feed(url, verbose = verbose)
   games <- response[["games"]] %>%
     tibble::as_tibble()
   colnames(games) <- colnames(games) %>%
@@ -293,48 +293,6 @@ msf_seasonal_games <- function(league, season, verbose = TRUE) {
   return(games %>% dplyr::arrange(schedule_start_time))
 }
 
-#' @title MySportsFeeds Seasonal Players
-#' @name msf_seasonal_players
-#' @description Returns a data frame of players from
-#' MySportsFeeds version 2.1 API
-#' @importFrom dplyr %>%
-#' @importFrom dplyr mutate
-#' @importFrom dplyr arrange
-#' @importFrom dplyr select_if
-#' @importFrom tibble tibble
-#' @importFrom lubridate with_tz
-#' @importFrom lubridate as_datetime
-#' @importFrom snakecase to_snake_case
-#' @export msf_seasonal_players
-#' @param league the league to fetch
-#' @param season the season to fetch
-#' @param verbose print status info
-#' @return a tibble of players
-#' @examples
-#' \dontrun{
-#' nba_players <- dfstools::msf_seasonal_players(
-#' season = "2017-2018-regular", league = "nba"
-#' )}
-
-msf_seasonal_players <- function(league, season, verbose = TRUE) {
-  url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.1/pull/%s/players.json?season=%s",
-    league,
-    season
-  )
-  response <- msf_get_feed(url, verbose = verbose)
-  players <- response[["players"]] %>%
-    tibble::as_tibble() %>%
-    .good_columns() %>%
-    dplyr::mutate(
-      league = league,
-      season = season
-    )
-  colnames(players) <- colnames(players) %>%
-    snakecase::to_snake_case()
-  return(players)
-}
-
 #' @title MySportsFeeds Seasonal Player Gamelogs
 #' @name msf_seasonal_player_gamelogs
 #' @description Gets player gamelogs object from from
@@ -355,17 +313,16 @@ msf_seasonal_players <- function(league, season, verbose = TRUE) {
 #' @examples
 #' \dontrun{
 #' nba_player_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
-#' season = "2018-playoff", league = "nba", team = "GSW"
+#'   season = "2018-playoff", league = "nba", team = "GSW"
 #' )}
 
 msf_seasonal_player_gamelogs <- function(league, season, team, verbose = TRUE) {
-  url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/player_gamelogs.json?team=%s",
-    league,
-    season,
-    team
+  response <- dfstools::msf_get_feed(
+    dfstools::msf_build_url(
+      league, season, "player_gamelogs.json", team = team
+    ),
+    verbose = verbose
   )
-  response <- msf_get_feed(url, verbose = verbose)
   player_gamelogs <- response[["gamelogs"]] %>%
     tibble::as_tibble() %>%
     .good_columns()
@@ -394,17 +351,16 @@ msf_seasonal_player_gamelogs <- function(league, season, team, verbose = TRUE) {
 #' @examples
 #' \dontrun{
 #' nba_team_gamelogs <- dfstools::msf_seasonal_team_gamelogs(
-#' season = "2018-playoff", league = "nba", team = "GSW"
+#'   season = "2018-playoff", league = "nba", team = "GSW"
 #' )}
 
 msf_seasonal_team_gamelogs <- function(league, season, team, verbose = TRUE) {
-  url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/team_gamelogs.json?team=%s",
-    league,
-    season,
-    team
+  response <- dfstools::msf_get_feed(
+    dfstools::msf_build_url(
+      league, season, "team_gamelogs.json", team = team
+    ),
+    verbose = verbose
   )
-  response <- msf_get_feed(url, verbose = verbose)
   team_gamelogs <- response[["gamelogs"]] %>%
     tibble::as_tibble() %>%
     .good_columns()
@@ -432,16 +388,16 @@ msf_seasonal_team_gamelogs <- function(league, season, team, verbose = TRUE) {
 #' @examples
 #' \dontrun{
 #' nba_player_totals <- dfstools::msf_seasonal_player_stats_totals(
-#' season = "current", league = "nba", verbose = TRUE
+#'   season = "2018-2019-regular", league = "nba", verbose = TRUE
 #' )}
 
 msf_seasonal_player_stats_totals <- function(league, season, verbose = TRUE) {
-  url <- sprintf(
-    "https://api.mysportsfeeds.com/v2.1/pull/%s/%s/player_stats_totals.json",
-    league,
-    season
+  response <- dfstools::msf_get_feed(
+    dfstools::msf_build_url(
+      league, season, "player_stats_totals.json"
+    ),
+    verbose = verbose
   )
-  response <- msf_get_feed(url, verbose = verbose)
   player_stats_totals <- response[["playerStatsTotals"]] %>%
     tibble::as_tibble() %>%
     .good_columns()

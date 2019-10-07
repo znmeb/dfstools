@@ -23,6 +23,6 @@ MySportsFeeds version 2.1 API
 \examples{
 \dontrun{
 nba_player_totals <- dfstools::msf_seasonal_player_stats_totals(
-season = "current", league = "nba", verbose = TRUE
+  season = "2018-2019-regular", league = "nba", verbose = TRUE
 )}
 }

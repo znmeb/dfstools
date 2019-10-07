@@ -39,6 +39,6 @@ The returned tibble will be sorted in order of scheduled start time.
 \examples{
 \dontrun{
 nba_games <- dfstools::msf_seasonal_games(
-season = "2017-2018-regular", league = "nba"
+  season = "2017-2018-regular", league = "nba"
 )}
 }

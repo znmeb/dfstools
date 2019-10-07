@@ -25,6 +25,6 @@ version 2.1 API
 \examples{
 \dontrun{
 nba_team_gamelogs <- dfstools::msf_seasonal_team_gamelogs(
-season = "2018-playoff", league = "nba", team = "GSW"
+  season = "2018-playoff", league = "nba", team = "GSW"
 )}
 }

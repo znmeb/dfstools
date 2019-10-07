@@ -25,6 +25,6 @@ MySportsFeeds version 2.1 API
 \examples{
 \dontrun{
 nba_player_gamelogs <- dfstools::msf_seasonal_player_gamelogs(
-season = "2018-playoff", league = "nba", team = "GSW"
+  season = "2018-playoff", league = "nba", team = "GSW"
 )}
 }
