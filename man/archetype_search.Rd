@@ -4,8 +4,8 @@
 \alias{archetype_search}
 \title{Archetype Search}
 \usage{
-archetype_search(player_totals, player_labels, num_steps = 1:5,
-  nrep = 4, verbose = FALSE)
+archetype_search(player_totals, player_labels, num_steps = 1:7,
+  nrep = 32, verbose = FALSE)
 }
 \arguments{
 \item{player_totals}{a tibble of the values to use for archetypal analysis.

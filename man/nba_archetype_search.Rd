@@ -4,7 +4,7 @@
 \alias{nba_archetype_search}
 \title{NBA Archetype Search}
 \usage{
-nba_archetype_search(player_totals, num_steps = 1:5, nrep = 4,
+nba_archetype_search(player_totals, num_steps = 1:7, nrep = 32,
   verbose = FALSE)
 }
 \arguments{
@@ -31,8 +31,9 @@ stepwise search of archetype counts
 \examples{
 \dontrun{
 dfstools::msf_set_apikey("your MySportsFeeds API key")
-player_totals <- dfstools::nba_player_season_totals("current")
+player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
 the_archetypes <- dfstools::nba_archetype_search(player_totals)
+screeplot(the_archetypes$archetype_models)
 player_alphas <- the_archetypes[["player_alphas"]]
 View(player_alphas)
 }

@@ -30,12 +30,11 @@
 #' }
 
 nba_player_season_totals <- function(season) {
-  response <- msf_seasonal_player_stats_totals(
+  raw_data <- dfstools::msf_seasonal_player_stats_totals(
     league = "nba",
     season = season,
     verbose = FALSE
-  )
-  raw_data <- response[["player_stats_totals"]] %>%
+  ) %>%
     dplyr::filter(player_current_roster_status == "ROSTER") %>%
     dplyr::mutate(
       player_name = paste(player_first_name, player_last_name),
@@ -53,8 +52,11 @@ nba_player_season_totals <- function(season) {
     "player_age",
     "player_rookie"
   )
+  labels <- raw_data %>%
+    dplyr::select(label_columns) %>%
+    dplyr::arrange(player_name) %>%
+    unique()
   stats_columns <- c(
-    "player_name",
     "stats_minutes_played",
     "stats_games_played",
     "stats_miscellaneous_games_started",
@@ -77,20 +79,16 @@ nba_player_season_totals <- function(season) {
     "stats_miscellaneous_fouls"
   )
   totals <- raw_data %>%
-    dplyr::select_at(.vars = stats_columns) %>%
-    dplyr::group_by(
-      player_name
-    ) %>%
+    dplyr::group_by(player_name) %>%
     dplyr::summarize_at(
-      .vars = dplyr::vars(stats_minutes_played:stats_miscellaneous_fouls),
+      .vars = dplyr::vars(stats_columns),
       .funs = dplyr::funs(sum)
     ) %>%
+    dplyr::arrange(player_name) %>%
     dplyr::ungroup()
-  labels <- raw_data %>%
-    dplyr::select_at(.vars = label_columns) %>%
-    unique()
   return(
-    dplyr::full_join(labels, totals) %>%
+    labels %>%
+      dplyr::full_join(totals) %>%
       dplyr::arrange(desc(stats_offense_pts))
   )
 }

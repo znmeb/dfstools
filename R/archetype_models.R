@@ -95,7 +95,7 @@
 #' @examples
 #' \dontrun{
 #' dfstools::msf_set_apikey("your MySportsFeeds API key")
-#' player_totals <- dfstools::nba_player_season_totals("current")
+#' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
 #' the_archetypes <- dfstools::nba_archetypes(player_totals)
 #' player_alphas <- the_archetypes[["player_alphas"]]
 #' View(player_alphas)
@@ -139,14 +139,15 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' @examples
 #' \dontrun{
 #' dfstools::msf_set_apikey("your MySportsFeeds API key")
-#' player_totals <- dfstools::nba_player_season_totals("current")
+#' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
 #' the_archetypes <- dfstools::nba_archetype_search(player_totals)
+#' screeplot(the_archetypes$archetype_models)
 #' player_alphas <- the_archetypes[["player_alphas"]]
 #' View(player_alphas)
 #' }
 
 nba_archetype_search <-
-  function(player_totals, num_steps = 1:5, nrep = 4, verbose = FALSE) {
+  function(player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
 
     trimmed_player_totals <- .nba_totals_select(player_totals)
     player_labels <- trimmed_player_totals %>%
@@ -190,7 +191,7 @@ nba_archetype_search <-
 #' \item all of the models}
 
 archetype_search <- function(player_totals, player_labels,
-                             num_steps = 1:5, nrep = 4, verbose = FALSE) {
+                             num_steps = 1:7, nrep = 32, verbose = FALSE) {
 
   input_matrix <- player_totals %>%
     dplyr::select_if(.predicate = .is_valid_column) %>%
