@@ -33,7 +33,9 @@ nhl_player_season_totals <- function(season) {
   raw_data <- dfstools::msf_seasonal_player_stats_totals("nhl", season) %>%
     dplyr::filter(player_current_roster_status == "ROSTER") %>%
     dplyr::mutate(
-      player_name = paste(player_first_name, player_last_name),
+      player_name = paste(
+        player_first_name, player_last_name, player_primary_position
+      ),
       player_height_ft = .feet_inches_to_ft(player_height)
     )
   goalies <- raw_data %>% dplyr::filter(player_primary_position == "G") %>%
@@ -82,7 +84,8 @@ nhl_player_season_totals <- function(season) {
       .funs = sum
     ) %>%
     dplyr::arrange(desc(stats_goaltending_wins)) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::select_if(.predicate = .is_valid_column)
 
   skater_totals <- skaters %>%
     dplyr::group_by(player_name) %>%
@@ -91,7 +94,8 @@ nhl_player_season_totals <- function(season) {
       .funs = sum
     ) %>%
     dplyr::arrange(desc(stats_scoring_goals)) %>%
-    dplyr::ungroup()
+    dplyr::ungroup() %>%
+    dplyr::select_if(.predicate = .is_valid_column)
 
   return(list(goalie_totals = goalie_totals, skater_totals = skater_totals))
 
