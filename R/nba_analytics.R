@@ -48,13 +48,13 @@ nba_player_season_totals <- function(season) {
   ) %>%
     dplyr::filter(player_current_roster_status == "ROSTER") %>%
     dplyr::mutate(
-      player_name = paste(player_first_name, player_last_name),
+      player_name =
+        paste(player_first_name, player_last_name, player_primary_position),
       player_height_ft = .feet_inches_to_ft(player_height),
       stats_minutes_played = stats_miscellaneous_min_seconds / 60.0
     )
   label_columns <- c(
     "player_name",
-    "player_primary_position",
     "player_current_team_abbreviation",
     "player_height",
     "player_height_ft",
@@ -131,12 +131,10 @@ nba_player_season_totals <- function(season) {
 #' }
 
 nba_archetypes <- function(player_totals, num_archetypes = 3) {
-
-  trimmed_player_totals <- .nba_totals_select(player_totals)
-  player_labels <- trimmed_player_totals %>%
-    dplyr::select(player_name:games_played)
-  call_player_totals <- trimmed_player_totals %>%
-    dplyr::select(player_name, total_rebounds:steals)
+  player_labels <- player_totals %>%
+    dplyr::select(player_name:player_rookie)
+  call_player_totals <- player_totals %>%
+    dplyr::select(player_name, stats_minutes_played:stats_miscellaneous_fouls)
   return(compute_archetypes(
     call_player_totals, player_labels, num_archetypes
   ))
@@ -177,12 +175,10 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 
 nba_archetype_search <-
   function(player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
-
-    trimmed_player_totals <- .nba_totals_select(player_totals)
-    player_labels <- trimmed_player_totals %>%
-      dplyr::select(player_name:games_played)
-    call_player_totals <- trimmed_player_totals %>%
-      dplyr::select(player_name, total_rebounds:steals)
+    player_labels <- player_totals %>%
+      dplyr::select(player_name:player_rookie)
+    call_player_totals <- player_totals %>%
+      dplyr::select(player_name, stats_minutes_played:stats_miscellaneous_fouls)
     return(archetype_search(
       call_player_totals, player_labels, num_steps, nrep, verbose
     ))

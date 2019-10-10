@@ -16,8 +16,8 @@
 }
 
 # utility function to do common processing after an archetype model has been run
-.wrangle_archetype_results <- function(
-  player_labels, input_matrix, archetype_model) {
+.wrangle_archetype_results <-
+  function(player_labels, input_matrix, archetype_model) {
 
   # get the archetype_parameters
   archetype_parameters <- t(archetypes::parameters(archetype_model))
@@ -38,15 +38,11 @@
   player_alphas <- player_alphas[, ordering]
 
   # use archetypal players for column names
-  if (ncol(player_alphas) == 3) { # default case
-    name_vector <- c("Rim", "Floor", "Bench")
-  } else { # use the best players for column names
-    name_vector <- c()
-    for (i in 1:ncol(player_alphas)) {
-      name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
-    }
-    name_vector[ncol(player_alphas)] <- "Bench"
+  name_vector <- c()
+  for (i in 1:ncol(player_alphas)) {
+    name_vector <- c(name_vector, names(which.max(player_alphas[, i])))
   }
+  name_vector[ncol(player_alphas)] <- "Bench" # don't embarrass benchwarmer
   colnames(archetype_parameters) <- name_vector
   colnames(player_alphas) <- name_vector
 
@@ -61,16 +57,6 @@
     player_alphas = player_alphas,
     archetype_parameters = archetype_parameters
   ))
-
-}
-
-# all-zero columns crash the archetype algorithm
-.is_valid_column <- function(x) {
-  if (!is.numeric(x)) {
-    TRUE
-  } else {
-    sum(as.double(x) * as.double(x)) > 0
-  }
 }
 
 #' @title Archetype Search
@@ -119,7 +105,8 @@ archetype_search <- function(player_totals, player_labels,
     method = robustArchetypes,
     verbose = verbose
   )
-  archetype_model <- archetypes::bestModel(archetype_models[max(num_steps)])
+  archetype_model <-
+    archetypes::bestModel(archetype_models[[length(archetype_models)]])
 
   # wrangle the results
   wrangled <-
@@ -160,25 +147,18 @@ archetype_search <- function(player_totals, player_labels,
 compute_archetypes <- function(player_totals, player_labels,
                                num_archetypes = 3) {
 
-  input_matrix <- player_totals %>%
-    dplyr::select_if(.predicate = .is_valid_column) %>%
-    tibble::column_to_rownames(var = "player_name") %>%
-    as.matrix()
-  set.seed(1776)
-  archetype_model <- archetypes(
-    data = input_matrix,
-    k = num_archetypes,
+  search_result <- dfstools::archetype_search(
+    player_totals,
+    player_labels,
+    num_steps = num_archetypes:num_archetypes,
+    nrep = 32,
     verbose = FALSE
   )
-
-  # wrangle the results
-  wrangled <-
-    .wrangle_archetype_results(player_labels, input_matrix, archetype_model)
-
   return(list(
-    archetype_parameters = wrangled$archetype_parameters,
-    player_alphas = wrangled$player_alphas,
-    archetype_model = archetype_model))
+    archetype_parameters = search_result$archetype_parameters,
+    player_alphas = search_result$player_alphas,
+    archetype_model = search_result$archetype_model
+  ))
 }
 
 utils::globalVariables(c(
