@@ -17,7 +17,7 @@
 
 # utility function to do common processing after an archetype model has been run
 .wrangle_archetype_results <-
-  function(player_labels, input_matrix, archetype_model) {
+  function(input_matrix, archetype_model) {
 
   # get the archetype_parameters
   archetype_parameters <- t(archetypes::parameters(archetype_model))
@@ -49,8 +49,7 @@
   # make tibbles
   player_alphas <- player_alphas %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "player_name") %>% as_tibble()
-  player_alphas <- dplyr::left_join(player_labels, player_alphas) %>%
-    arrange(Bench)
+  player_alphas <- player_alphas %>% arrange(Bench)
   archetype_parameters <- archetype_parameters %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "statistic") %>% as_tibble()
   return(list(
@@ -74,11 +73,10 @@
 #' @importFrom scales rescale
 #' @export archetype_search
 #' @param player_totals a tibble of the values to use for archetypal analysis.
-#' The first column must be the player name, which must match the player name
-#' in the player_labels. The archetypes will be sorted on the second columns.
-#' @param player_labels a tibble with the labels (player and team names,
-#' positions, etc.). They may overlap with the totals. The leftmost column must
-#' be the player name, which must match the player name in `player_totals`..
+#' The first column must be the player name. The archetypes will be sorted on
+#' the second columns. Usually, this will be a measure of the player's total
+#' activity for the season, like minutes played or plate appearances / batters
+#' faced.
 #' @param num_steps number of steps to use (default 1:5)
 #' @param nrep number of repetitions at each step (default 4)
 #' @param verbose should the search be verbose? (default FALSE)
@@ -90,9 +88,8 @@
 #' archetypes
 #' \item all of the models}
 
-archetype_search <- function(player_totals, player_labels,
-                             num_steps = 1:7, nrep = 32, verbose = FALSE) {
-
+archetype_search <- function(
+  player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
   input_matrix <- player_totals %>%
     dplyr::select_if(.predicate = .is_valid_column) %>%
     tibble::column_to_rownames(var = "player_name") %>%
@@ -110,7 +107,7 @@ archetype_search <- function(player_totals, player_labels,
 
   # wrangle the results
   wrangled <-
-    .wrangle_archetype_results(player_labels, input_matrix, archetype_model)
+    .wrangle_archetype_results(input_matrix, archetype_model)
 
   return(list(
     archetype_parameters = wrangled$archetype_parameters,
@@ -132,11 +129,8 @@ archetype_search <- function(player_totals, player_labels,
 #' @importFrom scales rescale
 #' @export compute_archetypes
 #' @param player_totals a tibble of the values to use for archetypal analysis.
-#' The first column must be the player name, which must match the player name
-#' in the player_labels. The archetypes will be sorted on the second columns.
-#' @param player_labels a tibble with the labels (player and team names,
-#' positions, etc.). They may overlap with the totals. The leftmost column must
-#' be the player name, which must match the player name in `player_totals`..
+#' The first column must be the player name. The archetypes will be sorted on
+#' the second column.
 #' @param num_archetypes number of archetypes to use (default 3)
 #' @return a list of
 #' \itemize{
@@ -144,12 +138,10 @@ archetype_search <- function(player_totals, player_labels,
 #' \item player_alphas the players tagged with their loadings on each archetype
 #' \item archetype_model the model object}
 
-compute_archetypes <- function(player_totals, player_labels,
-                               num_archetypes = 3) {
+compute_archetypes <- function(player_totals, num_archetypes = 3) {
 
   search_result <- dfstools::archetype_search(
     player_totals,
-    player_labels,
     num_steps = num_archetypes:num_archetypes,
     nrep = 32,
     verbose = FALSE
@@ -165,7 +157,6 @@ utils::globalVariables(c(
   "games_played",
   "player_current_team_abbreviation",
   "player_height_ft",
-  "player_labels",
   "player_rookie",
   "total_rebounds",
   "stats_defense_blk",

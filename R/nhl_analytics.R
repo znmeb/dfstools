@@ -34,7 +34,8 @@ nhl_player_season_totals <- function(season) {
     dplyr::filter(player_current_roster_status == "ROSTER") %>%
     dplyr::mutate(
       player_name = paste(
-        player_first_name, player_last_name, player_primary_position
+        player_first_name, player_last_name, player_primary_position,
+        player_current_team_abbreviation
       ),
       player_height_ft = .feet_inches_to_ft(player_height)
     )
@@ -44,7 +45,6 @@ nhl_player_season_totals <- function(season) {
     dplyr::mutate(stats_minutes_played = stats_shifts_time_on_ice_seconds / 60.0)
   label_columns <- c(
     "player_name",
-    "player_current_team_abbreviation",
     "player_height",
     "player_height_ft",
     "player_weight",

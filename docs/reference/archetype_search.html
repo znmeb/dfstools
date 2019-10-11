@@ -114,8 +114,8 @@
     <p>stepwise search of archetype counts</p>
     </div>
 
-    <pre class="usage"><span class='fu'>archetype_search</span>(<span class='no'>player_totals</span>, <span class='no'>player_labels</span>, <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>7</span>,
-  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>32</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>archetype_search</span>(<span class='no'>player_totals</span>, <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>7</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>32</span>,
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -123,14 +123,10 @@
     <tr>
       <th>player_totals</th>
       <td><p>a tibble of the values to use for archetypal analysis.
-The first column must be the player name, which must match the player name
-in the player_labels. The archetypes will be sorted on the second columns.</p></td>
-    </tr>
-    <tr>
-      <th>player_labels</th>
-      <td><p>a tibble with the labels (player and team names,
-positions, etc.). They may overlap with the totals. The leftmost column must
-be the player name, which must match the player name in <code>player_totals</code>..</p></td>
+The first column must be the player name. The archetypes will be sorted on
+the second columns. Usually, this will be a measure of the player's total
+activity for the season, like minutes played or plate appearances / batters
+faced.</p></td>
     </tr>
     <tr>
       <th>num_steps</th>

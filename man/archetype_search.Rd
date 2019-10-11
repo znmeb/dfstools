@@ -4,17 +4,15 @@
 \alias{archetype_search}
 \title{Archetype Search}
 \usage{
-archetype_search(player_totals, player_labels, num_steps = 1:7,
-  nrep = 32, verbose = FALSE)
+archetype_search(player_totals, num_steps = 1:7, nrep = 32,
+  verbose = FALSE)
 }
 \arguments{
 \item{player_totals}{a tibble of the values to use for archetypal analysis.
-The first column must be the player name, which must match the player name
-in the player_labels. The archetypes will be sorted on the second columns.}
-
-\item{player_labels}{a tibble with the labels (player and team names,
-positions, etc.). They may overlap with the totals. The leftmost column must
-be the player name, which must match the player name in \code{player_totals}..}
+The first column must be the player name. The archetypes will be sorted on
+the second columns. Usually, this will be a measure of the player's total
+activity for the season, like minutes played or plate appearances / batters
+faced.}
 
 \item{num_steps}{number of steps to use (default 1:5)}
 

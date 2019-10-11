@@ -4,16 +4,12 @@
 \alias{compute_archetypes}
 \title{Archetypal Analysis}
 \usage{
-compute_archetypes(player_totals, player_labels, num_archetypes = 3)
+compute_archetypes(player_totals, num_archetypes = 3)
 }
 \arguments{
 \item{player_totals}{a tibble of the values to use for archetypal analysis.
-The first column must be the player name, which must match the player name
-in the player_labels. The archetypes will be sorted on the second columns.}
-
-\item{player_labels}{a tibble with the labels (player and team names,
-positions, etc.). They may overlap with the totals. The leftmost column must
-be the player name, which must match the player name in \code{player_totals}..}
+The first column must be the player name. The archetypes will be sorted on
+the second column.}
 
 \item{num_archetypes}{number of archetypes to use (default 3)}
 }
