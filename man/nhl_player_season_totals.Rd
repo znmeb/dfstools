@@ -10,12 +10,14 @@ nhl_player_season_totals(season)
 \item{season}{a valid MySportsFeeds v2.1 API season name}
 }
 \value{
-a list of two items
+a list of three items
 \itemize{
 \item goalie_totals a tibble of goalie season total box score statistics,
 arranged by descending games won
 \item skater_totals a tibble of skater season total box score statistics,
 arranged by descending goals made
+\item player_labels a tibble of labeling information for both goalies and
+skaters
 }
 }
 \description{

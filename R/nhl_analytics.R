@@ -14,12 +14,14 @@
 #' @importFrom dplyr desc
 #' @export nhl_player_season_totals
 #' @param season a valid MySportsFeeds v2.1 API season name
-#' @return a list of two items
+#' @return a list of three items
 #' \itemize{
 #' \item goalie_totals a tibble of goalie season total box score statistics,
 #' arranged by descending games won
 #' \item skater_totals a tibble of skater season total box score statistics,
 #' arranged by descending goals made
+#' \item player_labels a tibble of labeling information for both goalies and
+#' skaters
 #' }
 #' @examples
 #' \dontrun{
@@ -52,7 +54,7 @@ nhl_player_season_totals <- function(season) {
     "player_age",
     "player_rookie"
   )
-  labels <- raw_data %>%
+  player_labels <- raw_data %>%
     dplyr::select(label_columns) %>%
     dplyr::arrange(player_name) %>%
     unique()
@@ -96,7 +98,11 @@ nhl_player_season_totals <- function(season) {
     dplyr::ungroup() %>%
     dplyr::select_if(.predicate = .is_valid_column)
 
-  return(list(goalie_totals = goalie_totals, skater_totals = skater_totals))
+  return(list(
+    goalie_totals = goalie_totals,
+    skater_totals = skater_totals,
+    player_labels = player_labels
+  ))
 
 }
 
@@ -109,7 +115,7 @@ nhl_player_season_totals <- function(season) {
 #' @param skater_totals a tibble returned by `nhl_player_season_totals`
 #' @param num_steps number of steps to use (default 1:5)
 #' @param nrep number of repetitions at each step (default 4)
-#' @param verbose should the search be verbose? (default FALSE)
+#' @param verbose should the search be verbose? (default TRUE)
 #' @return a list of
 #' \itemize{
 #' \item archetype_parameters the parameters that define each archetype
@@ -130,8 +136,42 @@ nhl_player_season_totals <- function(season) {
 #' }
 
 nhl_skater_archetype_search <-
-  function(skater_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
+  function(skater_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
     return(archetype_search(skater_totals, num_steps, nrep, verbose))
+  }
+
+#' @title NHL Goalie Archetype Search
+#' @name nhl_goalie_archetype_search
+#' @description stepwise search of archetype counts
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @export nhl_goalie_archetype_search
+#' @param goalie_totals a tibble returned by `nhl_player_season_totals`
+#' @param num_steps number of steps to use (default 1:7)
+#' @param nrep number of repetitions at each step (default 32)
+#' @param verbose should the search be verbose? (default TRUE)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item player_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object - the `bestModel` with `num_steps`
+#' archetypes
+#' \item all of the models}
+#' @examples
+#' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
+#' player_totals <- dfstools::nhl_player_season_totals("2018-2019-regular")
+#' goalie_totals <- player_totals$goalie_totals
+#' skater_totals <- player_totals$skater_totals
+#' goalie_archetypes <- dfstools::nhl_goalie_archetype_search(goalie_totals)
+#' screeplot(goalie_archetypes$archetype_models)
+#' goalie_alphas <- goalie_archetypes[["player_alphas"]]
+#' View(goalie_alphas)
+#' }
+
+nhl_goalie_archetype_search <-
+  function(goalie_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
+    return(archetype_search(goalie_totals, num_steps, nrep, verbose))
   }
 
 

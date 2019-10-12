@@ -77,14 +77,14 @@
 #' the second columns. Usually, this will be a measure of the player's total
 #' activity for the season, like minutes played or plate appearances / batters
 #' faced.
-#' @param num_steps number of steps to use (default 1:5)
-#' @param nrep number of repetitions at each step (default 4)
+#' @param num_steps number of steps to use (default 1:7)
+#' @param nrep number of repetitions at each step (default 32)
 #' @param verbose should the search be verbose? (default FALSE)
 #' @return a list of
 #' \itemize{
 #' \item archetype_parameters the parameters that define each archetype
 #' \item player_alphas the players tagged with their loadings on each archetype
-#' \item archetype_model the model object - the `bestModel` with `num_steps`
+#' \item archetype_model the model object - the `bestModel` with `max(num_steps)`
 #' archetypes
 #' \item all of the models}
 
@@ -130,7 +130,9 @@ archetype_search <- function(
 #' @export compute_archetypes
 #' @param player_totals a tibble of the values to use for archetypal analysis.
 #' The first column must be the player name. The archetypes will be sorted on
-#' the second column.
+#' the second columns. Usually, this will be a measure of the player's total
+#' activity for the season, like minutes played or plate appearances / batters
+#' faced.
 #' @param num_archetypes number of archetypes to use (default 3)
 #' @return a list of
 #' \itemize{

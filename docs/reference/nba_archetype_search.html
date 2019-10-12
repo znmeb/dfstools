@@ -115,7 +115,7 @@
     </div>
 
     <pre class="usage"><span class='fu'>nba_archetype_search</span>(<span class='no'>player_totals</span>, <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>7</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>32</span>,
-  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+  <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,7 +134,7 @@
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>should the search be verbose? (default FALSE)</p></td>
+      <td><p>should the search be verbose? (default TRUE)</p></td>
     </tr>
     </table>
 
@@ -153,7 +153,7 @@ archetypes</p></li>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/msf_set_apikey.html'>msf_set_apikey</a></span>(<span class='st'>"your MySportsFeeds API key"</span>)
 <span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nba_player_season_totals.html'>nba_player_season_totals</a></span>(<span class='st'>"2018-2019-regular"</span>)
-<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nba_archetype_search.html'>nba_archetype_search</a></span>(<span class='no'>player_totals</span>)
+<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nba_archetype_search.html'>nba_archetype_search</a></span>(<span class='no'>player_totals</span>$<span class='no'>player_totals</span>)
 <span class='fu'><a href='https://rdrr.io/r/stats/screeplot.html'>screeplot</a></span>(<span class='no'>the_archetypes</span>$<span class='no'>archetype_models</span>)
 <span class='no'>player_alphas</span> <span class='kw'>&lt;-</span> <span class='no'>the_archetypes</span><span class='kw'>[[</span><span class='st'>"player_alphas"</span>]]
 <span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>player_alphas</span>)

@@ -130,11 +130,11 @@ faced.</p></td>
     </tr>
     <tr>
       <th>num_steps</th>
-      <td><p>number of steps to use (default 1:5)</p></td>
+      <td><p>number of steps to use (default 1:7)</p></td>
     </tr>
     <tr>
       <th>nrep</th>
-      <td><p>number of repetitions at each step (default 4)</p></td>
+      <td><p>number of repetitions at each step (default 32)</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -147,7 +147,7 @@ faced.</p></td>
     <p>a list of</p><ul>
 <li><p>archetype_parameters the parameters that define each archetype</p></li>
 <li><p>player_alphas the players tagged with their loadings on each archetype</p></li>
-<li><p>archetype_model the model object - the <code>bestModel</code> with <code>num_steps</code>
+<li><p>archetype_model the model object - the <code>bestModel</code> with <code><a href='https://rdrr.io/r/base/Extremes.html'>max(num_steps)</a></code>
 archetypes</p></li>
 <li><p>all of the models</p></li>
 </ul>

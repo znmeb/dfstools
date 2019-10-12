@@ -9,7 +9,9 @@ compute_archetypes(player_totals, num_archetypes = 3)
 \arguments{
 \item{player_totals}{a tibble of the values to use for archetypal analysis.
 The first column must be the player name. The archetypes will be sorted on
-the second column.}
+the second columns. Usually, this will be a measure of the player's total
+activity for the season, like minutes played or plate appearances / batters
+faced.}
 
 \item{num_archetypes}{number of archetypes to use (default 3)}
 }

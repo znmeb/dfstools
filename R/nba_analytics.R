@@ -1,22 +1,3 @@
-# utility function to select a standard set of player totals.
-.nba_totals_select <- function(nba_player_totals) {
-  return(nba_player_totals %>%
-           dplyr::select(
-             player_name:player_rookie,
-             games_played = stats_games_played,
-             total_rebounds = stats_rebounds_reb,
-             total_minutes = stats_minutes_played,
-             two_point_field_goals = stats_field_goals_fg_2_pt_made,
-             three_point_field_goals = stats_field_goals_fg_3_pt_made,
-             free_throws = stats_free_throws_ft_made,
-             assists = stats_offense_ast,
-             turnovers = stats_defense_tov,
-             blocks = stats_defense_blk,
-             steals = stats_defense_stl
-           )
-  )
-}
-
 #' @title NBA Player Season Totals
 #' @name nba_player_season_totals
 #' @description fetches the player season totals for base box score statistics
@@ -33,8 +14,12 @@
 #' @importFrom dplyr desc
 #' @export nba_player_season_totals
 #' @param season a valid MySportsFeeds v2.1 API season name
-#' @return a tibble of season total box score statistics, arranged by
-#' descending total points scored
+#' @return a list of two items
+#' \itemize{
+#' \item player_totals a tibble of player season total box score statistics,
+#' arranged by descending points scored
+#' \item player_labels a tibble of labeling information for players
+#' }
 #' @examples
 #' \dontrun{
 #' player_totals <- dfstools::nba_player_season_totals("current")
@@ -64,7 +49,7 @@ nba_player_season_totals <- function(season) {
     "player_age",
     "player_rookie"
   )
-  labels <- raw_data %>%
+  player_labels <- raw_data %>%
     dplyr::select(label_columns) %>%
     dplyr::arrange(player_name) %>%
     unique()
@@ -90,19 +75,15 @@ nba_player_season_totals <- function(season) {
     "stats_defense_blk",
     "stats_miscellaneous_fouls"
   )
-  totals <- raw_data %>%
+  player_totals <- raw_data %>%
     dplyr::group_by(player_name) %>%
     dplyr::summarize_at(
       .vars = dplyr::vars(stats_columns),
       .funs = dplyr::funs(sum)
     ) %>%
-    dplyr::arrange(player_name) %>%
-    dplyr::ungroup()
-  return(
-    labels %>%
-      dplyr::full_join(totals) %>%
-      dplyr::arrange(desc(stats_offense_pts))
-  )
+    dplyr::arrange(desc(stats_offense_pts)) %>%
+  dplyr::ungroup()
+  return(list(player_totals = player_totals, player_labels = player_labels))
 }
 
 #' @title NBA Archetypal Analysis
@@ -126,7 +107,7 @@ nba_player_season_totals <- function(season) {
 #' \dontrun{
 #' dfstools::msf_set_apikey("your MySportsFeeds API key")
 #' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
-#' the_archetypes <- dfstools::nba_archetypes(player_totals)
+#' the_archetypes <- dfstools::nba_archetypes(player_totals$player_totals)
 #' player_alphas <- the_archetypes[["player_alphas"]]
 #' View(player_alphas)
 #' }
@@ -152,7 +133,7 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' @param player_totals a tibble returned by `nba_player_season_totals`
 #' @param num_steps number of steps to use (default 1:5)
 #' @param nrep number of repetitions at each step (default 4)
-#' @param verbose should the search be verbose? (default FALSE)
+#' @param verbose should the search be verbose? (default TRUE)
 #' @return a list of
 #' \itemize{
 #' \item archetype_parameters the parameters that define each archetype
@@ -164,14 +145,14 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' \dontrun{
 #' dfstools::msf_set_apikey("your MySportsFeeds API key")
 #' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
-#' the_archetypes <- dfstools::nba_archetype_search(player_totals)
+#' the_archetypes <- dfstools::nba_archetype_search(player_totals$player_totals)
 #' screeplot(the_archetypes$archetype_models)
 #' player_alphas <- the_archetypes[["player_alphas"]]
 #' View(player_alphas)
 #' }
 
 nba_archetype_search <-
-  function(player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
+  function(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
     call_player_totals <- player_totals %>%
       dplyr::select(player_name, stats_minutes_played:stats_miscellaneous_fouls)
     return(archetype_search(call_player_totals, num_steps, nrep, verbose))

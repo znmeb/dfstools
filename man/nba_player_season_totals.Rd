@@ -10,8 +10,12 @@ nba_player_season_totals(season)
 \item{season}{a valid MySportsFeeds v2.1 API season name}
 }
 \value{
-a tibble of season total box score statistics, arranged by
-descending total points scored
+a list of two items
+\itemize{
+\item player_totals a tibble of player season total box score statistics,
+arranged by descending points scored
+\item player_labels a tibble of labeling information for players
+}
 }
 \description{
 fetches the player season totals for base box score statistics

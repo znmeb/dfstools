@@ -14,9 +14,9 @@ the second columns. Usually, this will be a measure of the player's total
 activity for the season, like minutes played or plate appearances / batters
 faced.}
 
-\item{num_steps}{number of steps to use (default 1:5)}
+\item{num_steps}{number of steps to use (default 1:7)}
 
-\item{nrep}{number of repetitions at each step (default 4)}
+\item{nrep}{number of repetitions at each step (default 32)}
 
 \item{verbose}{should the search be verbose? (default FALSE)}
 }
@@ -25,7 +25,7 @@ a list of
 \itemize{
 \item archetype_parameters the parameters that define each archetype
 \item player_alphas the players tagged with their loadings on each archetype
-\item archetype_model the model object - the \code{bestModel} with \code{num_steps}
+\item archetype_model the model object - the \code{bestModel} with \code{max(num_steps)}
 archetypes
 \item all of the models}
 }
