@@ -32,9 +32,8 @@ stepwise search of archetype counts
 \dontrun{
 dfstools::msf_set_apikey("your MySportsFeeds API key")
 player_totals <- dfstools::nhl_player_season_totals("2018-2019-regular")
-goalie_totals <- player_totals$goalie_totals
-skater_totals <- player_totals$skater_totals
-skater_archetypes <- dfstools::nhl_skater_archetype_search(skater_totals)
+skater_archetypes <-
+  dfstools::nhl_skater_archetype_search(player_totals$skater_totals)
 screeplot(skater_archetypes$archetype_models)
 skater_alphas <- skater_archetypes[["player_alphas"]]
 View(skater_alphas)

@@ -113,9 +113,7 @@ nba_player_season_totals <- function(season) {
 #' }
 
 nba_archetypes <- function(player_totals, num_archetypes = 3) {
-  call_player_totals <- player_totals %>%
-    dplyr::select(player_name, stats_minutes_played:stats_miscellaneous_fouls)
-  return(compute_archetypes(call_player_totals, num_archetypes))
+  return(compute_archetypes(player_totals, num_archetypes))
 }
 
 #' @title NBA Archetype Search
@@ -153,9 +151,7 @@ nba_archetypes <- function(player_totals, num_archetypes = 3) {
 
 nba_archetype_search <-
   function(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
-    call_player_totals <- player_totals %>%
-      dplyr::select(player_name, stats_minutes_played:stats_miscellaneous_fouls)
-    return(archetype_search(call_player_totals, num_steps, nrep, verbose))
+    return(archetype_search(player_totals, num_steps, nrep, verbose))
   }
 
 utils::globalVariables(c(

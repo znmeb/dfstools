@@ -127,9 +127,8 @@ nhl_player_season_totals <- function(season) {
 #' \dontrun{
 #' dfstools::msf_set_apikey("your MySportsFeeds API key")
 #' player_totals <- dfstools::nhl_player_season_totals("2018-2019-regular")
-#' goalie_totals <- player_totals$goalie_totals
-#' skater_totals <- player_totals$skater_totals
-#' skater_archetypes <- dfstools::nhl_skater_archetype_search(skater_totals)
+#' skater_archetypes <-
+#'   dfstools::nhl_skater_archetype_search(player_totals$skater_totals)
 #' screeplot(skater_archetypes$archetype_models)
 #' skater_alphas <- skater_archetypes[["player_alphas"]]
 #' View(skater_alphas)
@@ -139,6 +138,36 @@ nhl_skater_archetype_search <-
   function(skater_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
     return(archetype_search(skater_totals, num_steps, nrep, verbose))
   }
+
+#' @title NHL Skater Archetypal Analysis
+#' @name nhl_skater_archetypes
+#' @description perform an "archetypal athletes" analysis
+#' @importFrom archetypes archetypes
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble as_tibble
+#' @export nhl_skater_archetypes
+#' @param skater_totals a `skaters_totals` tibble returned by `nhl_player_season_totals`
+#' @param num_archetypes number of archetypes to use (default 3)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item skater_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object}
+#' @examples
+#' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
+#' player_totals <- dfstools::nhl_player_season_totals("2018-2019-regular")
+#' the_archetypes <- dfstools::nhl_skater_archetypes(player_totals$skater_totals)
+#' skater_alphas <- the_archetypes[["player_alphas"]]
+#' View(skater_alphas)
+#' }
+
+nhl_skater_archetypes <- function(skater_totals, num_archetypes = 3) {
+  return(compute_archetypes(skater_totals, num_archetypes))
+}
 
 #' @title NHL Goalie Archetype Search
 #' @name nhl_goalie_archetype_search
@@ -173,6 +202,36 @@ nhl_goalie_archetype_search <-
   function(goalie_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
     return(archetype_search(goalie_totals, num_steps, nrep, verbose))
   }
+
+#' @title NHL Goalie Archetypal Analysis
+#' @name nhl_goalie_archetypes
+#' @description perform an "archetypal athletes" analysis
+#' @importFrom archetypes archetypes
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble as_tibble
+#' @export nhl_goalie_archetypes
+#' @param goalie_totals a `goalie_totals` tibble returned by `nhl_player_season_totals`
+#' @param num_archetypes number of archetypes to use (default 2)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item goalie_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object}
+#' @examples
+#' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
+#' player_totals <- dfstools::nhl_player_season_totals("2018-2019-regular")
+#' the_archetypes <- dfstools::nhl_goalie_archetypes(player_totals$goalie_totals)
+#' goalie_alphas <- the_archetypes[["player_alphas"]]
+#' View(goalie_alphas)
+#' }
+
+nhl_goalie_archetypes <- function(goalie_totals, num_archetypes = 2) {
+  return(compute_archetypes(goalie_totals, num_archetypes))
+}
 
 
 utils::globalVariables(c(

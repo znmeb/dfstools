@@ -153,9 +153,8 @@ archetypes</p></li>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/msf_set_apikey.html'>msf_set_apikey</a></span>(<span class='st'>"your MySportsFeeds API key"</span>)
 <span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nhl_player_season_totals.html'>nhl_player_season_totals</a></span>(<span class='st'>"2018-2019-regular"</span>)
-<span class='no'>goalie_totals</span> <span class='kw'>&lt;-</span> <span class='no'>player_totals</span>$<span class='no'>goalie_totals</span>
-<span class='no'>skater_totals</span> <span class='kw'>&lt;-</span> <span class='no'>player_totals</span>$<span class='no'>skater_totals</span>
-<span class='no'>skater_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nhl_skater_archetype_search.html'>nhl_skater_archetype_search</a></span>(<span class='no'>skater_totals</span>)
+<span class='no'>skater_archetypes</span> <span class='kw'>&lt;-</span>
+  <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/nhl_skater_archetype_search.html'>nhl_skater_archetype_search</a></span>(<span class='no'>player_totals</span>$<span class='no'>skater_totals</span>)
 <span class='fu'><a href='https://rdrr.io/r/stats/screeplot.html'>screeplot</a></span>(<span class='no'>skater_archetypes</span>$<span class='no'>archetype_models</span>)
 <span class='no'>skater_alphas</span> <span class='kw'>&lt;-</span> <span class='no'>skater_archetypes</span><span class='kw'>[[</span><span class='st'>"player_alphas"</span>]]
 <span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>skater_alphas</span>)
