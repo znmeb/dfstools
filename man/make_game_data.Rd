@@ -18,9 +18,17 @@ Builds a \code{mvglmmRank} "game.data" table from an
 }
 \examples{
 \dontrun{
-nba_seasonal_games <- dfstools::msf_seasonal_games("nba", "2018-2019-regular")
 nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
-nba.game.data <- dfstools::make_game_data(nba_seasonal_games)
-nhl.game.data <- dfstools::make_game_data(nhl_seasonal_games)
+nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+nhl_model <- dfstools::mvglmmRank_model(
+  nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+)
+nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+View(nhl_predictions)
+entropy_forecast <- nhl_predictions \%>\%
+  group_by(date) \%>\%
+  summarize(games = n(), entropy = sum(entropy))
+View(entropy_forecast)
 }
 }

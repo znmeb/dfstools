@@ -17,3 +17,19 @@ the schedule augmented with prediction columns
 \description{
 Creates a data frame with game predictions
 }
+\examples{
+\dontrun{
+nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
+nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+nhl_model <- dfstools::mvglmmRank_model(
+  nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+)
+nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+View(nhl_predictions)
+entropy_forecast <- nhl_predictions \%>\%
+  group_by(date) \%>\%
+  summarize(games = n(), entropy = sum(entropy))
+View(entropy_forecast)
+}
+}

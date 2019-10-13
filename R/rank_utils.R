@@ -9,10 +9,18 @@
 #' @return a "game data" table
 #' @examples
 #' \dontrun{
-#' nba_seasonal_games <- dfstools::msf_seasonal_games("nba", "2018-2019-regular")
 #' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
-#' nba.game.data <- dfstools::make_game_data(nba_seasonal_games)
-#' nhl.game.data <- dfstools::make_game_data(nhl_seasonal_games)
+#' nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+#' nhl_model <- dfstools::mvglmmRank_model(
+#'   nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+#' )
+#' nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+#' View(nhl_predictions)
+#' entropy_forecast <- nhl_predictions %>%
+#'   group_by(date) %>%
+#'   summarize(games = n(), entropy = sum(entropy))
+#' View(entropy_forecast)
 #' }
 
 make_game_data <- function(seasonal_games) {
@@ -40,14 +48,23 @@ make_game_data <- function(seasonal_games) {
 #' @return a "schedule" table
 #' @examples
 #' \dontrun{
-#' nba_seasonal_games <- dfstools::msf_seasonal_games("nba", "2018-2019-regular")
 #' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
-#' nba.schedule <- dfstools::make_schedule(nba_seasonal_games)
-#' nhl.schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+#' nhl_model <- dfstools::mvglmmRank_model(
+#'   nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+#' )
+#' nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+#' View(nhl_predictions)
+#' entropy_forecast <- nhl_predictions %>%
+#'   group_by(date) %>%
+#'   summarize(games = n(), entropy = sum(entropy))
+#' View(entropy_forecast)
 #' }
 
 make_schedule <- function(seasonal_games) {
   schedule <- seasonal_games %>% dplyr::select(
+    date,
     road_team = schedule_away_team_abbreviation,
     home_team = schedule_home_team_abbreviation,
     road_actual_score = score_away_score_total,
@@ -68,6 +85,21 @@ make_schedule <- function(seasonal_games) {
 #' default is `FALSE`
 #' @param verbose print a lot of stuff whilst iterating - default is `FALSE`
 #' @return an mvglmmRank model object
+#' @examples
+#' \dontrun{
+#' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
+#' nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+#' nhl_model <- dfstools::mvglmmRank_model(
+#'   nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+#' )
+#' nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+#' View(nhl_predictions)
+#' entropy_forecast <- nhl_predictions %>%
+#'   group_by(date) %>%
+#'   summarize(games = n(), entropy = sum(entropy))
+#' View(entropy_forecast)
+#' }
 
 mvglmmRank_model <- function(
   game_data, method = "NB", first.order = FALSE, verbose = FALSE) {
@@ -97,6 +129,21 @@ mvglmmRank_model <- function(
 #' @param schedule a data frame team names in "road_team" and "home_team" columns
 #' @param model a model from mvglmmRank::mvglmmRank
 #' @return the schedule augmented with prediction columns
+#' @examples
+#' \dontrun{
+#' nhl_seasonal_games <- dfstools::msf_seasonal_games("nhl", "2019-2020-regular")
+#' nhl_game_data <- dfstools::make_game_data(nhl_seasonal_games)
+#' nhl_model <- dfstools::mvglmmRank_model(
+#'   nhl_game_data, method = "PB1", first.order = FALSE, verbose = TRUE
+#' )
+#' nhl_schedule <- dfstools::make_schedule(nhl_seasonal_games)
+#' nhl_predictions <- dfstools::game_predict(nhl_schedule, nhl_model)
+#' View(nhl_predictions)
+#' entropy_forecast <- nhl_predictions %>%
+#'   group_by(date) %>%
+#'   summarize(games = n(), entropy = sum(entropy))
+#' View(entropy_forecast)
+#' }
 
 game_predict <-
   function(schedule, model) {

@@ -133,10 +133,18 @@ msf_seasonal_gamesresult" />
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>nba_seasonal_games</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/msf_seasonal_games.html'>msf_seasonal_games</a></span>(<span class='st'>"nba"</span>, <span class='st'>"2018-2019-regular"</span>)
 <span class='no'>nhl_seasonal_games</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/msf_seasonal_games.html'>msf_seasonal_games</a></span>(<span class='st'>"nhl"</span>, <span class='st'>"2019-2020-regular"</span>)
-<span class='no'>nba.game.data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/make_game_data.html'>make_game_data</a></span>(<span class='no'>nba_seasonal_games</span>)
-<span class='no'>nhl.game.data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/make_game_data.html'>make_game_data</a></span>(<span class='no'>nhl_seasonal_games</span>)
+<span class='no'>nhl_game_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/make_game_data.html'>make_game_data</a></span>(<span class='no'>nhl_seasonal_games</span>)
+<span class='no'>nhl_model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/mvglmmRank_model.html'>mvglmmRank_model</a></span>(
+  <span class='no'>nhl_game_data</span>, <span class='kw'>method</span> <span class='kw'>=</span> <span class='st'>"PB1"</span>, <span class='kw'>first.order</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
+)
+<span class='no'>nhl_schedule</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/make_schedule.html'>make_schedule</a></span>(<span class='no'>nhl_seasonal_games</span>)
+<span class='no'>nhl_predictions</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dfstools/man/game_predict.html'>game_predict</a></span>(<span class='no'>nhl_schedule</span>, <span class='no'>nhl_model</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>nhl_predictions</span>)
+<span class='no'>entropy_forecast</span> <span class='kw'>&lt;-</span> <span class='no'>nhl_predictions</span> <span class='kw'>%&gt;%</span>
+  <span class='fu'>group_by</span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
+  <span class='fu'>summarize</span>(<span class='kw'>games</span> <span class='kw'>=</span> <span class='fu'>n</span>(), <span class='kw'>entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>entropy_forecast</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
