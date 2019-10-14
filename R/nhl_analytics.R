@@ -233,8 +233,43 @@ nhl_goalie_archetypes <- function(goalie_totals, num_archetypes = 2) {
   return(compute_archetypes(goalie_totals, num_archetypes))
 }
 
+#' @title NHL Play-by-play
+#' @name nhl_play_by_play
+#' @description retrieve an NHL game play-by-play tibble
+#' @importFrom tibble as_tibble
+#' @export nhl_play_by_play
+#' @param season the NHL season
+#' @param game_slug a string of the form `yyyymmdd-AAA-HHH`, where `yyyymmdd`
+#' is the game start date, `AAA` is the away team abbreviation, and `HHH` is the
+#' home team abbreviation.
+#' @return a tibble of all the plays in the game
+#' @examples
+#' \dontrun{
+#' library(dplyr)
+#' stanley_cup_games <- dfstools::msf_seasonal_games("nhl", "2019-playoff")
+#' stanley_cup_final <- stanley_cup_games %>%
+#'   dplyr::arrange(desc(slug)) %>%
+#'   head(1)
+#' stanley_cup_final_slug <- stanley_cup_final[["slug"]]
+#' stanley_cup_final_pbp <-
+#'   dfstools::nhl_play_by_play("2019-playoff", stanley_cup_final_slug)
+#' }
+
+nhl_play_by_play <- function(season, game_slug) {
+  url <- paste(
+    "https://api.mysportsfeeds.com/v2.1/pull/nhl",
+    season,
+    "games",
+    game_slug,
+    "playbyplay.json",
+    sep = "/"
+  )
+  return(tibble::as_tibble(dfstools::msf_get_feed(url)[["plays"]]))
+}
 
 utils::globalVariables(c(
+  "goalie_totals",
+  "num_archetypes",
   "player_primary_position",
   "stats_goaltending_minutes_played",
   "stats_goaltending_wins",

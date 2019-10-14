@@ -153,6 +153,39 @@ nba_archetype_search <-
   function(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
     return(archetype_search(player_totals, num_steps, nrep, verbose))
   }
+#' @title NBA Play-by-play
+#' @name nba_play_by_play
+#' @description retrieve an nba game play-by-play tibble
+#' @importFrom tibble as_tibble
+#' @export nba_play_by_play
+#' @param season the NBA season
+#' @param game_slug a string of the form `yyyymmdd-AAA-HHH`, where `yyyymmdd`
+#' is the game start date, `AAA` is the away team abbreviation, and `HHH` is the
+#' home team abbreviation.
+#' @return a tibble of all the plays in the game
+#' @examples
+#' \dontrun{
+#' library(dplyr)
+#' nba_playoff_games <- dfstools::msf_seasonal_games("nba", "2019-playoff")
+#' nba_playoff_final <- nba_playoff_games %>%
+#'   dplyr::arrange(desc(slug)) %>%
+#'   head(1)
+#' nba_playoff_final_slug <- nba_playoff_final[["slug"]]
+#' nba_playoff_final_pbp <-
+#'   dfstools::nba_play_by_play("2019-playoff", nba_playoff_final_slug)
+#' }
+
+nba_play_by_play <- function(season, game_slug) {
+  url <- paste(
+    "https://api.mysportsfeeds.com/v2.1/pull/nba",
+    season,
+    "games",
+    game_slug,
+    "playbyplay.json",
+    sep = "/"
+  )
+  return(tibble::as_tibble(dfstools::msf_get_feed(url)[["plays"]]))
+}
 
 utils::globalVariables(c(
   "player_current_roster_status",
