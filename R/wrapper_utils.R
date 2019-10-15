@@ -417,6 +417,42 @@ msf_seasonal_player_stats_totals <- function(league, season, verbose = TRUE) {
   return(player_stats_totals)
 }
 
+#' @title MySportsFeeds Daily DFS
+#' @name msf_daily_dfs
+#' @description Gets DFS object from from
+#' MySportsFeeds version 2.1 API
+#' @export msf_daily_dfs
+#' @importFrom tibble tibble
+#' @importFrom tibble as_tibble
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr %>%
+#' @importFrom dplyr mutate
+#' @importFrom dplyr select_if
+#' @importFrom snakecase to_snake_case
+#' @param league the league to fetch
+#' @param season the season to fetch
+#' @param date the date to fetch
+#' @param verbose print status info
+#' @return a `dfs` object
+#' @examples
+#' \dontrun{
+#' nba_dfs <- dfstools::msf_daily_dfs(
+#'   season = "2019-playoff", league = "nba", date = "20190419", verbose = TRUE
+#' )}
+
+msf_daily_dfs <- function(league, season, date, verbose = TRUE) {
+  response <- dfstools::msf_get_feed(
+    dfstools::msf_build_url(
+      league, season, "dfs.json", date = date
+    ),
+    verbose = verbose
+  )
+  dfs <- response[["sources"]]
+  colnames(dfs) <- colnames(dfs) %>%
+    snakecase::to_snake_case()
+  return(dfs)
+}
+
 utils::globalVariables(c(
   ".",
   "schedule_away_team_abbreviation",
