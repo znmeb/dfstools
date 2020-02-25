@@ -4,8 +4,12 @@
 \alias{nhl_skater_archetype_search}
 \title{NHL Skater Archetype Search}
 \usage{
-nhl_skater_archetype_search(skater_totals, num_steps = 1:7, nrep = 32,
-  verbose = TRUE)
+nhl_skater_archetype_search(
+  skater_totals,
+  num_steps = 1:7,
+  nrep = 32,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{skater_totals}{a tibble returned by \code{nhl_player_season_totals}}

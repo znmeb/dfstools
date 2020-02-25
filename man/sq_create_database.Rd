@@ -25,6 +25,6 @@ Creates an SQLite database for a league and season
 }
 \details{
 The database will be saved to file
-\code{<directory>/<league>_<season>.sqlite}"`. It will be
+\verb{<directory>/<league>_<season>.sqlite}"`. It will be
 overwritten if it exists and created if it doesn't.
 }

@@ -4,8 +4,7 @@
 \alias{nba_archetype_search}
 \title{NBA Archetype Search}
 \usage{
-nba_archetype_search(player_totals, num_steps = 1:7, nrep = 32,
-  verbose = TRUE)
+nba_archetype_search(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE)
 }
 \arguments{
 \item{player_totals}{a tibble returned by \code{nba_player_season_totals}}

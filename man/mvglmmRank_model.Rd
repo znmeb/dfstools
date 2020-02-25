@@ -4,8 +4,12 @@
 \alias{mvglmmRank_model}
 \title{Build an mvglmmRank model}
 \usage{
-mvglmmRank_model(game_data, method = "NB", first.order = FALSE,
-  verbose = FALSE)
+mvglmmRank_model(
+  game_data,
+  method = "NB",
+  first.order = FALSE,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{game_data}{a \code{game_data} tibble.}

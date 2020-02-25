@@ -4,8 +4,12 @@
 \alias{nhl_goalie_archetype_search}
 \title{NHL Goalie Archetype Search}
 \usage{
-nhl_goalie_archetype_search(goalie_totals, num_steps = 1:7, nrep = 32,
-  verbose = TRUE)
+nhl_goalie_archetype_search(
+  goalie_totals,
+  num_steps = 1:7,
+  nrep = 32,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{goalie_totals}{a tibble returned by \code{nhl_player_season_totals}}

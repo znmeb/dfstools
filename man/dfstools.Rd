@@ -3,7 +3,6 @@
 \docType{package}
 \name{dfstools}
 \alias{dfstools}
-\alias{dfstools-package}
 \title{dfstools: Daily Fantasy Sports tools}
 \description{
 Companion package for \emph{Mastering DFS Analytics} eBook
