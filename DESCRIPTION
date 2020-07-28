@@ -10,7 +10,7 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/znmeb/dfstools
 BugReports: https://github.com/znmeb/dfstools/issues/new/choose
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Imports: 
     DBI,
