@@ -31,7 +31,8 @@ Imports:
     ggtern,
     ggplot2,
     readxl,
-    xml2
+    xml2,
+    janitor
 Suggests: 
     knitr,
     rmarkdown,
