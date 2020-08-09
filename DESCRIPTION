@@ -30,7 +30,8 @@ Imports:
     RColorBrewer,
     ggtern,
     ggplot2,
-    readxl
+    readxl,
+    xml2
 Suggests: 
     knitr,
     rmarkdown,
