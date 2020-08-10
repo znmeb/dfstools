@@ -1,3 +1,33 @@
+#' @title WNBA BigDataBall Team Box Score
+#' @name wnba_bdb_team_box_score
+#' @description fetches a BigDataBall WNBA team box score
+#' @export wnba_bdb_team_box_score
+#' @importFrom dplyr %>%
+#' @importFrom janitor clean_names
+#' @importFrom readxl read_excel
+#' @param bdb_excel_file a BigDataBall WNBA team box score file
+#' @return a tibble with the team box score
+#' @examples
+#' \dontrun{
+#' wnba_team_box_score <- dfstools::wnba_bdb_team_box_score(
+#'   "~/Dropbox/20-wnba-team/08-09-2020-wnba-season-team-feed.xlsx"
+#' )
+#' View(wnba_team_box_score)
+#' }
+
+wnba_bdb_team_box_score <- function(bdb_excel_file) {
+  readxl::read_excel(bdb_excel_file, col_types = c(
+    "text", "text", "text", "text", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "numeric", "numeric", "numeric", "numeric",
+    "numeric", "numeric", "numeric", "skip", "skip", "skip", "skip",
+    "skip"
+  )) %>%
+    janitor::clean_names()
+}
+
 #' @title WNBA BigDataBall DFS
 #' @name wnba_bdb_dfs
 #' @description fetches a BigDataBall WNBA player box score
