@@ -15,7 +15,8 @@ a tibble with three columns
 }
 }
 \description{
-fetches the 2020 WNBA schedule from Basketball-reference.com
+fetches the 2020 WNBA schedule from Basketball-reference.com and
+converts it to a format usable by dfstools::mvglmmRank_model
 }
 \examples{
 \dontrun{

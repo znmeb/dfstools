@@ -8,7 +8,8 @@ mvglmmRank_model(
   game_data,
   method = "NB",
   first.order = FALSE,
-  verbose = FALSE
+  verbose = FALSE,
+  OT.flag = FALSE
 )
 }
 \arguments{
@@ -20,6 +21,8 @@ mvglmmRank_model(
 default is \code{FALSE}}
 
 \item{verbose}{print a lot of stuff whilst iterating - default is \code{FALSE}}
+
+\item{OT.flag}{the \code{mvglmmRank} "use overtime" flag - default is \code{FALSE}}
 }
 \value{
 an mvglmmRank model object

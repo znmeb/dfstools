@@ -4,6 +4,10 @@
 #' @name make_game_data
 #' @description Builds a `mvglmmRank` "game.data" table from an
 #' `msf_seasonal_games`result
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
 #' @export make_game_data
 #' @param seasonal_games a tibble returned from `msf_seasonal_games`
 #' @return a "game data" table
@@ -84,6 +88,7 @@ make_schedule <- function(seasonal_games) {
 #' @param first.order the `mvglmmRank` first-order correction flag -
 #' default is `FALSE`
 #' @param verbose print a lot of stuff whilst iterating - default is `FALSE`
+#' @param OT.flag the `mvglmmRank` "use overtime" flag - default is `FALSE`
 #' @return an mvglmmRank model object
 #' @examples
 #' \dontrun{
@@ -102,18 +107,19 @@ make_schedule <- function(seasonal_games) {
 #' }
 
 mvglmmRank_model <- function(
-  game_data, method = "NB", first.order = FALSE, verbose = FALSE) {
+  game_data,
+  method = "NB",
+  first.order = FALSE,
+  verbose = FALSE,
+  OT.flag = FALSE
+) {
   print(start_time <- Sys.time())
   nb_model <- mvglmmRank::mvglmmRank(
     game.data = game_data,
     method = method,
     first.order = first.order,
     home.field = TRUE,
-    OT.flag = TRUE,
-    Hessian = FALSE,
-    max.iter.EM = 2000,
-    tol1 = 1e-03,
-    tol2 = 1e-03,
+    OT.flag = OT.flag,
     verbose = verbose)
   print(end_time <- Sys.time())
   print(end_time - start_time)
@@ -201,6 +207,10 @@ game_predict <-
 ## global name declarations
 ## See <https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618>
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "f",
+  "minutes",
+  "teams",
+  "venue",
   "OT",
   "ot",
   "schedule_played_status",
