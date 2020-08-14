@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Basketball Reference WNBA Schedule — wnba_2020_schedule_bbref • dfstools</title>
+<title>WNBA 2020 Schedule from Basketball Reference — wnba_2020_schedule_bbref • dfstools</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Basketball Reference WNBA Schedule — wnba_2020_schedule_bbref" />
+<meta property="og:title" content="WNBA 2020 Schedule from Basketball Reference — wnba_2020_schedule_bbref" />
 <meta property="og:description" content="fetches the 2020 WNBA schedule from Basketball-reference.com and
 converts it to a format usable by dfstools::mvglmmRank_model" />
 
@@ -109,7 +109,7 @@ converts it to a format usable by dfstools::mvglmmRank_model" />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Basketball Reference WNBA Schedule</h1>
+    <h1>WNBA 2020 Schedule from Basketball Reference</h1>
     <small class="dont-index">Source: <a href='https://github.com/znmeb/dfstools/blob/master/R/wnba.R'><code>R/wnba.R</code></a></small>
     <div class="hidden name"><code>wnba_2020_schedule_bbref.Rd</code></div>
     </div>
@@ -124,17 +124,31 @@ converts it to a format usable by dfstools::mvglmmRank_model</p>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a tibble with three columns</p><ul>
-<li><p><code>date</code> POSIXct the game date,</p></li>
-<li><p><code>away</code> character the "away" team</p></li>
-<li><p><code>home</code> character the "home" team</p></li>
-</ul>
-
+    <p>a tibble that can be truncated to serve as a <code>game.data</code> input for
+<code><a href='mvglmmRank_model.html'>dfstools::mvglmmRank_model</a></code> and as a <code>schedule</code> input for
+<code><a href='game_predict.html'>dfstools::game_predict</a></code>.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>wnba_schedule</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_2020_schedule_bbref</span>()
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>wnba_schedule</span>)
+<span class='no'>wnba_game_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_make_game_data.html'>wnba_make_game_data</a></span>(<span class='no'>wnba_schedule</span>)
+<span class='no'>wnba_model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='mvglmmRank_model.html'>mvglmmRank_model</a></span>(<span class='no'>wnba_game_data</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
+<span class='no'>teams</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.offense"</span>]]))
+<span class='no'>ratings</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
+  <span class='kw'>team</span> <span class='kw'>=</span> <span class='no'>teams</span>,
+  <span class='kw'>offense</span> <span class='kw'>=</span> <span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.offense"</span>]],
+  <span class='kw'>defense</span> <span class='kw'>=</span> <span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.defense"</span>]]
+))
+<span class='no'>forecast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='game_predict.html'>game_predict</a></span>(
+  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='no'>wnba_schedule</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(
+    <span class='kw'>road_team</span> <span class='kw'>=</span> <span class='no'>away</span>,
+    <span class='kw'>home_team</span> <span class='kw'>=</span> <span class='no'>home</span>
+  ),
+  <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>wnba_model</span>
+)
+<span class='no'>entropy</span> <span class='kw'>&lt;-</span> <span class='no'>forecast</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span>(<span class='kw'>total_entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

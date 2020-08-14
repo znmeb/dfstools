@@ -2,17 +2,14 @@
 % Please edit documentation in R/wnba.R
 \name{wnba_2020_schedule_bbref}
 \alias{wnba_2020_schedule_bbref}
-\title{Basketball Reference WNBA Schedule}
+\title{WNBA 2020 Schedule from Basketball Reference}
 \usage{
 wnba_2020_schedule_bbref()
 }
 \value{
-a tibble with three columns
-\itemize{
-\item \code{date} POSIXct the game date,
-\item \code{away} character the "away" team
-\item \code{home} character the "home" team
-}
+a tibble that can be truncated to serve as a \code{game.data} input for
+\code{dfstools::mvglmmRank_model} and as a \code{schedule} input for
+\code{dfstools::game_predict}.
 }
 \description{
 fetches the 2020 WNBA schedule from Basketball-reference.com and
@@ -21,6 +18,23 @@ converts it to a format usable by dfstools::mvglmmRank_model
 \examples{
 \dontrun{
 wnba_schedule <- dfstools::wnba_2020_schedule_bbref()
-View(wnba_schedule)
+wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+wnba_model <- dfstools::mvglmmRank_model(wnba_game_data, verbose = FALSE)
+teams <- as.character(names(wnba_model[["n.ratings.offense"]]))
+ratings <- tibble::as_tibble(list(
+  team = teams,
+  offense = wnba_model[["n.ratings.offense"]],
+  defense = wnba_model[["n.ratings.defense"]]
+))
+forecast <- dfstools::game_predict(
+  schedule = wnba_schedule \%>\% dplyr::rename(
+    road_team = away,
+    home_team = home
+  ),
+  model = wnba_model
+)
+entropy <- forecast \%>\%
+  dplyr::group_by(date) \%>\%
+  dplyr::summarise(total_entropy = sum(entropy))
 }
 }

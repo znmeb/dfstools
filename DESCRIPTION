@@ -39,3 +39,5 @@ Suggests:
     pkgdown,
     miniUI
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
