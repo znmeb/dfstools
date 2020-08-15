@@ -67,6 +67,7 @@
 #' @importFrom dplyr %>%
 #' @importFrom dplyr select
 #' @importFrom dplyr select_if
+#' @importFrom tibble remove_rownames
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
@@ -92,6 +93,7 @@ archetype_search <- function(
   player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
   input_matrix <- player_totals %>%
     dplyr::select_if(.predicate = .is_valid_column) %>%
+    tibble::remove_rownames() %>%
     tibble::column_to_rownames(var = "player_name") %>%
     as.matrix()
   set.seed(1776)

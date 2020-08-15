@@ -1,3 +1,165 @@
+#' @title WNBA 2020 player totals from Basketball Reference
+#' @name wnba_2020_totals_bbref
+#' @description fetches the 2020 WNBA player totals from
+#'  basketball-reference.com and prepares the raw data for archetypal
+#'  analysis.
+#' @export wnba_2020_totals_bbref
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
+#' @importFrom tibble remove_rownames
+#' @importFrom janitor clean_names
+#' @importFrom rvest html_table
+#' @importFrom xml2 read_html
+#' @return a list of two items
+#' \itemize{
+#' \item player_totals a tibble of player season total box score statistics,
+#' arranged by descending points scored
+#' \item player_labels a tibble of labeling information for players
+#' }
+#' @examples
+#' \dontrun{
+#' wnba_totals <- dfstools::wnba_2020_totals_bbref()
+#' player_totals <- wnba_totals$player_totals
+#' player_labels <- wnba_totals$player_labels
+#' the_archetypes <- dfstools::wnba_archetypes(player_totals)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' View(player_alphas)
+#' }
+
+wnba_2020_totals_bbref <- function() {
+  raw_data <- xml2::read_html(
+    "https://www.basketball-reference.com/wnba/years/2020_totals.html"
+  ) %>% rvest::html_table()
+  raw_data <- raw_data[[1]] %>%
+    janitor::clean_names() %>%
+    dplyr::filter(player != "Player") %>%
+    dplyr::mutate(player_name = paste(player, tm))
+
+  # the columns of `raw_data` are all character! Make the numbers numbers!
+  numbers <- as.data.frame(data.matrix(dplyr::select(raw_data, g:pts)))
+  raw_data <- dplyr::bind_cols(
+    dplyr::select(raw_data, player_name, tm, pos),
+    numbers
+  ) %>% dplyr::mutate(drb = trb - orb)
+
+  label_columns <- c(
+    "player_name",
+    "tm",
+    "pos"
+  )
+  player_labels <- raw_data %>%
+    dplyr::select(label_columns) %>%
+    dplyr::arrange(player_name) %>%
+    unique()
+
+  stats_columns <- c(
+    "player_name",
+    "mp",
+    "g",
+    "gs",
+    "x2pa",
+    "x2p",
+    "x3pa",
+    "x3p",
+    "fga",
+    "fg",
+    "fta",
+    "ft",
+    "orb",
+    "drb",
+    "trb",
+    "ast",
+    "pts",
+    "tov",
+    "stl",
+    "blk",
+    "pf"
+  )
+  player_totals <- raw_data %>%
+    dplyr::select(stats_columns) %>%
+    dplyr::arrange(desc(pts)) %>%
+    unique()
+
+  return(list(
+    player_totals = player_totals,
+    player_labels = player_labels)
+  )
+
+}
+
+#' @title WNBA Archetypal Analysis
+#' @name wnba_archetypes
+#' @description perform an "archetypal athletes" analysis
+#' @importFrom archetypes archetypes
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble as_tibble
+#' @export wnba_archetypes
+#' @param player_totals a tibble returned by `nba_player_season_totals`
+#' @param num_archetypes number of archetypes to use (default 3)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item player_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object}
+#' @examples
+#' \dontrun{
+#' wnba_totals <- dfstools::wnba_2020_totals_bbref()
+#' player_totals <- wnba_totals$player_totals
+#' player_labels <- wnba_totals$player_labels
+#' the_archetypes <- dfstools::wnba_archetypes(player_totals)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' View(player_alphas)
+#' }
+
+wnba_archetypes <- function(player_totals, num_archetypes = 3) {
+  return(compute_archetypes(player_totals, num_archetypes))
+}
+
+#' @title WNBA Archetype Search
+#' @name wnba_archetype_search
+#' @description stepwise search of archetype counts
+#' @importFrom archetypes stepArchetypes
+#' @importFrom archetypes bestModel
+#' @importFrom archetypes robustArchetypes
+#' @importFrom dplyr %>%
+#' @importFrom dplyr select
+#' @importFrom tibble column_to_rownames
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble as_tibble
+#' @export wnba_archetype_search
+#' @param player_totals a tibble returned by `nba_player_season_totals`
+#' @param num_steps number of steps to use (default 1:5)
+#' @param nrep number of repetitions at each step (default 4)
+#' @param verbose should the search be verbose? (default TRUE)
+#' @return a list of
+#' \itemize{
+#' \item archetype_parameters the parameters that define each archetype
+#' \item player_alphas the players tagged with their loadings on each archetype
+#' \item archetype_model the model object - the `bestModel` with `num_steps`
+#' archetypes
+#' \item all of the models}
+#' @examples
+#' \dontrun{
+#' dfstools::msf_set_apikey("your MySportsFeeds API key")
+#' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
+#' the_archetypes <- dfstools::wnba_archetype_search(player_totals$player_totals)
+#' screeplot(the_archetypes$archetype_models)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' View(player_alphas)
+#' }
+
+wnba_archetype_search <-
+  function(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
+    return(archetype_search(player_totals, num_steps, nrep, verbose))
+  }
+
 #' @title Make WNBA game.data
 #' @name wnba_make_game_data
 #' @description Builds a `mvglmmRank` "game.data" table from a
@@ -263,6 +425,13 @@ wnba_rest_days <- function(schedule) {
 ## global name declarations - See
 ## https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "tm",
+  "g",
+  "orb",
+  "player",
+  "pos",
+  "pts",
+  "trb",
   "gdte",
   "h.s",
   "h.tc",
