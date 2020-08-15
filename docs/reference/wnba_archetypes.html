@@ -143,12 +143,14 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>wnba_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_2020_totals_bbref.html'>wnba_2020_totals_bbref</a></span>()
+<span class='no'>wnba_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_season_totals_bbref.html'>wnba_season_totals_bbref</a></span>(<span class='fl'>2020</span>)
 <span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='no'>wnba_totals</span>$<span class='no'>player_totals</span>
 <span class='no'>player_labels</span> <span class='kw'>&lt;-</span> <span class='no'>wnba_totals</span>$<span class='no'>player_labels</span>
 <span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_archetypes</span>(<span class='no'>player_totals</span>)
 <span class='no'>player_alphas</span> <span class='kw'>&lt;-</span> <span class='no'>the_archetypes</span><span class='kw'>[[</span><span class='st'>"player_alphas"</span>]]
+<span class='no'>archetype_parameters</span> <span class='kw'>&lt;-</span> <span class='no'>the_archetypes</span><span class='kw'>[[</span><span class='st'>"archetype_parameters"</span>]]
 <span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>player_alphas</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>archetype_parameters</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

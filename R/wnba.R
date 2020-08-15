@@ -1,9 +1,9 @@
-#' @title WNBA 2020 player totals from Basketball Reference
-#' @name wnba_2020_totals_bbref
-#' @description fetches the 2020 WNBA player totals from
-#'  basketball-reference.com and prepares the raw data for archetypal
-#'  analysis.
-#' @export wnba_2020_totals_bbref
+#' @title WNBA season player totals from Basketball Reference
+#' @name wnba_season_totals_bbref
+#' @description fetches the WNBA player totals for a given season from
+#' basketball-reference.com and prepares the raw data for archetypal
+#' analysis.
+#' @export wnba_season_totals_bbref
 #' @importFrom dplyr %>%
 #' @importFrom dplyr filter
 #' @importFrom dplyr rename
@@ -14,6 +14,7 @@
 #' @importFrom janitor clean_names
 #' @importFrom rvest html_table
 #' @importFrom xml2 read_html
+#' @param season season to fetch (1997 - 2020)
 #' @return a list of two items
 #' \itemize{
 #' \item player_totals a tibble of player season total box score statistics,
@@ -22,29 +23,39 @@
 #' }
 #' @examples
 #' \dontrun{
-#' wnba_totals <- dfstools::wnba_2020_totals_bbref()
+#' wnba_totals <- dfstools::wnba_season_totals_bbref(2020)
 #' player_totals <- wnba_totals$player_totals
 #' player_labels <- wnba_totals$player_labels
 #' the_archetypes <- dfstools::wnba_archetypes(player_totals)
 #' player_alphas <- the_archetypes[["player_alphas"]]
+#' archetype_parameters <- the_archetypes[["archetype_parameters"]]
 #' View(player_alphas)
+#' View(archetype_parameters)
 #' }
 
-wnba_2020_totals_bbref <- function() {
-  raw_data <- xml2::read_html(
-    "https://www.basketball-reference.com/wnba/years/2020_totals.html"
-  ) %>% rvest::html_table()
-  raw_data <- raw_data[[1]] %>%
+wnba_season_totals_bbref <- function(season) {
+  if (season < 1997 | season > 2020) {
+    stop(paste("season", season, "is invalid!"))
+  }
+  url <- paste0(
+    "https://www.basketball-reference.com/wnba/years/",
+    season,
+    "_totals.html"
+  )
+  raw_data <- xml2::read_html(url) %>% rvest::html_table()
+  raw_data <- raw_data[[1]]
+  for (ixcol in 4:ncol(raw_data)) {
+    numbers <- as.numeric(raw_data[, ixcol])
+    numbers[is.na(numbers)] <- 0
+    raw_data[, ixcol] <- numbers
+  }
+ raw_data <- raw_data %>%
     janitor::clean_names() %>%
     dplyr::filter(player != "Player") %>%
-    dplyr::mutate(player_name = paste(player, tm))
-
-  # the columns of `raw_data` are all character! Make the numbers numbers!
-  numbers <- as.data.frame(data.matrix(dplyr::select(raw_data, g:pts)))
-  raw_data <- dplyr::bind_cols(
-    dplyr::select(raw_data, player_name, tm, pos),
-    numbers
-  ) %>% dplyr::mutate(drb = trb - orb)
+    dplyr::mutate(
+      player_name = paste(player, tm),
+      drb = trb - orb
+    )
 
   label_columns <- c(
     "player_name",
@@ -110,12 +121,14 @@ wnba_2020_totals_bbref <- function() {
 #' \item archetype_model the model object}
 #' @examples
 #' \dontrun{
-#' wnba_totals <- dfstools::wnba_2020_totals_bbref()
+#' wnba_totals <- dfstools::wnba_season_totals_bbref(2020)
 #' player_totals <- wnba_totals$player_totals
 #' player_labels <- wnba_totals$player_labels
 #' the_archetypes <- dfstools::wnba_archetypes(player_totals)
 #' player_alphas <- the_archetypes[["player_alphas"]]
+#' archetype_parameters <- the_archetypes[["archetype_parameters"]]
 #' View(player_alphas)
+#' View(archetype_parameters)
 #' }
 
 wnba_archetypes <- function(player_totals, num_archetypes = 3) {
@@ -135,8 +148,8 @@ wnba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' @importFrom tibble as_tibble
 #' @export wnba_archetype_search
 #' @param player_totals a tibble returned by `nba_player_season_totals`
-#' @param num_steps number of steps to use (default 1:5)
-#' @param nrep number of repetitions at each step (default 4)
+#' @param num_steps number of steps to use (default 1:10)
+#' @param nrep number of repetitions at each step (default 64)
 #' @param verbose should the search be verbose? (default TRUE)
 #' @return a list of
 #' \itemize{
@@ -147,16 +160,15 @@ wnba_archetypes <- function(player_totals, num_archetypes = 3) {
 #' \item all of the models}
 #' @examples
 #' \dontrun{
-#' dfstools::msf_set_apikey("your MySportsFeeds API key")
-#' player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
-#' the_archetypes <- dfstools::wnba_archetype_search(player_totals$player_totals)
+#' wnba_totals <- dfstools::wnba_season_totals_bbref(2020)
+#' player_totals <- wnba_totals$player_totals
+#' player_labels <- wnba_totals$player_labels
+#' the_archetypes <- dfstools::wnba_archetype_search(player_totals)
 #' screeplot(the_archetypes$archetype_models)
-#' player_alphas <- the_archetypes[["player_alphas"]]
-#' View(player_alphas)
 #' }
 
 wnba_archetype_search <-
-  function(player_totals, num_steps = 1:7, nrep = 32, verbose = TRUE) {
+  function(player_totals, num_steps = 1:10, nrep = 64, verbose = TRUE) {
     return(archetype_search(player_totals, num_steps, nrep, verbose))
   }
 

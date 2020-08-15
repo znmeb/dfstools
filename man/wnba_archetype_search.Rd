@@ -6,17 +6,17 @@
 \usage{
 wnba_archetype_search(
   player_totals,
-  num_steps = 1:7,
-  nrep = 32,
+  num_steps = 1:10,
+  nrep = 64,
   verbose = TRUE
 )
 }
 \arguments{
 \item{player_totals}{a tibble returned by \code{nba_player_season_totals}}
 
-\item{num_steps}{number of steps to use (default 1:5)}
+\item{num_steps}{number of steps to use (default 1:10)}
 
-\item{nrep}{number of repetitions at each step (default 4)}
+\item{nrep}{number of repetitions at each step (default 64)}
 
 \item{verbose}{should the search be verbose? (default TRUE)}
 }
@@ -34,11 +34,10 @@ stepwise search of archetype counts
 }
 \examples{
 \dontrun{
-dfstools::msf_set_apikey("your MySportsFeeds API key")
-player_totals <- dfstools::nba_player_season_totals("2018-2019-regular")
-the_archetypes <- dfstools::wnba_archetype_search(player_totals$player_totals)
+wnba_totals <- dfstools::wnba_season_totals_bbref(2020)
+player_totals <- wnba_totals$player_totals
+player_labels <- wnba_totals$player_labels
+the_archetypes <- dfstools::wnba_archetype_search(player_totals)
 screeplot(the_archetypes$archetype_models)
-player_alphas <- the_archetypes[["player_alphas"]]
-View(player_alphas)
 }
 }

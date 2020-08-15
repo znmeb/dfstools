@@ -78,8 +78,8 @@
 #' the second columns. Usually, this will be a measure of the player's total
 #' activity for the season, like minutes played or plate appearances / batters
 #' faced.
-#' @param num_steps number of steps to use (default 1:7)
-#' @param nrep number of repetitions at each step (default 32)
+#' @param num_steps number of steps to use (default 1:10)
+#' @param nrep number of repetitions at each step (default 64)
 #' @param verbose should the search be verbose? (default FALSE)
 #' @return a list of
 #' \itemize{
@@ -90,7 +90,7 @@
 #' \item all of the models}
 
 archetype_search <- function(
-  player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE) {
+  player_totals, num_steps = 1:10, nrep = 64, verbose = FALSE) {
   input_matrix <- player_totals %>%
     dplyr::select_if(.predicate = .is_valid_column) %>%
     tibble::remove_rownames() %>%

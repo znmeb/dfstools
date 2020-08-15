@@ -119,8 +119,8 @@
 
     <pre class="usage"><span class='fu'>wnba_archetype_search</span>(
   <span class='no'>player_totals</span>,
-  <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>7</span>,
-  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>32</span>,
+  <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>,
+  <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>64</span>,
   <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>
 )</pre>
 
@@ -133,11 +133,11 @@
     </tr>
     <tr>
       <th>num_steps</th>
-      <td><p>number of steps to use (default 1:5)</p></td>
+      <td><p>number of steps to use (default 1:10)</p></td>
     </tr>
     <tr>
       <th>nrep</th>
-      <td><p>number of repetitions at each step (default 4)</p></td>
+      <td><p>number of repetitions at each step (default 64)</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -158,12 +158,11 @@ archetypes</p></li>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='msf_set_apikey.html'>msf_set_apikey</a></span>(<span class='st'>"your MySportsFeeds API key"</span>)
-<span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='nba_player_season_totals.html'>nba_player_season_totals</a></span>(<span class='st'>"2018-2019-regular"</span>)
-<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_archetype_search</span>(<span class='no'>player_totals</span>$<span class='no'>player_totals</span>)
+<span class='no'>wnba_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_season_totals_bbref.html'>wnba_season_totals_bbref</a></span>(<span class='fl'>2020</span>)
+<span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='no'>wnba_totals</span>$<span class='no'>player_totals</span>
+<span class='no'>player_labels</span> <span class='kw'>&lt;-</span> <span class='no'>wnba_totals</span>$<span class='no'>player_labels</span>
+<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_archetype_search</span>(<span class='no'>player_totals</span>)
 <span class='fu'><a href='https://rdrr.io/r/stats/screeplot.html'>screeplot</a></span>(<span class='no'>the_archetypes</span>$<span class='no'>archetype_models</span>)
-<span class='no'>player_alphas</span> <span class='kw'>&lt;-</span> <span class='no'>the_archetypes</span><span class='kw'>[[</span><span class='st'>"player_alphas"</span>]]
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>player_alphas</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

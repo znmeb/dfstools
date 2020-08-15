@@ -4,7 +4,7 @@
 \alias{archetype_search}
 \title{Archetype Search}
 \usage{
-archetype_search(player_totals, num_steps = 1:7, nrep = 32, verbose = FALSE)
+archetype_search(player_totals, num_steps = 1:10, nrep = 64, verbose = FALSE)
 }
 \arguments{
 \item{player_totals}{a tibble of the values to use for archetypal analysis.
@@ -13,9 +13,9 @@ the second columns. Usually, this will be a measure of the player's total
 activity for the season, like minutes played or plate appearances / batters
 faced.}
 
-\item{num_steps}{number of steps to use (default 1:7)}
+\item{num_steps}{number of steps to use (default 1:10)}
 
-\item{nrep}{number of repetitions at each step (default 32)}
+\item{nrep}{number of repetitions at each step (default 64)}
 
 \item{verbose}{should the search be verbose? (default FALSE)}
 }

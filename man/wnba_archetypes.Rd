@@ -23,11 +23,13 @@ perform an "archetypal athletes" analysis
 }
 \examples{
 \dontrun{
-wnba_totals <- dfstools::wnba_2020_totals_bbref()
+wnba_totals <- dfstools::wnba_season_totals_bbref(2020)
 player_totals <- wnba_totals$player_totals
 player_labels <- wnba_totals$player_labels
 the_archetypes <- dfstools::wnba_archetypes(player_totals)
 player_alphas <- the_archetypes[["player_alphas"]]
+archetype_parameters <- the_archetypes[["archetype_parameters"]]
 View(player_alphas)
+View(archetype_parameters)
 }
 }
