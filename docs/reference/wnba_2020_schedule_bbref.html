@@ -140,15 +140,15 @@ converts it to a format usable by dfstools::mvglmmRank_model</p>
   <span class='kw'>defense</span> <span class='kw'>=</span> <span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.defense"</span>]]
 ))
 <span class='no'>forecast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='game_predict.html'>game_predict</a></span>(
-  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='no'>wnba_schedule</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/rename.html'>rename</a></span>(
+  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='no'>wnba_schedule</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(
     <span class='kw'>road_team</span> <span class='kw'>=</span> <span class='no'>away</span>,
     <span class='kw'>home_team</span> <span class='kw'>=</span> <span class='no'>home</span>
   ),
   <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>wnba_model</span>
 )
 <span class='no'>entropy</span> <span class='kw'>&lt;-</span> <span class='no'>forecast</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/group_by.html'>group_by</a></span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/summarise.html'>summarise</a></span>(<span class='kw'>total_entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span>(<span class='kw'>total_entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

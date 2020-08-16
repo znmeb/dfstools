@@ -65,3 +65,17 @@
 #'
 #' @source \url{https://www.basketball-reference.com/wnba/years/2020_totals.html}
 "wnba_2020_first_nine_games_player_totals"
+
+#' WNBA 2020 table of conferences
+#'
+#' A dataset with the list of conferences / teams
+#'
+#' @format A data frame with 12 rows and 3 variables:
+#' \describe{
+#'   \item{conference}{conference name}
+#'   \item{team}{team name}
+#'   \item{code}{team code name}
+#' }
+#'
+#' @source \url{https://www.basketball-reference.com/wnba/}
+"conference_table"

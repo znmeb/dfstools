@@ -143,7 +143,7 @@ home team abbreviation.</p></td>
 <span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>dplyr</span>)
 <span class='no'>nba_playoff_games</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='msf_seasonal_games.html'>msf_seasonal_games</a></span>(<span class='st'>"nba"</span>, <span class='st'>"2019-playoff"</span>)
 <span class='no'>nba_playoff_final</span> <span class='kw'>&lt;-</span> <span class='no'>nba_playoff_games</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/arrange.html'>arrange</a></span>(<span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/desc.html'>desc</a></span>(<span class='no'>slug</span>)) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span>(<span class='fu'><a href='https://dplyr.tidyverse.org/reference/desc.html'>desc</a></span>(<span class='no'>slug</span>)) <span class='kw'>%&gt;%</span>
   <span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span>(<span class='fl'>1</span>)
 <span class='no'>nba_playoff_final_slug</span> <span class='kw'>&lt;-</span> <span class='no'>nba_playoff_final</span><span class='kw'>[[</span><span class='st'>"slug"</span>]]
 <span class='no'>nba_playoff_final_pbp</span> <span class='kw'>&lt;-</span>
