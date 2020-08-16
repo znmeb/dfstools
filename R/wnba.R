@@ -1,3 +1,104 @@
+#' @title WNBA season player totals from wnba.com
+#' @name wnba_season_totals_wnba
+#' @description fetches the WNBA player totals for a given season from
+#' wnba.com and prepares the raw data for archetypal
+#' analysis.
+#' @export wnba_season_totals_wnba
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @importFrom dplyr rename
+#' @importFrom dplyr select
+#' @importFrom dplyr mutate
+#' @importFrom dplyr arrange
+#' @importFrom tibble remove_rownames
+#' @importFrom janitor clean_names
+#' @importFrom rvest html_table
+#' @importFrom xml2 read_html
+#' @param season season to fetch (1997 - 2020)
+#' @return a list of two items
+#' \itemize{
+#' \item player_totals a tibble of player season total box score statistics,
+#' arranged by descending points scored
+#' \item player_labels a tibble of labeling information for players
+#' }
+#' @examples
+#' \dontrun{
+#' wnba_totals <- dfstools::wnba_season_totals_wnba(2020)
+#' player_totals <- wnba_totals$player_totals
+#' player_labels <- wnba_totals$player_labels
+#' the_archetypes <- dfstools::wnba_archetypes(player_totals)
+#' player_alphas <- the_archetypes[["player_alphas"]]
+#' archetype_parameters <- the_archetypes[["archetype_parameters"]]
+#' View(player_alphas)
+#' View(archetype_parameters)
+#' }
+
+wnba_season_totals_wnba <- function(season) {
+  if (season < 1997 | season > 2020) {
+    stop(paste("season", season, "is invalid!"))
+  }
+  url <- paste0(
+    "https://stats.wnba.com/stats/leagueLeaders?LeagueID=10&PerMode=Totals&Scope=S&Season=",
+    season,
+    "&SeasonType=Regular+Season&StatCategory=PTS"
+  )
+  json <- jsonlite::fromJSON(url, flatten = TRUE)
+  raw_data <- as.data.frame(json[["resultSet"]][["rowSet"]])
+  names(raw_data) <- janitor::make_clean_names(json[["resultSet"]][["headers"]])
+  for (ixcol in 5:ncol(raw_data)) {
+    numbers <- as.numeric(raw_data[, ixcol])
+    numbers[is.na(numbers)] <- 0
+    raw_data[, ixcol] <- numbers
+  }
+  raw_data <- raw_data %>% dplyr::mutate(
+    player_name = paste(player, team),
+    fg2a = fga - fg3a,
+    fg2m = fgm - fg3m
+  )
+
+  label_columns <- c(
+    "player_name",
+    "team"
+  )
+  player_labels <- raw_data %>%
+    dplyr::select(label_columns) %>%
+    dplyr::arrange(player_name) %>%
+    unique()
+
+  stats_columns <- c(
+    "player_name",
+    "min",
+    "gp",
+    "fg2a",
+    "fg2m",
+    "fg3a",
+    "fg3m",
+    "fga",
+    "fgm",
+    "fta",
+    "ftm",
+    "oreb",
+    "dreb",
+    "reb",
+    "ast",
+    "pts",
+    "tov",
+    "stl",
+    "blk",
+    "pf"
+  )
+  player_totals <- raw_data %>%
+    dplyr::select(stats_columns) %>%
+    dplyr::arrange(desc(pts)) %>%
+    unique()
+
+  return(list(
+    player_totals = player_totals,
+    player_labels = player_labels)
+  )
+
+}
+
 #' @title WNBA season player totals from Basketball Reference
 #' @name wnba_season_totals_bbref
 #' @description fetches the WNBA player totals for a given season from
@@ -437,6 +538,10 @@ wnba_rest_days <- function(schedule) {
 ## global name declarations - See
 ## https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618
 if(getRversion() >= "2.15.1")  utils::globalVariables(c(
+  "fg3a",
+  "fg3m",
+  "fga",
+  "fgm",
   "tm",
   "g",
   "orb",
