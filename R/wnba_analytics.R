@@ -1,3 +1,29 @@
+#' @title WNBA Ranking
+#' @name wnba_ranking
+#' @description Runs `dfstools::mvglmmRank` and `dfstools::game_predict` and
+#' returns a list of the results
+#' @export wnba_ranking
+#' @param rank_prep the output of `dfstools::wnba_rank_prep_wnba` or
+#' `dfstools::wnba_rank_prep_bbref`
+#' @return a list of two items
+#' \itemize{
+#' \item rank_model the result of mvglmmRank_model
+#' \item forecast the result of game_predict
+#' }
+#' @examples
+#' \dontrun{
+#' rank_prep_wnba <- dfstools::wnba_2020_rank_prep_wnba()
+#' ranking_wnba <- dfstools::wnba_ranking(rank_prep_wnba)
+#' rank_prep_bbref <- dfstools::wnba_2020_rank_prep_bbref()
+#' ranking_bbref <- dfstools::wnba_ranking(rank_prep_bbref)
+#' }
+
+wnba_ranking <- function(rank_prep) {
+  rank_model <- mvglmmRank_model(rank_prep$game.data)
+  forecast <- game_predict(rank_prep$schedule, rank_model)
+  return(list(rank_model = rank_model, forecast = forecast))
+}
+
 #' @title WNBA Archetypal Analysis
 #' @name wnba_archetypes
 #' @description perform an "archetypal athletes" analysis
@@ -67,88 +93,6 @@ wnba_archetype_search <-
   function(player_totals, num_steps = 1:10, nrep = 64, verbose = TRUE) {
     return(archetype_search(player_totals, num_steps, nrep, verbose))
   }
-
-#' @title Make WNBA `game_predict` schedule
-#' @name wnba_make_game_predict_schedule
-#' @description Builds a `game_predict` `schedule` table from a
-#' `wnba_2020_schedule` result
-#' @importFrom dplyr %>%
-#' @importFrom dplyr filter
-#' @export wnba_make_game_predict_schedule
-#' @param wnba_schedule a tibble returned from `wnba_2020_schedule`
-#' @return a `schedule` table
-#' @examples
-#' \dontrun{
-#' wnba_schedule <- dfstools::wnba_2020_schedule()
-#' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
-#' wnba_game_predict_schedule <-
-#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
-#' View(wnba_game_data)
-#' View(wnba_game_predict_schedule)
-#' }
-
-wnba_make_game_predict_schedule <- function(wnba_schedule) {
-  wnba_schedule %>% dplyr::filter(is.na(away.response))
-}
-
-#' @title Make WNBA game.data
-#' @name wnba_make_game_data
-#' @description Builds a `mvglmmRank_model` `game.data` table from a
-#' `wnba_2020_schedule` result
-#' @importFrom dplyr %>%
-#' @importFrom dplyr filter
-#' @export wnba_make_game_data
-#' @param wnba_schedule a tibble returned from `wnba_2020_schedule`
-#' @return a `game.data` table
-#' @examples
-#' \dontrun{
-#' wnba_schedule <- dfstools::wnba_2020_schedule()
-#' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
-#' wnba_game_predict_schedule <-
-#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
-#' View(wnba_game_data)
-#' View(wnba_game_predict_schedule)
-#' }
-
-wnba_make_game_data <- function(wnba_schedule) {
-  wnba_schedule %>% dplyr::filter(!is.na(away.response))
-}
-
-#' @title Rest days
-#' @name wnba_rest_days
-#' @description Compute rest days from the schedule
-#' @export wnba_rest_days
-#' @importFrom dplyr %>%
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr lag
-#' @importFrom dplyr mutate
-#' @importFrom dplyr arrange
-#' @importFrom dplyr group_by
-#' @importFrom dplyr ungroup
-#' @param schedule a tibble returned by `wnba_2020_schedule_bbref`
-#' @return a tibble with three columns
-#' \itemize{
-#' \item `team` character team name,
-#' \item `date` POSIXct the game date,
-#' \item `rest_days` numeric number of rest days
-#' }
-#' @examples
-#' \dontrun{
-#' wnba_schedule <- dfstools::wnba_2020_schedule_bbref()
-#' View(wnba_schedule)
-#' rest_days <- dfstools::wnba_rest_days(wnba_schedule)
-#' View(rest_days)
-#' }
-
-wnba_rest_days <- function(schedule) {
-  aways <- schedule %>% dplyr::select(team = away, date)
-  homes <- schedule %>% dplyr::select(team = home, date)
-  aways %>% dplyr::bind_rows(homes) %>%
-    dplyr::arrange(team, date) %>%
-    dplyr::group_by(team) %>%
-    dplyr::mutate(rest_days = as.numeric(date - dplyr::lag(date)) - 1) %>%
-    dplyr::ungroup()
-}
 
 ## global name declarations - See
 ## https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618

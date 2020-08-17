@@ -99,48 +99,26 @@ wnba_season_totals_wnba <- function(season) {
 
 }
 
-#' @title WNBA 2020 Schedule from WNBA site
-#' @name wnba_2020_schedule_wnba
+#' @title WNBA 2020 rank prep from wnba.com
+#' @name wnba_2020_rank_prep_wnba
 #' @description fetches the 2020 WNBA schedule from stats.wnba.com and
-#' converts it to a format usable by dfstools::mvglmmRank_model
-#' @export wnba_2020_schedule_wnba
+#' converts it to tables usable by `dfstools::mvglmmRank_model` and
+#' `dfstools::game_predict`
+#' @export wnba_2020_rank_prep_wnba
 #' @importFrom dplyr %>%
-#' @importFrom dplyr bind_rows
-#' @importFrom dplyr select
-#' @importFrom dplyr mutate
 #' @importFrom jsonlite fromJSON
-#' @return a tibble that can be truncated to serve as a `game.data` input for
-#' `dfstools::mvglmmRank_model` and as a `schedule` input for
-#' `dfstools::game_predict`.
-#' @examples
-#' \dontrun{
-#' library(magrittr)
-#' wnba_schedule <- dfstools::wnba_2020_schedule_wnba()
-#' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
-#' wnba_game_predict_schedule <-
-#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
-#' View(wnba_game_data)
-#' View(wnba_game_predict_schedule)
-#' wnba_model <- dfstools::mvglmmRank_model(wnba_game_data, verbose = FALSE)
-#' teams <- as.character(names(wnba_model[["n.ratings.offense"]]))
-#' ratings <- tibble::as_tibble(list(
-#'   team = teams,
-#'   offense = wnba_model[["n.ratings.offense"]],
-#'   defense = wnba_model[["n.ratings.defense"]]
-#' ))
-#' forecast <- dfstools::game_predict(
-#'   schedule = wnba_game_predict_schedule,
-#'   model = wnba_model
-#' )
-#' forecast <- forecast %>%
-#'   dplyr::select(-away.response, -home.response, -binary.response)
-#' entropy <- forecast %>%
-#'   dplyr::group_by(date) %>%
-#'   dplyr::summarise(total_entropy = sum(entropy))
+#' @importFrom dplyr bind_rows
+#' @importFrom dplyr mutate
+#' @importFrom dplyr filter
+#' @importFrom dplyr select
+#' @return a list with two items
+#' \itemize{
+#' \item game.data a `game.data` table
+#' \item schedule a `schedule` table
 #' }
 
-wnba_2020_schedule_wnba <- function() {
-  raw_data <- fromJSON(
+wnba_2020_rank_prep_wnba <- function() {
+  raw_data <- jsonlite::fromJSON(
     "https://data.wnba.com/data/5s/v2015/json/mobile_teams/wnba/2020/league/10_full_schedule.json",
     flatten = TRUE
   )
@@ -157,9 +135,8 @@ wnba_2020_schedule_wnba <- function() {
     neutral.site = 0,
     binary.response = as.integer(home.response > away.response)
   ) %>% dplyr::select(date:binary.response)
+  game.data <- schedule %>% dplyr::filter(!is.na(away.response))
+  schedule <- schedule %>% dplyr::filter(is.na(away.response)) %>%
+    dplyr::select(-away.response, -home.response, -binary.response)
+  return(list(game.data = game.data, schedule = schedule))
 }
-
-## global name declarations - See
-## https://github.com/STAT545-UBC/Discussion/issues/451#issuecomment-264598618
-if(getRversion() >= "2.15.1")  utils::globalVariables(c(
-))
