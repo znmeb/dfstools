@@ -24,13 +24,13 @@ analysis.
 }
 \examples{
 \dontrun{
-wnba_totals <- dfstools::wnba_season_totals_wnba(2020)
-player_totals <- wnba_totals$player_totals
-player_labels <- wnba_totals$player_labels
-the_archetypes <- dfstools::wnba_archetypes(player_totals)
-player_alphas <- the_archetypes[["player_alphas"]]
-archetype_parameters <- the_archetypes[["archetype_parameters"]]
-View(player_alphas)
-View(archetype_parameters)
+wnba_2020_totals_wnba <- dfstools::wnba_season_totals_wnba(2020)
+archetype_search_result <-
+  dfstools::archetype_search(wnba_2020_totals_wnba$player_totals)
+screeplot(archetype_search_result$archetype_models)
+the_archetypes <-
+  dfstools::compute_archetypes(wnba_2020_totals_wnba$player_totals)
+View(the_archetypes$player_alphas)
+View(the_archetypes$archetype_parameters)
 }
 }
