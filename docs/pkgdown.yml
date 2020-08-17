@@ -1,6 +1,7 @@
 pandoc: 2.7.3
 pkgdown: 1.5.1
 pkgdown_sha: ~
-articles: []
-last_built: 2020-08-16T21:46Z
+articles:
+  projecting_the_2020_wnba_season: projecting_the_2020_wnba_season.html
+last_built: 2020-08-17T03:45Z
 

@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Make WNBA game.data — wnba_make_game_data" />
-<meta property="og:description" content="Builds a mvglmmRank &quot;game.data&quot; table from a
+<meta property="og:description" content="Builds a mvglmmRank_model game.data table from a
 wnba_2020_schedule result" />
 
 
@@ -88,6 +88,18 @@ wnba_2020_schedule result" />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/projecting_the_2020_wnba_season.html">Projecting the 2020 WNBA Season</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -115,7 +127,7 @@ wnba_2020_schedule result" />
     </div>
 
     <div class="ref-description">
-    <p>Builds a <code>mvglmmRank</code> "game.data" table from a
+    <p>Builds a <code>mvglmmRank_model</code> <code>game.data</code> table from a
 <code>wnba_2020_schedule</code> result</p>
     </div>
 
@@ -138,7 +150,10 @@ wnba_2020_schedule result" />
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
 <span class='no'>wnba_schedule</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_2020_schedule</span>()
 <span class='no'>wnba_game_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_make_game_data</span>(<span class='no'>wnba_schedule</span>)
+<span class='no'>wnba_game_predict_schedule</span> <span class='kw'>&lt;-</span>
+  <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_make_game_predict_schedule.html'>wnba_make_game_predict_schedule</a></span>(<span class='no'>wnba_schedule</span>)
 <span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>wnba_game_data</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>wnba_game_predict_schedule</span>)
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,3 +6,4 @@
 *.sqlite
 .httr-oauth
 *.csv
+inst/doc

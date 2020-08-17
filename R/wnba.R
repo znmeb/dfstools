@@ -273,9 +273,32 @@ wnba_archetype_search <-
     return(archetype_search(player_totals, num_steps, nrep, verbose))
   }
 
+#' @title Make WNBA `game_predict` schedule
+#' @name wnba_make_game_predict_schedule
+#' @description Builds a `game_predict` `schedule` table from a
+#' `wnba_2020_schedule` result
+#' @importFrom dplyr %>%
+#' @importFrom dplyr filter
+#' @export wnba_make_game_predict_schedule
+#' @param wnba_schedule a tibble returned from `wnba_2020_schedule`
+#' @return a `schedule` table
+#' @examples
+#' \dontrun{
+#' wnba_schedule <- dfstools::wnba_2020_schedule()
+#' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+#' wnba_game_predict_schedule <-
+#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
+#' View(wnba_game_data)
+#' View(wnba_game_predict_schedule)
+#' }
+
+wnba_make_game_predict_schedule <- function(wnba_schedule) {
+  wnba_schedule %>% dplyr::filter(is.na(away.response))
+}
+
 #' @title Make WNBA game.data
 #' @name wnba_make_game_data
-#' @description Builds a `mvglmmRank` "game.data" table from a
+#' @description Builds a `mvglmmRank_model` `game.data` table from a
 #' `wnba_2020_schedule` result
 #' @importFrom dplyr %>%
 #' @importFrom dplyr filter
@@ -286,7 +309,10 @@ wnba_archetype_search <-
 #' \dontrun{
 #' wnba_schedule <- dfstools::wnba_2020_schedule()
 #' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+#' wnba_game_predict_schedule <-
+#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
 #' View(wnba_game_data)
+#' View(wnba_game_predict_schedule)
 #' }
 
 wnba_make_game_data <- function(wnba_schedule) {
@@ -308,8 +334,13 @@ wnba_make_game_data <- function(wnba_schedule) {
 #' `dfstools::game_predict`.
 #' @examples
 #' \dontrun{
+#' library(magrittr)
 #' wnba_schedule <- dfstools::wnba_2020_schedule_wnba()
 #' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+#' wnba_game_predict_schedule <-
+#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
+#' View(wnba_game_data)
+#' View(wnba_game_predict_schedule)
 #' wnba_model <- dfstools::mvglmmRank_model(wnba_game_data, verbose = FALSE)
 #' teams <- as.character(names(wnba_model[["n.ratings.offense"]]))
 #' ratings <- tibble::as_tibble(list(
@@ -318,12 +349,11 @@ wnba_make_game_data <- function(wnba_schedule) {
 #'   defense = wnba_model[["n.ratings.defense"]]
 #' ))
 #' forecast <- dfstools::game_predict(
-#'   schedule = wnba_schedule %>% dplyr::rename(
-#'     road_team = away,
-#'     home_team = home
-#'   ),
+#'   schedule = wnba_game_predict_schedule,
 #'   model = wnba_model
 #' )
+#' forecast <- forecast %>%
+#'   dplyr::select(-away.response, -home.response, -binary.response)
 #' entropy <- forecast %>%
 #'   dplyr::group_by(date) %>%
 #'   dplyr::summarise(total_entropy = sum(entropy))
@@ -457,8 +487,13 @@ wnba_bdb_player_box_score <- function(bdb_excel_file) {
 #' `dfstools::game_predict`.
 #' @examples
 #' \dontrun{
+#' library(magrittr)
 #' wnba_schedule <- dfstools::wnba_2020_schedule_bbref()
 #' wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+#' wnba_game_predict_schedule <-
+#'   dfstools::wnba_make_game_predict_schedule(wnba_schedule)
+#' View(wnba_game_data)
+#' View(wnba_game_predict_schedule)
 #' wnba_model <- dfstools::mvglmmRank_model(wnba_game_data, verbose = FALSE)
 #' teams <- as.character(names(wnba_model[["n.ratings.offense"]]))
 #' ratings <- tibble::as_tibble(list(
@@ -467,12 +502,11 @@ wnba_bdb_player_box_score <- function(bdb_excel_file) {
 #'   defense = wnba_model[["n.ratings.defense"]]
 #' ))
 #' forecast <- dfstools::game_predict(
-#'   schedule = wnba_schedule %>% dplyr::rename(
-#'     road_team = away,
-#'     home_team = home
-#'   ),
+#'   schedule = wnba_game_predict_schedule,
 #'   model = wnba_model
 #' )
+#' forecast <- forecast %>%
+#'   dplyr::select(-away.response, -home.response, -binary.response)
 #' entropy <- forecast %>%
 #'   dplyr::group_by(date) %>%
 #'   dplyr::summarise(total_entropy = sum(entropy))

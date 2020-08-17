@@ -17,8 +17,13 @@ converts it to a format usable by dfstools::mvglmmRank_model
 }
 \examples{
 \dontrun{
+library(magrittr)
 wnba_schedule <- dfstools::wnba_2020_schedule_bbref()
 wnba_game_data <- dfstools::wnba_make_game_data(wnba_schedule)
+wnba_game_predict_schedule <-
+  dfstools::wnba_make_game_predict_schedule(wnba_schedule)
+View(wnba_game_data)
+View(wnba_game_predict_schedule)
 wnba_model <- dfstools::mvglmmRank_model(wnba_game_data, verbose = FALSE)
 teams <- as.character(names(wnba_model[["n.ratings.offense"]]))
 ratings <- tibble::as_tibble(list(
@@ -27,12 +32,11 @@ ratings <- tibble::as_tibble(list(
   defense = wnba_model[["n.ratings.defense"]]
 ))
 forecast <- dfstools::game_predict(
-  schedule = wnba_schedule \%>\% dplyr::rename(
-    road_team = away,
-    home_team = home
-  ),
+  schedule = wnba_game_predict_schedule,
   model = wnba_model
 )
+forecast <- forecast \%>\%
+  dplyr::select(-away.response, -home.response, -binary.response)
 entropy <- forecast \%>\%
   dplyr::group_by(date) \%>\%
   dplyr::summarise(total_entropy = sum(entropy))

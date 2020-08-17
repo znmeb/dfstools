@@ -88,6 +88,18 @@ converts it to a format usable by dfstools::mvglmmRank_model" />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/projecting_the_2020_wnba_season.html">Projecting the 2020 WNBA Season</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -130,8 +142,13 @@ converts it to a format usable by dfstools::mvglmmRank_model</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='fu'><a href='https://rdrr.io/r/base/library.html'>library</a></span>(<span class='no'>magrittr</span>)
 <span class='no'>wnba_schedule</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_2020_schedule_wnba</span>()
 <span class='no'>wnba_game_data</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_make_game_data.html'>wnba_make_game_data</a></span>(<span class='no'>wnba_schedule</span>)
+<span class='no'>wnba_game_predict_schedule</span> <span class='kw'>&lt;-</span>
+  <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='wnba_make_game_predict_schedule.html'>wnba_make_game_predict_schedule</a></span>(<span class='no'>wnba_schedule</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>wnba_game_data</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>wnba_game_predict_schedule</span>)
 <span class='no'>wnba_model</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='mvglmmRank_model.html'>mvglmmRank_model</a></span>(<span class='no'>wnba_game_data</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)
 <span class='no'>teams</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/names.html'>names</a></span>(<span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.offense"</span>]]))
 <span class='no'>ratings</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>tibble</span><span class='kw ns'>::</span><span class='fu'><a href='https://tibble.tidyverse.org/reference/as_tibble.html'>as_tibble</a></span>(<span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span>(
@@ -140,15 +157,14 @@ converts it to a format usable by dfstools::mvglmmRank_model</p>
   <span class='kw'>defense</span> <span class='kw'>=</span> <span class='no'>wnba_model</span><span class='kw'>[[</span><span class='st'>"n.ratings.defense"</span>]]
 ))
 <span class='no'>forecast</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='game_predict.html'>game_predict</a></span>(
-  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='no'>wnba_schedule</span> <span class='kw'>%&gt;%</span> <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/rename.html'>rename</a></span>(
-    <span class='kw'>road_team</span> <span class='kw'>=</span> <span class='no'>away</span>,
-    <span class='kw'>home_team</span> <span class='kw'>=</span> <span class='no'>home</span>
-  ),
+  <span class='kw'>schedule</span> <span class='kw'>=</span> <span class='no'>wnba_game_predict_schedule</span>,
   <span class='kw'>model</span> <span class='kw'>=</span> <span class='no'>wnba_model</span>
 )
+<span class='no'>forecast</span> <span class='kw'>&lt;-</span> <span class='no'>forecast</span> <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/select.html'>select</a></span>(-<span class='no'>away.response</span>, -<span class='no'>home.response</span>, -<span class='no'>binary.response</span>)
 <span class='no'>entropy</span> <span class='kw'>&lt;-</span> <span class='no'>forecast</span> <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
-  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span>(<span class='kw'>total_entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/group_by.html'>group_by</a></span>(<span class='no'>date</span>) <span class='kw'>%&gt;%</span>
+  <span class='kw pkg'>dplyr</span><span class='kw ns'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/summarise.html'>summarise</a></span>(<span class='kw'>total_entropy</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span>(<span class='no'>entropy</span>))
 }</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
