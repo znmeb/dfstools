@@ -11,10 +11,13 @@ wnba_ranking(rank_prep)
 \code{dfstools::wnba_rank_prep_bbref}}
 }
 \value{
-a list of two items
+a list of five items
 \itemize{
 \item rank_model the result of mvglmmRank_model
+\item offensive ratings
+\item defensive ratings
 \item forecast the result of game_predict
+\item daily_entropy the projected entropy for upcoming dates
 }
 }
 \description{
