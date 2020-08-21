@@ -1,0 +1,97 @@
+---
+title: "NBA Bubble Analytics"
+output: html_notebook
+---
+
+## Data acquistion
+We get the data from <https://basketball-reference.com>. The process is as
+follows:
+
+1. Go to
+<https://www.basketball-reference.com/leagues/NBA_2020_games-july.html>. Hover
+over "Share & more" and select the Excel workbook link. This will generate a
+binary file, which you'll need to open with a spreadsheet program! I used
+LibreOffice but any spreadsheet should work. After it opens, save the file as
+a `.xls` file `july_games.xls`.
+2. Repeat for `august_games.xls` at
+<https://www.basketball-reference.com/leagues/NBA_2020_games-august.html>. Now
+you're ready to make the raw data table `nba_bubble_games`.
+
+```{r}
+library(dplyr)
+july_games <- read_excel("~/DFS/NBA Playoffs/july_games.xls")
+august_games <- read_excel("~/DFS/NBA Playoffs/august_games.xls")
+nba_bubble_games <- dplyr::bind_rows(july_games, august_games)
+colnames(nba_bubble_games) <- c(
+  "raw_date",
+  "ignore_1",
+  "away",
+  "away.response",
+  "home",
+  "home.response",
+  "ignore_2",
+  "raw_ot",
+  "ignore_3",
+  "ignore_4"
+)
+nba_bubble_games <- nba_bubble_games %>%
+  dplyr::mutate(
+    date = lubridate::mdy(raw_date),
+    binary.response = as.integer(home.response > away.response),
+    neutral.site = 0,
+    OT = if_else(raw_ot == "2OT", 2, 1, 0)
+  ) %>% 
+  dplyr::select(date, away:home.response, binary.response, neutral.site, OT)
+DT::datatable(nba_bubble_games)
+```
+
+## Building the model
+This is a straightforward call to `dfstools::mvglmmRank_model`:
+
+```{r}
+game.data <- nba_bubble_games %>% dplyr::filter(!is.na(away.response))
+schedule <- nba_bubble_games %>% dplyr::filter(is.na(away.response)) %>%
+    dplyr::select(-away.response, -home.response, -binary.response, -OT)
+rank_model <- dfstools::mvglmmRank_model(game.data, OT.flag = TRUE)
+
+offensive_ratings <- tibble::as_tibble(list(
+  team = names(rank_model$n.ratings.offense),
+  offensive_rating = round(rank_model$n.ratings.offense, 2)
+)) %>% dplyr::arrange(desc(offensive_rating))
+means <- tibble::tribble(
+  ~team, ~offensive_rating,
+  "Home Mean", round(rank_model$n.mean[["LocationHome"]], 2),
+  "Away Mean", round(rank_model$n.mean[["LocationAway"]], 2),
+  "Home Edge", round(rank_model$n.mean[["LocationHome"]] -
+                     rank_model$n.mean[["LocationAway"]], 2)
+)
+offensive_ratings <- dplyr::bind_rows(offensive_ratings, means)
+DT::datatable(offensive_ratings)
+```
+
+```{r}
+defensive_ratings <- tibble::as_tibble(list(
+  team = names(rank_model$n.ratings.defense),
+  defensive_rating = round(rank_model$n.ratings.defense, 2)
+)) %>% dplyr::arrange(desc(defensive_rating))
+DT::datatable(defensive_ratings)
+```
+
+## Forecasting future games
+This is a straightforward call to `dfstools::game_predict`:
+
+```{r}
+forecast <- dfstools::game_predict(schedule, rank_model)
+DT::datatable(forecast)
+
+```
+
+
+```{r}
+daily_entropy <- forecast %>%
+  group_by(date) %>%
+  summarize(total_entropy = sum(entropy))
+DT::datatable(daily_entropy)
+
+```
+
