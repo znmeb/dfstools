@@ -71,6 +71,7 @@ if(getRversion() >= "2.15.1")  utils::globalVariables(c(
   "entropy",
   "offensive_rating",
   "binary.response",
+  "tov",
   "fg3a",
   "fg3m",
   "fga",

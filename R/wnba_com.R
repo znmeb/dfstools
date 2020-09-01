@@ -18,7 +18,7 @@
 #' @return a list of two items
 #' \itemize{
 #' \item player_totals a tibble of player season total box score statistics,
-#' arranged by descending points scored
+#' arranged by descending minutes played
 #' \item player_labels a tibble of labeling information for players
 #' }
 #' @examples
@@ -53,7 +53,8 @@ wnba_season_totals_wnba <- function(season) {
   raw_data <- raw_data %>% dplyr::mutate(
     player_name = paste(player, team),
     fg2a = fga - fg3a,
-    fg2m = fgm - fg3m
+    fg2m = fgm - fg3m,
+    negtov = -tov
   )
 
   label_columns <- c(
@@ -69,27 +70,19 @@ wnba_season_totals_wnba <- function(season) {
     "player_name",
     "min",
     "gp",
-    "fg2a",
     "fg2m",
-    "fg3a",
     "fg3m",
-    "fga",
-    "fgm",
-    "fta",
     "ftm",
     "oreb",
     "dreb",
-    "reb",
     "ast",
-    "pts",
-    "tov",
+    "negtov",
     "stl",
-    "blk",
-    "pf"
+    "blk"
   )
   player_totals <- raw_data %>%
     dplyr::select(stats_columns) %>%
-    dplyr::arrange(desc(pts)) %>%
+    dplyr::arrange(desc(min)) %>%
     unique()
 
   return(list(

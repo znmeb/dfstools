@@ -13,7 +13,7 @@ wnba_season_totals_wnba(season)
 a list of two items
 \itemize{
 \item player_totals a tibble of player season total box score statistics,
-arranged by descending points scored
+arranged by descending minutes played
 \item player_labels a tibble of labeling information for players
 }
 }
