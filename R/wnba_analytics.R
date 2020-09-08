@@ -9,8 +9,8 @@
     dplyr::summarise(away_games = dplyr::n())
   games_played <-
     dplyr::full_join(away_games, home_games, by = c("away" = "home")) %>%
-    dplyr::mutate(games_played = away_games + home_games) %>%
-    dplyr::rename(team = away)
+    dplyr::mutate(team_games_played = away_games + home_games) %>%
+    dplyr::select(team = away, team_games_played)
 }
 
 #' @title WNBA Ranking
