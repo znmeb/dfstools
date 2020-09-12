@@ -92,6 +92,23 @@ wnba_season_totals_wnba <- function(season) {
 
 }
 
+# internal - team code table
+.team_code_table <- tibble::tribble(
+  ~team_name, ~team,
+  "Atlanta Dream", "ATL",
+  "Chicago Sky", "CHI",
+  "Connecticut Sun", "CON",
+  "Dallas Wings", "DAL",
+  "Indiana Fever", "IND",
+  "Las Vegas Aces", "LVA",
+  "Los Angeles Sparks", "LAS",
+  "Minnesota Lynx", "MIN",
+  "New York Liberty", "NYL",
+  "Phoenix Mercury", "PHO",
+  "Seattle Storm", "SEA",
+  "Washington Mystics", "WAS",
+)
+
 #' @title WNBA 2020 rank prep from wnba.com
 #' @name wnba_2020_rank_prep_wnba
 #' @description fetches the 2020 WNBA schedule from stats.wnba.com and
@@ -104,9 +121,10 @@ wnba_season_totals_wnba <- function(season) {
 #' @importFrom dplyr mutate
 #' @importFrom dplyr filter
 #' @importFrom dplyr select
-#' @return a list with two items
+#' @return a list with three items
 #' \itemize{
 #' \item game.data a `game.data` table
+#' \item games_played a table with the number of games each team has played
 #' \item schedule a `schedule` table
 #' }
 
@@ -129,7 +147,25 @@ wnba_2020_rank_prep_wnba <- function() {
     binary.response = as.integer(home.response > away.response)
   ) %>% dplyr::select(date:binary.response)
   game.data <- schedule %>% dplyr::filter(!is.na(away.response))
+
+  home_games <- game.data %>%
+    dplyr::group_by(home) %>%
+    dplyr::summarise(home_games = dplyr::n())
+  away_games <- game.data %>%
+    dplyr::group_by(away) %>%
+    dplyr::summarise(away_games = dplyr::n())
+  games_played <-
+    dplyr::full_join(away_games, home_games, by = c("away" = "home")) %>%
+    dplyr::mutate(team_games_played = away_games + home_games) %>%
+    dplyr::select(team_name = away, team_games_played) %>%
+    dplyr::left_join(.team_code_table, by = "team_name")
+
   schedule <- schedule %>% dplyr::filter(is.na(away.response)) %>%
     dplyr::select(-away.response, -home.response, -binary.response)
-  return(list(game.data = game.data, schedule = schedule))
+
+  return(list(
+    game.data = game.data,
+    games_played = games_played,
+    schedule = schedule
+  ))
 }

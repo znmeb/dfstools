@@ -1,18 +1,3 @@
-# internal function - how many games has each team played?
-.games_played <- function(rank_prep) {
-  game.data <- rank_prep$game.data
-  home_games <- game.data %>%
-    dplyr::group_by(home) %>%
-    dplyr::summarise(home_games = dplyr::n())
-  away_games <- game.data %>%
-    dplyr::group_by(away) %>%
-    dplyr::summarise(away_games = dplyr::n())
-  games_played <-
-    dplyr::full_join(away_games, home_games, by = c("away" = "home")) %>%
-    dplyr::mutate(team_games_played = away_games + home_games) %>%
-    dplyr::select(team = away, team_games_played)
-}
-
 #' @title WNBA Ranking
 #' @name wnba_ranking
 #' @description Runs `dfstools::mvglmmRank` and `dfstools::game_predict` and

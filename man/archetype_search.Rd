@@ -11,7 +11,12 @@ archetype_search(player_totals, num_steps = 1:10, nrep = 64, verbose = FALSE)
 The first column must be the player name. The archetypes will be sorted on
 the second columns. Usually, this will be a measure of the player's total
 activity for the season, like minutes played or plate appearances / batters
-faced.}
+faced.
+
+If the column \code{team_games_played} exists, the other numeric values will
+be divided by it and the column will be deleted before doing the search.
+\code{team_games_played} must contain the number of games the player's team
+has played as of the player total dataset acquisition.}
 
 \item{num_steps}{number of steps to use (default 1:10)}
 

@@ -78,6 +78,11 @@
 #' the second columns. Usually, this will be a measure of the player's total
 #' activity for the season, like minutes played or plate appearances / batters
 #' faced.
+#'
+#' If the column `team_games_played` exists, the other numeric values will
+#' be divided by it and the column will be deleted before doing the search.
+#' `team_games_played` must contain the number of games the player's team
+#'  has played as of the player total dataset acquisition.
 #' @param num_steps number of steps to use (default 1:10)
 #' @param nrep number of repetitions at each step (default 64)
 #' @param verbose should the search be verbose? (default FALSE)
@@ -91,6 +96,13 @@
 
 archetype_search <- function(
   player_totals, num_steps = 1:10, nrep = 64, verbose = FALSE) {
+  if ("team_games_played" %in% colnames(player_totals)) {
+    divisor <- as.double(player_totals$team_games_played)
+    for (ixcol in 2:ncol(player_totals)) {
+      player_totals[, ixcol] <- player_totals[, ixcol] / divisor
+    }
+    player_totals <- player_totals %>% dplyr::select(-team_games_played)
+  }
   input_matrix <- player_totals %>%
     dplyr::select_if(.predicate = .is_valid_column) %>%
     tibble::remove_rownames() %>%

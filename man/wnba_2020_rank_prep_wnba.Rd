@@ -7,9 +7,10 @@
 wnba_2020_rank_prep_wnba()
 }
 \value{
-a list with two items
+a list with three items
 \itemize{
 \item game.data a \code{game.data} table
+\item games_played a table with the number of games each team has played
 \item schedule a \code{schedule} table
 }
 }
