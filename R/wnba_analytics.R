@@ -27,6 +27,7 @@
 #' @export wnba_ranking
 #' @param rank_prep the output of `dfstools::wnba_rank_prep_wnba` or
 #' `dfstools::wnba_rank_prep_bbref`
+#' @param method The method to use in `mvglmmRank`. Default is "NB".
 #' @return a list of five items
 #' \itemize{
 #' \item rank_model the result of mvglmmRank_model
@@ -43,26 +44,34 @@
 #' ranking_bbref <- dfstools::wnba_ranking(rank_prep_bbref)
 #' }
 
-wnba_ranking <- function(rank_prep) {
-  rank_model <- mvglmmRank_model(rank_prep$game.data)
-
-  offensive_ratings <- tibble::as_tibble(list(
-    team = names(rank_model$n.ratings.offense),
-    offensive_rating = round(rank_model$n.ratings.offense, 2)
-  )) %>% dplyr::arrange(desc(offensive_rating))
-  means <- tibble::tribble(
-    ~team, ~offensive_rating,
-    "Home Mean", round(rank_model$n.mean[["LocationHome"]], 2),
-    "Away Mean", round(rank_model$n.mean[["LocationAway"]], 2),
-    "Home Edge", round(rank_model$n.mean[["LocationHome"]] -
-                         rank_model$n.mean[["LocationAway"]], 2)
+wnba_ranking <- function(rank_prep, method = "NB") {
+  rank_model <- mvglmmRank_model(
+    rank_prep$game.data,
+    method = method
   )
-  offensive_ratings <- dplyr::bind_rows(offensive_ratings, means)
 
-  defensive_ratings <- tibble::as_tibble(list(
-    team = names(rank_model$n.ratings.defense),
-    defensive_rating = round(rank_model$n.ratings.defense, 2)
-  )) %>% dplyr::arrange(desc(defensive_rating))
+  if (length(rank_model$n.ratings.offense) > 0) {
+    offensive_ratings <- tibble::as_tibble(list(
+      team = names(rank_model$n.ratings.offense),
+      offensive_rating = round(rank_model$n.ratings.offense, 2)
+    )) %>% dplyr::arrange(desc(offensive_rating))
+    means <- tibble::tribble(
+      ~team, ~offensive_rating,
+      "Home Mean", round(rank_model$n.mean[["LocationHome"]], 2),
+      "Away Mean", round(rank_model$n.mean[["LocationAway"]], 2),
+      "Home Edge", round(rank_model$n.mean[["LocationHome"]] -
+                           rank_model$n.mean[["LocationAway"]], 2)
+    )
+    offensive_ratings <- dplyr::bind_rows(offensive_ratings, means)
+
+    defensive_ratings <- tibble::as_tibble(list(
+      team = names(rank_model$n.ratings.defense),
+      defensive_rating = round(rank_model$n.ratings.defense, 2)
+    )) %>% dplyr::arrange(desc(defensive_rating))
+  } else {
+    offensive_ratings = NA
+    defensive_ratings = NA
+  }
 
   forecast <- game_predict(rank_prep$schedule, rank_model)
 

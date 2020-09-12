@@ -4,11 +4,13 @@
 \alias{wnba_ranking}
 \title{WNBA Ranking}
 \usage{
-wnba_ranking(rank_prep)
+wnba_ranking(rank_prep, method = "NB")
 }
 \arguments{
 \item{rank_prep}{the output of \code{dfstools::wnba_rank_prep_wnba} or
 \code{dfstools::wnba_rank_prep_bbref}}
+
+\item{method}{The method to use in \code{mvglmmRank}. Default is "NB".}
 }
 \value{
 a list of five items
