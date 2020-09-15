@@ -117,7 +117,7 @@
     <p>perform an "archetypal athletes" analysis</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nba_archetypes</span>(<span class='no'>player_totals</span>, <span class='kw'>num_archetypes</span> <span class='kw'>=</span> <span class='fl'>3</span>)</pre>
+    <pre class="usage"><span class='fu'>nba_archetypes</span>(<span class='kw'>player_totals</span>, num_archetypes = <span class='fl'>3</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,13 +142,14 @@
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='msf_set_apikey.html'>msf_set_apikey</a></span>(<span class='st'>"your MySportsFeeds API key"</span>)
-<span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='nba_player_season_totals.html'>nba_player_season_totals</a></span>(<span class='st'>"2018-2019-regular"</span>)
-<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>nba_archetypes</span>(<span class='no'>player_totals</span>$<span class='no'>player_totals</span>)
-<span class='no'>player_alphas</span> <span class='kw'>&lt;-</span> <span class='no'>the_archetypes</span><span class='kw'>[[</span><span class='st'>"player_alphas"</span>]]
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>player_alphas</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>dfstools</span>::<span class='fu'><a href='msf_set_apikey.html'>msf_set_apikey</a></span>(<span class='st'>"your MySportsFeeds API key"</span>)
+<span class='kw'>player_totals</span> <span class='op'>&lt;-</span> <span class='kw'>dfstools</span>::<span class='fu'><a href='nba_player_season_totals.html'>nba_player_season_totals</a></span>(<span class='st'>"2018-2019-regular"</span>)
+<span class='kw'>the_archetypes</span> <span class='op'>&lt;-</span> <span class='kw'>dfstools</span>::<span class='fu'>nba_archetypes</span>(<span class='kw'>player_totals</span><span class='op'>$</span><span class='kw'>player_totals</span>)
+<span class='kw'>player_alphas</span> <span class='op'>&lt;-</span> <span class='kw'>the_archetypes</span>[[<span class='st'>"player_alphas"</span>]]
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='kw'>player_alphas</span>)
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -164,7 +165,7 @@
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
