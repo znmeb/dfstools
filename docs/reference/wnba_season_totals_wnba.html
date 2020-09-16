@@ -121,7 +121,7 @@ wnba.com and prepares the raw data for archetypal
 analysis.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>wnba_season_totals_wnba</span>(<span class='no'>season</span>)</pre>
+    <pre class="usage"><span class='fu'>wnba_season_totals_wnba</span>(<span class='kw'>season</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -136,22 +136,23 @@ analysis.</p>
 
     <p>a list of two items</p><ul>
 <li><p>player_totals a tibble of player season total box score statistics,
-arranged by descending points scored</p></li>
+arranged by descending minutes played</p></li>
 <li><p>player_labels a tibble of labeling information for players</p></li>
 </ul>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>wnba_2020_totals_wnba</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>wnba_season_totals_wnba</span>(<span class='fl'>2020</span>)
-<span class='no'>archetype_search_result</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='archetype_search.html'>archetype_search</a></span>(<span class='no'>wnba_2020_totals_wnba</span>$<span class='no'>player_totals</span>)
-<span class='fu'><a href='https://rdrr.io/r/stats/screeplot.html'>screeplot</a></span>(<span class='no'>archetype_search_result</span>$<span class='no'>archetype_models</span>)
-<span class='no'>the_archetypes</span> <span class='kw'>&lt;-</span>
-  <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'><a href='compute_archetypes.html'>compute_archetypes</a></span>(<span class='no'>wnba_2020_totals_wnba</span>$<span class='no'>player_totals</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>the_archetypes</span>$<span class='no'>player_alphas</span>)
-<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='no'>the_archetypes</span>$<span class='no'>archetype_parameters</span>)
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>wnba_2020_totals_wnba</span> <span class='op'>&lt;-</span> <span class='kw'>dfstools</span>::<span class='fu'>wnba_season_totals_wnba</span>(<span class='fl'>2020</span>)
+<span class='kw'>archetype_search_result</span> <span class='op'>&lt;-</span>
+  <span class='kw'>dfstools</span>::<span class='fu'><a href='archetype_search.html'>archetype_search</a></span>(<span class='kw'>wnba_2020_totals_wnba</span><span class='op'>$</span><span class='kw'>player_totals</span>)
+<span class='fu'><a href='https://rdrr.io/r/stats/screeplot.html'>screeplot</a></span>(<span class='kw'>archetype_search_result</span><span class='op'>$</span><span class='kw'>archetype_models</span>)
+<span class='kw'>the_archetypes</span> <span class='op'>&lt;-</span>
+  <span class='kw'>dfstools</span>::<span class='fu'><a href='compute_archetypes.html'>compute_archetypes</a></span>(<span class='kw'>wnba_2020_totals_wnba</span><span class='op'>$</span><span class='kw'>player_totals</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='kw'>the_archetypes</span><span class='op'>$</span><span class='kw'>player_alphas</span>)
+<span class='fu'><a href='https://rdrr.io/r/utils/View.html'>View</a></span>(<span class='kw'>the_archetypes</span><span class='op'>$</span><span class='kw'>archetype_parameters</span>)
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -167,7 +168,7 @@ arranged by descending points scored</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

@@ -117,7 +117,7 @@
     <p>stepwise search of archetype counts</p>
     </div>
 
-    <pre class="usage"><span class='fu'>archetype_search</span>(<span class='no'>player_totals</span>, <span class='kw'>num_steps</span> <span class='kw'>=</span> <span class='fl'>1</span>:<span class='fl'>10</span>, <span class='kw'>nrep</span> <span class='kw'>=</span> <span class='fl'>64</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>FALSE</span>)</pre>
+    <pre class="usage"><span class='fu'>archetype_search</span>(<span class='kw'>player_totals</span>, num_steps = <span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span>, nrep = <span class='fl'>64</span>, verbose = <span class='fl'>FALSE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -128,7 +128,11 @@
 The first column must be the player name. The archetypes will be sorted on
 the second columns. Usually, this will be a measure of the player's total
 activity for the season, like minutes played or plate appearances / batters
-faced.</p></td>
+faced.</p>
+<p>If the column <code>team_games_played</code> exists, the other numeric values will
+be divided by it and the column will be deleted before doing the search.
+<code>team_games_played</code> must contain the number of games the player's team
+has played as of the player total dataset acquisition.</p></td>
     </tr>
     <tr>
       <th>num_steps</th>
@@ -170,7 +174,7 @@ archetypes</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

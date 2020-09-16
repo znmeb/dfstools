@@ -117,7 +117,7 @@
     <p>fetches the player season totals for base box score statistics</p>
     </div>
 
-    <pre class="usage"><span class='fu'>nhl_player_season_totals</span>(<span class='no'>season</span>)</pre>
+    <pre class="usage"><span class='fu'>nhl_player_season_totals</span>(<span class='kw'>season</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -141,11 +141,12 @@ skaters</p></li>
 
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>player_totals</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>nhl_player_season_totals</span>(<span class='st'>"2018-2019-regular"</span>)
-<span class='no'>goalie_totals</span> <span class='kw'>&lt;-</span> <span class='no'>player_totals</span>$<span class='no'>goalie_totals</span>
-<span class='no'>skater_totals</span> <span class='kw'>&lt;-</span> <span class='no'>player_totals</span>$<span class='no'>skater_totals</span>
-}</div></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>player_totals</span> <span class='op'>&lt;-</span> <span class='kw'>dfstools</span>::<span class='fu'>nhl_player_season_totals</span>(<span class='st'>"2018-2019-regular"</span>)
+<span class='kw'>goalie_totals</span> <span class='op'>&lt;-</span> <span class='kw'>player_totals</span><span class='op'>$</span><span class='kw'>goalie_totals</span>
+<span class='kw'>skater_totals</span> <span class='op'>&lt;-</span> <span class='kw'>player_totals</span><span class='op'>$</span><span class='kw'>skater_totals</span>
+}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -161,7 +162,7 @@ skaters</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>

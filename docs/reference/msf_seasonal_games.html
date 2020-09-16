@@ -117,7 +117,7 @@
     <p>Returns a data frame of games from MySportsFeeds version 2.1 API</p>
     </div>
 
-    <pre class="usage"><span class='fu'>msf_seasonal_games</span>(<span class='no'>league</span>, <span class='no'>season</span>, <span class='kw'>verbose</span> <span class='kw'>=</span> <span class='fl'>TRUE</span>)</pre>
+    <pre class="usage"><span class='fu'>msf_seasonal_games</span>(<span class='kw'>league</span>, <span class='kw'>season</span>, verbose = <span class='fl'>TRUE</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -153,10 +153,11 @@ timezone ("EST5EDT"), and</p></li>
 <p>The returned tibble will be sorted in order of scheduled start time.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> (<span class='fl'>FALSE</span>) {
-<span class='no'>nba_games</span> <span class='kw'>&lt;-</span> <span class='kw pkg'>dfstools</span><span class='kw ns'>::</span><span class='fu'>msf_seasonal_games</span>(
-  <span class='kw'>season</span> <span class='kw'>=</span> <span class='st'>"2017-2018-regular"</span>, <span class='kw'>league</span> <span class='kw'>=</span> <span class='st'>"nba"</span>
-)}</div></pre>
+    <pre class="examples"><div class='input'><span class='co'>if</span> (<span class='fl'>FALSE</span>) {
+<span class='kw'>nba_games</span> <span class='op'>&lt;-</span> <span class='kw'>dfstools</span>::<span class='fu'>msf_seasonal_games</span>(
+  season = <span class='st'>"2017-2018-regular"</span>, league = <span class='st'>"nba"</span>
+)}
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
@@ -172,7 +173,7 @@ timezone ("EST5EDT"), and</p></li>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.5.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
 </div>
 
       </footer>
