@@ -28,9 +28,6 @@
   # get the player_alphas
   raw_player_alphas <- archetype_model[["alphas"]]
   player_alphas <- raw_player_alphas
-  for (i in 1:ncol(player_alphas)) {
-    player_alphas[, i] <- scales::rescale(player_alphas[, i], to = c(0, 1))
-  }
   rownames(player_alphas) <- rownames(input_matrix)
 
   # reorder the columns
@@ -71,7 +68,6 @@
 #' @importFrom tibble column_to_rownames
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble as_tibble
-#' @importFrom scales rescale
 #' @export archetype_search
 #' @param player_totals a tibble of the values to use for archetypal analysis.
 #' The first column must be the player name. The archetypes will be sorted on
