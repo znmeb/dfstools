@@ -1,40 +1,22 @@
-# internal function to merge regular and playoffs
-.fetch_season <- function(season) {
+# internal functions for player totals
+.fetch_player_totals <- function(season, season_type = "Regular+Season") {
   url <- paste0(
-    "https://stats.wnba.com/stats/leagueLeaders?LeagueID=10&PerMode=Totals&Scope=S&Season=",
+    "https://stats.wnba.com/stats/leagueLeaders?",
+    "LeagueID=10&PerMode=Totals&Scope=S&Season=",
     season,
-    "&SeasonType=Regular+Season&StatCategory=PTS"
+    "&SeasonType=",
+    season_type,
+    "&StatCategory=PTS"
   )
   json <- jsonlite::fromJSON(url, flatten = TRUE)
-  regular <- as.data.frame(json[["resultSet"]][["rowSet"]])
-  names(regular) <-
+  raw_data <- as.data.frame(json[["resultSet"]][["rowSet"]])
+  names(raw_data) <-
     janitor::make_clean_names(json[["resultSet"]][["headers"]])
-  for (ixcol in 5:ncol(regular)) {
-    numbers <- as.numeric(regular[, ixcol])
+  for (ixcol in 5:ncol(raw_data)) {
+    numbers <- as.numeric(raw_data[, ixcol])
     numbers[is.na(numbers)] <- 0
-    regular[, ixcol] <- numbers
+    raw_data[, ixcol] <- numbers
   }
-
-  url <- paste0(
-    "https://stats.wnba.com/stats/leagueLeaders?LeagueID=10&PerMode=Totals&Scope=S&Season=",
-    season,
-    "&SeasonType=Playoffs&StatCategory=PTS"
-  )
-  json <- jsonlite::fromJSON(url, flatten = TRUE)
-  playoffs <- as.data.frame(json[["resultSet"]][["rowSet"]])
-  names(playoffs) <-
-    janitor::make_clean_names(json[["resultSet"]][["headers"]])
-  for (ixcol in 5:ncol(playoffs)) {
-    numbers <- as.numeric(playoffs[, ixcol])
-    numbers[is.na(numbers)] <- 0
-    playoffs[, ixcol] <- numbers
-  }
-
-  raw_data <- dplyr::bind_rows(regular, playoffs) %>%
-    dplyr::group_by(player, team) %>%
-    dplyr::summarise_if(is.numeric, sum, na.rm = TRUE) %>%
-    dplyr::ungroup()
-
   return(raw_data)
 }
 
@@ -78,21 +60,7 @@ wnba_season_totals_wnba <- function(season) {
     stop(paste("season", season, "is invalid!"))
   }
 
-  # url <- paste0(
-  #   "https://stats.wnba.com/stats/leagueLeaders?LeagueID=10&PerMode=Totals&Scope=S&Season=",
-  #   season,
-  #   "&SeasonType=Regular+Season&StatCategory=PTS"
-  # )
-  # json <- jsonlite::fromJSON(url, flatten = TRUE)
-  # raw_data <- as.data.frame(json[["resultSet"]][["rowSet"]])
-  # names(raw_data) <- janitor::make_clean_names(json[["resultSet"]][["headers"]])
-  # for (ixcol in 5:ncol(raw_data)) {
-  #   numbers <- as.numeric(raw_data[, ixcol])
-  #   numbers[is.na(numbers)] <- 0
-  #   raw_data[, ixcol] <- numbers
-  # }
-
-  raw_data <- .fetch_season(season)
+  raw_data <- .fetch_player_totals(season)
   raw_data <- raw_data %>% dplyr::mutate(
     player_name = paste(player, team),
     fg2a = fga - fg3a,
@@ -179,7 +147,8 @@ wnba_2020_rank_prep_wnba <- function() {
   schedule <- dplyr::bind_rows(
     raw_data[["lscd"]][["mscd.g"]][[1]],
     raw_data[["lscd"]][["mscd.g"]][[2]],
-    raw_data[["lscd"]][["mscd.g"]][[3]]
+    raw_data[["lscd"]][["mscd.g"]][[3]],
+    raw_data[["lscd"]][["mscd.g"]][[4]]
   ) %>% dplyr::mutate(
     date = gdte,
     away = paste(v.tc, v.tn, sep = " "),
