@@ -13,6 +13,7 @@
 #' @param rank_prep the output of `dfstools::wnba_rank_prep_wnba` or
 #' `dfstools::wnba_rank_prep_bbref`
 #' @param method The method to use in `mvglmmRank`. Default is "NB".
+#' @param verbose be verbose during iteration Default is `FALSE`.
 #' @return a list of five items
 #' \itemize{
 #' \item rank_model the result of mvglmmRank_model
@@ -29,9 +30,11 @@
 #' ranking_bbref <- dfstools::wnba_ranking(rank_prep_bbref)
 #' }
 
-wnba_ranking <- function(rank_prep, method = "NB") {
+wnba_ranking <- function(rank_prep, method = "NB", verbose = FALSE) {
   rank_model <- mvglmmRank_model(
     rank_prep$game.data,
+    verbose = verbose,
+    first.order = TRUE,
     method = method
   )
 

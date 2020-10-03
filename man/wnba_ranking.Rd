@@ -4,13 +4,15 @@
 \alias{wnba_ranking}
 \title{WNBA Ranking}
 \usage{
-wnba_ranking(rank_prep, method = "NB")
+wnba_ranking(rank_prep, method = "NB", verbose = FALSE)
 }
 \arguments{
 \item{rank_prep}{the output of \code{dfstools::wnba_rank_prep_wnba} or
 \code{dfstools::wnba_rank_prep_bbref}}
 
 \item{method}{The method to use in \code{mvglmmRank}. Default is "NB".}
+
+\item{verbose}{be verbose during iteration Default is \code{FALSE}.}
 }
 \value{
 a list of five items
