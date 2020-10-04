@@ -195,10 +195,10 @@ game_predict <-
           round(stats::pnorm(
             model$b.mean +
               model$b.ratings[home] -
-              model$b.ratings[away]), 3),
-        away_prob_w = round(1 - home_prob_w, 3),
+              model$b.ratings[away]), 2),
+        away_prob_w = round(1 - home_prob_w, 2),
         entropy = round(-log2(home_prob_w) * home_prob_w -
-          log2(away_prob_w) * away_prob_w, 3))
+          log2(away_prob_w) * away_prob_w, 2))
     }
 
     return(aug_schedule)
